@@ -1,0 +1,88 @@
+<sunSpecPics>
+  <device v="1">
+    <model id="1" len="65">
+      <block>
+        <point id="Mn">SunSpec</point>
+        <point id="Md">TestInverter-1</point>
+        <point id="Opt">Option-a-b-c</point>
+        <point id="Vr">1.2.3</point>
+        <point id="SN">987654321</point>
+      </block>
+    </model>
+    <model id="101" len="50">
+      <block>
+        <point id="AphB" impl="false" />
+        <point id="AphC" impl="false" />
+        <point id="PPVphAB" impl="false" />
+        <point id="PPVphBC" impl="false" />
+        <point id="PPVphCA" impl="false" />
+        <point id="PhVphB" impl="false" />
+        <point id="PhVphC" impl="false" />
+        <point id="TmpCab" impl="false" />
+        <point id="TmpSnk" impl="false" />
+        <point id="TmpTrns" impl="false" />
+        <point id="TmpOt" impl="false" />
+        <point id="DCV_SF">0</point>
+        <point id="DCW_SF">-1</point>
+        <point id="Hz_SF">-2</point>
+        <point id="DCA_SF">-2</point>
+        <point id="VAr_SF">0</point>
+        <point id="V_SF">0</point>
+        <point id="PF_SF">-1</point>
+        <point id="VA_SF">0</point>
+        <point id="WH_SF">0</point>
+        <point id="Tmp_SF" impl="false" />
+        <point id="W_SF">0</point>
+        <point id="A_SF">-2</point>
+      </block>
+    </model>
+    <model id="126" len="226">
+      <block>
+        <point id="RmpTms" impl="false" />
+        <point id="NCrv">4</point>
+        <point id="NPt">4</point>
+        <point id="RmpIncDec_SF">0</point>
+        <point id="DeptRef_SF">0</point>
+        <point id="V_SF">0</point>
+      </block>
+      <block type="repeating">
+        <point access="r" id="ActPt">4</point>
+        <point access="r" id="DeptRef">2</point>
+        <point id="V5" impl="false" />
+        <point id="VAr5" impl="false" />
+        <point id="V6" impl="false" />
+        <point id="VAr6" impl="false" />
+        <point id="V7" impl="false" />
+        <point id="VAr7" impl="false" />
+        <point id="V8" impl="false" />
+        <point id="VAr8" impl="false" />
+        <point id="V9" impl="false" />
+        <point id="VAr9" impl="false" />
+        <point id="V10" impl="false" />
+        <point id="VAr10" impl="false" />
+        <point id="V11" impl="false" />
+        <point id="VAr11" impl="false" />
+        <point id="V12" impl="false" />
+        <point id="VAr12" impl="false" />
+        <point id="V13" impl="false" />
+        <point id="VAr13" impl="false" />
+        <point id="V14" impl="false" />
+        <point id="VAr14" impl="false" />
+        <point id="V15" impl="false" />
+        <point id="VAr15" impl="false" />
+        <point id="V16" impl="false" />
+        <point id="VAr16" impl="false" />
+        <point id="V17" impl="false" />
+        <point id="VAr17" impl="false" />
+        <point id="V18" impl="false" />
+        <point id="VAr18" impl="false" />
+        <point id="V19" impl="false" />
+        <point id="VAr19" impl="false" />
+        <point id="V20" impl="false" />
+        <point id="VAr20" impl="false" />
+        <point id="CrvNam" impl="false" />
+        <point id="RmpTms" impl="false" />
+      </block>
+    </model>
+  </device>
+</sunSpecPics>

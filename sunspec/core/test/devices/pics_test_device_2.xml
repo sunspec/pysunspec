@@ -1,0 +1,122 @@
+<sunSpecPics>
+  <device v="1">
+    <model id="1" len="65">
+      <block>
+        <point id="Mn">SunSpecTest</point>
+        <point id="Md">TestDevice-2</point>
+        <point id="Opt">opt_a_b_c</point>
+        <point id="Vr">1.2.3</point>
+        <point id="SN">sn-123456789</point>
+        <point id="DA">1</point>
+      </block>
+    </model>
+    <model id="63001" len="188">
+      <block>
+        <point id="sunssf_1">-10</point>
+        <point id="sunssf_2">10</point>
+        <point id="sunssf_3">0</point>
+        <point id="sunssf_4">1</point>
+        <point id="int16_1">1</point>
+        <point id="int16_2">-1</point>
+        <point id="int16_3">2</point>
+        <point id="int16_4">-2</point>
+        <point id="int16_5">3</point>
+        <point id="int16_u" impl="false"/>
+        <point id="uint16_1">4</point>
+        <point id="uint16_2">5</point>
+        <point id="uint16_3">65524</point>
+        <point id="uint16_4">6</point>
+        <point id="uint16_5">7</point>
+        <point id="uint16_u">0xffff</point>
+        <point id="acc16">8</point>
+        <point id="acc16_u">0</point>
+        <point id="enum16">9</point>
+        <point id="enum16_u">0xffff</point>
+        <point id="bitfield16">10</point>
+        <point id="bitfield16_u">0xffff</point>
+        <point id="int32_1">11</point>
+        <point id="int32_2">12</point>
+        <point id="int32_3">13</point>
+        <point id="int32_4">14</point>
+        <point id="int32_5">15</point>
+        <point id="int32_u">-2147483648</point>
+        <point id="uint32_1">16</point>
+        <point id="uint32_2">17</point>
+        <point id="uint32_3">18</point>
+        <point id="uint32_4">19</point>
+        <point id="uint32_5">20</point>
+        <point id="uint32_u">0xffffffff</point>
+        <point id="acc32">21</point>
+        <point id="acc32_u">0</point>
+        <point id="enum32">22</point>
+        <point id="enum32_u">0xffffffff</point>
+        <point id="bitfield32">23</point>
+        <point id="bitfield32_u">0xffffffff</point>
+        <point id="ipaddr">0x01020304</point>
+        <point id="ipaddr_u">0</point>
+        <point id="int64">24</point>
+        <point id="int64_u">-9223372036854775808</point>
+        <point id="acc64">25</point>
+        <point id="acc64_u">0</point>
+        <point id="ipv6addr" impl="false"/>
+        <point id="ipv6addr_u" impl="false"/>
+        <point id="float32">26</point>
+        <point id="float32_u">0x7fc00000</point>
+        <point id="string">12345678</point>
+        <point id="string_u" impl="false"/>
+        <point id="sunssf_5">2</point>
+        <point id="sunssf_6">3</point>
+        <point id="sunssf_7">4</point>
+        <point id="pad_1">-32768</point>
+      </block>
+      <block type="repeating" index="1">
+        <point id="sunssf_8">-2</point>
+        <point id="int16_11">30</point>
+        <point id="int16_12">31</point>
+        <point id="int16_u">-32768</point>
+        <point id="uint16_11">32</point>
+        <point id="uint16_12">33</point>
+        <point id="uint16_13">34</point>
+        <point id="uint16_u">0xffff</point>
+        <point id="int32">35</point>
+        <point id="int32_u">-2147483648</point>
+        <point id="uint32">36</point>
+        <point id="uint32_u">0xffffffff</point>
+        <point id="sunssf_9">-3</point>
+        <point id="pad_2">0x8000</point>
+      </block>
+      <block type="repeating" index="2">
+        <point id="sunssf_8">-4</point>
+        <point id="int16_11">40</point>
+        <point id="int16_12">41</point>
+        <point id="int16_u">-32768</point>
+        <point id="uint16_11">42</point>
+        <point id="uint16_12">43</point>
+        <point id="uint16_13">44</point>
+        <point id="uint16_u">0xffff</point>
+        <point id="int32">45</point>
+        <point id="int32_u">-2147483648</point>
+        <point id="uint32">46</point>
+        <point id="uint32_u">0xffffffff</point>
+        <point id="sunssf_9">-5</point>
+        <point id="pad_2">0x8000</point>
+      </block>
+      <block type="repeating" index="3">
+        <point id="sunssf_8">2</point>
+        <point id="int16_11">50</point>
+        <point id="int16_12">51</point>
+        <point id="int16_u">-32768</point>
+        <point id="uint16_11">52</point>
+        <point id="uint16_12">53</point>
+        <point id="uint16_13">54</point>
+        <point id="uint16_u">0xffff</point>
+        <point id="int32">55</point>
+        <point id="int32_u">-2147483648</point>
+        <point id="uint32">56</point>
+        <point id="uint32_u">0xffffffff</point>
+        <point id="sunssf_9">3</point>
+        <point id="pad_2">0x8000</point>
+      </block>
+    </model>
+  </device>
+</sunSpecPics> 

@@ -1,0 +1,109 @@
+<mbmap>
+  <!-- common model -->
+  <regs type="string" len="2">SunS</regs>
+  <regs type="u16">1</regs>
+  <regs type="u16">66</regs>
+  <regs type="string" len="16">SunSpecTest</regs>
+  <regs type="string" len="16">TestDevice-1</regs>
+  <regs type="string" len="8">opt_a_b_c</regs>
+  <regs type="string" len="8">1.2.3</regs>
+  <regs type="string" len="16">sn-123456789</regs>
+  <regs type="u16">1</regs>
+  <regs type="u16">0</regs>
+
+  <!-- model 63000  len = 188 -->
+  <regs offset="70" type="u16">63001</regs>
+  <regs offset="71" type="s16">188</regs>
+  <regs>fff6 000a 0000 0001 0001 ffff 0002 fffe  0003 8000 0004 0005 fff4 0006 0007 ffff</regs>
+  <regs>0008 0000 0009 ffff 000a ffff 0000 000b  0000 000c 0000 000d 0000 000e 0000 000f</regs>
+  <regs offset="104">80000000</regs>      <!-- 0x8000, 0,     #  0x80000000 <point id="int32_u"       offset="32"   type="int32" /> -->
+  <regs offset="106">00000010</regs>      <!--      0, 0x10,      #  16         <point id="uint32_1"      offset="34"   type="uint32"  sf="sunssf_5" /> -->
+  <regs offset="108">00000011</regs>      <!--      0, 0x11,      #  17         <point id="uint32_2"      offset="36"   type="uint32"  sf="sunssf_6" /> -->
+  <regs offset="110">00000012</regs>      <!--      0, 0x12,      #  18         <point id="uint32_3"      offset="38"   type="uint32"  sf="sunssf_7" /> -->
+  <regs offset="112">00000013</regs>      <!--      0, 0x13,      #  19         <point id="uint32_4"      offset="40"   type="uint32" /> -->
+  <regs offset="114">00000014</regs>      <!--      0, 0x14,      #  20         <point id="uint32_5"      offset="42"   type="uint32" /> -->
+  <regs offset="116">ffffffff</regs>      <!-- 0xffff, 0xffff,    #  0xffffffff <point id="uint32_u"      offset="44"   type="uint32" /> -->
+  <regs offset="118">00000015</regs>      <!--      0, 0x15,      #  21         <point id="acc32"         offset="46"   type="acc32" /> -->
+  <regs offset="120">00000000</regs>      <!--      0, 0,         #  0          <point id="acc32_u"       offset="48"   type="acc32" /> -->
+  <regs offset="122">00000016</regs>      <!--     0, 0x16,       #  22         <point id="enum32"        offset="50"   type="enum32" /> -->
+  <regs offset="124">ffffffff</regs>      <!-- 0xffff, 0xffff,    #  0xffffffff <point id="enum32_u"      offset="52"   type="enum32" /> -->
+  <regs offset="126">00000017</regs>      <!--      0, 0x17,      #  23         <point id="bitfield32"    offset="54"   type="bitfield32" /> -->
+  <regs offset="128">ffffffff</regs>      <!-- 0xffff, 0xffff,    #  0xffffffff <point id="bitfield32_u"  offset="56"   type="bitfield32" /> -->
+  <regs offset="130">01020304</regs>      <!-- 0x0102, 0x0304,    #  0x01020304 <point id="ipaddr"        offset="58"   type="ipaddr" /> -->
+  <regs offset="132">00000000</regs>          <!--      0, 0,         #  0          <point id="ipaddr_u"      offset="60"   type="ipaddr" /> -->
+  <regs offset="134">0000000000000018</regs>  <!--      0, 0, 0, 0x18, #  24         <point id="int64"         offset="62"   type="int64" /> -->
+  <regs offset="138">8000000000000000</regs>  <!-- 0x8000, 0, 0, 0,    #  0x8000000000000000 <point id="int64_u"       offset="66"   type="int64" /> -->
+  <regs offset="142">0000000000000019</regs>  <!--      0, 0, 0, 0x19, #  25         <point id="acc64"         offset="70"   type="acc64" /> -->
+  <regs offset="146">0000000000000000</regs>  <!--      0, 0, 0, 0,   #  0          <point id="acc64_u"       offset="74"   type="int64" /> -->
+  <regs offset="150">0000000000000000</regs>  <!--      0, 0, 0, 0,   #  0          <point id="ipv6addr"      offset="78"   type="ipv6addr" /> -->
+  <regs offset="154">0000000000000000</regs>  <!--      0, 0, 0, 0,  -->
+  <regs offset="158">0000000000000000</regs>  <!--      0, 0, 0, 0,   #  0          <point id="ipv6addr_u"    offset="86"   type="ipv6addr" /> -->
+  <regs offset="162">0000000000000000</regs>  <!--      0, 0, 0, 0,  -->
+  <regs offset="166">41d00000</regs>          <!-- 0x41d0, 0,         # 26          <point id="float32"       offset="94"   type="float32" /> -->
+  <regs offset="168">7fc00000</regs>          <!-- 0x7fc0, 0,         # NaN         <point id="float32_u"     offset="96"   type="float32" /> -->
+  <regs offset="170">3132333435363738000000000000000000000000000000000000000000000000</regs>    <!-- 0x3132, 0x3334,     # 12345678    <point id="string"        offset="98"   type="string"  len="16"/> -->
+  <!-- 0x3536, 0x3738, -->
+  <!--      0, 0, 0, 0, -->
+  <!--      0, 0, 0, 0, -->
+  <!--      0, 0, 0, 0, -->
+  <regs offset="186">0000000000000000000000000000000000000000000000000000000000000000</regs> <!--      0, 0, 0, 0, #  0          <point id="string_u"      offset="114"  type="string"  len="16"/> -->
+  <!--      0, 0, 0, 0, -->
+  <!--      0, 0, 0, 0, -->
+  <!--      0, 0, 0, 0, -->
+  <regs offset="202" type="s16">2</regs>          <!--      2,            #  2          <point id="sunssf_5"      offset="130"  type="sunssf" /> -->
+  <regs offset="203" type="s16">3</regs>          <!--      3,            #  3          <point id="sunssf_6"      offset="131"  type="sunssf" /> -->
+  <regs offset="204" type="s16">4</regs>          <!--      4,            #  4          <point id="sunssf_7"      offset="132"  type="sunssf" /> -->
+  <regs offset="205" type="s16">-32768</regs>     <!-- 0x8000,            #  0x8000     <point id="pad_1"         offset="133"  type="pad" /> -->
+ 
+  <!-- # block type="repeating" len="18" -->
+  <regs offset="206" type="s16">-2</regs>         <!-- 0xfffe,            #  -2         <point id="sunssf_8"      offset="0"    type="sunssf" /> -->
+  <regs offset="207" type="s16">30</regs>         <!--   0x1e,            #  30         <point id="int16_11"      offset="1"    type="int16"   sf="sunssf_8" /> -->
+  <regs offset="208" type="s16">31</regs>         <!--   0x1f,            #  31         <point id="int16_12"      offset="2"    type="int16"   sf="sunssf_9" /> -->
+  <regs offset="209" type="s16">-32768</regs>     <!-- 0x8000,            #  0x8000     <point id="int16_u"       offset="3"    type="int16" /> -->
+  <regs offset="210" type="u16">32</regs>         <!--   0x20,            #  32         <point id="uint16_11"     offset="4"    type="uint16"  sf="sunssf_8" /> -->
+  <regs offset="211" type="u16">33</regs>         <!--   0x21,            #  33         <point id="uint16_12"     offset="5"    type="uint16"  sf="sunssf_9" /> -->
+  <regs offset="212" type="u16">34</regs>         <!--   0x22,            #  34         <point id="uint16_13"     offset="6"    type="uint16" /> -->
+  <regs offset="213" type="u16">0xffff</regs>     <!-- 0xffff,            #  0xffff     <point id="uint16_u"      offset="7"    type="uint16" /> -->
+  <regs offset="214" type="s32">35</regs>         <!--      0, 0x23,      #  35         <point id="int32"         offset="8"    type="int32"   sf="sunssf_1" /> -->
+  <regs offset="216" type="s32">-2147483648</regs> <!-- 0x8000, 0,        #  0x80000000 <point id="int32_u"       offset="10"   type="int32" /> -->
+  <regs offset="218" type="u32">36</regs>         <!--      0, 0x24,      #  36         <point id="uint32"        offset="12"   type="uint32"  sf="sunssf_9" /> -->
+  <regs offset="220" type="u32">0xffffffff</regs> <!-- 0xffff, 0xffff,    #  0xffffffff <point id="uint32_u"      offset="14"   type="uint32" /> -->
+  <regs offset="222" type="s16">-3</regs>         <!-- 0xfffd,            #  -3         <point id="sunssf_9"      offset="16"   type="sunssf" /> -->
+  <regs offset="223" type="u16">0x8000</regs>     <!-- 0x8000,            # 0x8000      <point id="pad_2"         offset="17"   type="pad" /> -->
+
+  <!-- # block type="repeating" len="18" -->
+  <regs offset="224" type="s16">-4</regs>         <!-- 0xfffc,            #  -4         <point id="sunssf_8"      offset="0"    type="sunssf" /> -->
+  <regs offset="225" type="s16">40</regs>         <!--   0x28,            #  40         <point id="int16_11"      offset="1"    type="int16"   sf="sunssf_8" /> -->
+  <regs offset="226" type="s16">41</regs>         <!--   0x29,            #  41         <point id="int16_12"      offset="2"    type="int16"   sf="sunssf_9" /> -->
+  <regs offset="227" type="s16">-32768</regs>     <!-- 0x8000,            #  0x8000     <point id="int16_u"       offset="3"    type="int16" /> -->
+  <regs offset="228" type="u16">42</regs>         <!--   0x2a,            #  42         <point id="uint16_11"     offset="4"    type="uint16"  sf="sunssf_8" /> -->
+  <regs offset="229" type="u16">43</regs>         <!--   0x2b,            #  43         <point id="uint16_12"     offset="5"    type="uint16"  sf="sunssf_9" /> -->
+  <regs offset="230" type="u16">44</regs>         <!--  0x2c,             #  44         <point id="uint16_13"     offset="6"    type="uint16" /> -->
+  <regs offset="231" type="u16">0xffff</regs>     <!-- 0xffff,            #  0xffff     <point id="uint16_u"      offset="7"    type="uint16" /> -->
+  <regs offset="232" type="s32">45</regs>         <!--      0, 0x2d,      #  45         <point id="int32"         offset="8"    type="int32"   sf="sunssf_1" /> -->
+  <regs offset="234" type="s32">-2147483648</regs> <!-- 0x8000, 0,        #  0x80000000 <point id="int32_u"       offset="10"   type="int32" /> -->
+  <regs offset="236" type="u32">46</regs>         <!--      0, 0x2e,      #  46         <point id="uint32"        offset="12"   type="uint32"  sf="sunssf_9" /> -->
+  <regs offset="238" type="u32">0xffffffff</regs> <!-- 0xffff, 0xffff,    #  0xffffffff <point id="uint32_u"      offset="14"   type="uint32" /> -->
+  <regs offset="240" type="s16">-5</regs>         <!-- 0xfffb,            #  -5         <point id="sunssf_9"      offset="16"   type="sunssf" /> -->
+  <regs offset="241" type="u16">0x8000</regs>     <!-- 0x8000,            # 0x8000      <point id="pad_2"         offset="17"   type="pad" /> -->
+
+  <!-- # block type="repeating" len="18" -->
+  <regs offset="242" type="s16">2</regs>          <!--      2,            #  2          <point id="sunssf_8"      offset="0"    type="sunssf" /> -->
+  <regs offset="243" type="s16">50</regs>         <!--   0x32,            #  50         <point id="int16_11"      offset="1"    type="int16"   sf="sunssf_8" /> -->
+  <regs offset="244" type="s16">51</regs>         <!--   0x33,            #  51         <point id="int16_12"      offset="2"    type="int16"   sf="sunssf_9" /> -->
+  <regs offset="245" type="s16">-32768</regs>     <!-- 0x8000,            #  0x8000     <point id="int16_u"       offset="3"    type="int16" /> -->
+  <regs offset="246" type="u16">52</regs>         <!--   0x34,            #  52         <point id="uint16_11"     offset="4"    type="uint16"  sf="sunssf_8" /> -->
+  <regs offset="247" type="u16">53</regs>         <!--   0x35,            #  53         <point id="uint16_12"     offset="5"    type="uint16"  sf="sunssf_9" /> -->
+  <regs offset="248" type="u16">54</regs>         <!--   0x36,            #  54         <point id="uint16_13"     offset="6"    type="uint16" /> -->
+  <regs offset="249" type="u16">0xffff</regs>     <!-- 0xffff,            #  0xffff     <point id="uint16_u"      offset="7"    type="uint16" /> -->
+  <regs offset="250" type="s32">55</regs>         <!--      0, 0x37,      #  55         <point id="int32"         offset="8"    type="int32"   sf="sunssf_1" /> -->
+  <regs offset="252" type="s32">-2147483648</regs> <!-- 0x8000, 0,        #  0x80000000 <point id="int32_u"       offset="10"   type="int32" /> -->
+  <regs offset="254" type="u32">56</regs>         <!--     0, 0x38,       #  56         <point id="uint32"        offset="12"   type="uint32"  sf="sunssf_9" /> -->
+  <regs offset="256" type="u32">0xffffffff</regs> <!-- 0xffff, 0xffff,    #  0xffffffff <point id="uint32_u"      offset="14"   type="uint32" /> -->
+  <regs offset="258" type="s16">3</regs>          <!--     3,             #  3          <point id="sunssf_9"      offset="16"   type="sunssf" /> -->
+  <regs offset="259" type="u16">0xffff</regs>     <!-- 0x8000,            # 0x8000      <point id="pad_2"         offset="17"   type="pad" /> -->
+
+  <regs offset="260" type="u16">0xffff</regs>     <!-- 0xffff, 0x0000 -->
+  <regs offset="261" type="u16">0</regs>
+</mbmap>
+

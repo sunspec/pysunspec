@@ -1,0 +1,65 @@
+<mbmap>
+  <!-- common model -->
+  <regs type="string" len="2">SunS</regs>
+  <regs type="u16">1</regs>
+  <regs type="u16">66</regs>
+  <regs type="string" len="16">SunSpecTest</regs>
+  <regs type="string" len="16">TestInverter-1</regs>
+  <regs type="string" len="8">opt_a_b_c</regs>
+  <regs type="string" len="8">1.2.3</regs>
+  <regs type="string" len="16">sn-123456789</regs>
+  <regs type="u16">1</regs>
+  <regs type="u16">0</regs>
+
+  <!-- 103: inverter -->
+  <regs type="u16">103</regs>       <!-- <model id="103" len="50"> -->
+  <regs type="u16">50</regs> 
+  <regs type="u16">124</regs>       <!-- <point id="A" offset="0" type="uint16" sf="A_SF" units="A" mandatory="true" /> -->
+  <regs type="u16">41</regs>        <!-- <point id="AphA" offset="1" type="uint16" sf="A_SF" units="A" mandatory="true" /> -->
+  <regs type="u16">42</regs>        <!-- <point id="AphB" offset="2" type="uint16" sf="A_SF" units="A" mandatory="true" /> -->
+  <regs type="u16">43</regs>        <!-- <point id="AphC" offset="3" type="uint16" sf="A_SF" units="A" mandatory="true" /> -->
+  <regs type="s16">-1</regs>        <!-- <point id="A_SF" offset="4" type="sunssf" mandatory="true" /> -->
+  <regs type="u16">0xffff</regs>    <!-- <point id="PPVphAB" offset="5" type="uint16" sf="V_SF" units="V" /> -->
+  <regs type="u16">0xffff</regs>    <!-- <point id="PPVphBC" offset="6" type="uint16" sf="V_SF" units="V" /> -->
+  <regs type="u16">0xffff</regs>    <!-- <point id="PPVphCA" offset="7" type="uint16" sf="V_SF" units="V" /> -->
+  <regs type="u16">2401</regs>      <!-- <point id="PhVphA" offset="8" type="uint16" sf="V_SF" units="V" mandatory="true" /> -->
+  <regs type="u16">2402</regs>      <!-- <point id="PhVphB" offset="9" type="uint16" sf="V_SF" units="V" mandatory="true" /> -->
+  <regs type="u16">2403</regs>      <!-- <point id="PhVphC" offset="10" type="uint16" sf="V_SF" units="V" mandatory="true" /> -->
+  <regs type="s16">-1</regs>        <!-- <point id="V_SF" offset="11" type="sunssf" mandatory="true" /> -->
+  <regs type="s16">2970</regs>      <!-- <point id="W" offset="12" type="int16" sf="W_SF" units="W" mandatory="true" /> -->
+  <regs type="s16">0</regs>         <!-- <point id="W_SF" offset="13" type="sunssf" mandatory="true" /> -->
+  <regs type="u16">5999</regs>      <!-- <point id="Hz" offset="14" type="uint16" sf="Hz_SF" units="Hz" mandatory="true" /> -->
+  <regs type="s16">-2</regs>        <!-- <point id="Hz_SF" offset="15" type="sunssf" mandatory="true" /> -->
+  <regs type="s16">2978</regs>      <!-- <point id="VA" offset="16" type="int16" sf="VA_SF" units="VA" /> -->
+  <regs type="s16">0</regs>         <!-- <point id="VA_SF" offset="17" type="sunssf" /> -->
+  <regs type="s16">1</regs>         <!-- <point id="VAr" offset="18" type="int16" sf="VAr_SF" units="var" /> -->
+  <regs type="s16">-1</regs>        <!-- <point id="VAr_SF" offset="19" type="sunssf" /> -->
+  <regs type="s16">995</regs>       <!-- <point id="PF" offset="20" type="int16" sf="PF_SF" units="Pct" /> -->
+  <regs type="s16">-3</regs>        <!-- <point id="PF_SF" offset="21" type="sunssf" /> -->
+  <regs type="u32">1234567</regs>   <!-- <point id="WH" offset="22" type="acc32" sf="WH_SF" units="Wh" mandatory="true" /> -->
+  <regs type="s16">0</regs>         <!-- <point id="WH_SF" offset="24" type="sunssf" mandatory="true" /> -->
+  <regs type="u16">100</regs>       <!-- <point id="DCA" offset="25" type="uint16" sf="DCA_SF" units="A" /> -->
+  <regs type="s16">-1</regs>        <!-- <point id="DCA_SF" offset="26" type="sunssf" /> -->
+  <regs type="u16">3001</regs>      <!-- <point id="DCV" offset="27" type="uint16" sf="DCV_SF" units="V" /> -->
+  <regs type="s16">-1</regs>        <!-- <point id="DCV_SF" offset="28" type="sunssf" /> -->
+  <regs type="s16">3001</regs>      <!-- <point id="DCW" offset="29" type="int16" sf="DCW_SF" units="W" /> -->
+  <regs type="s16">0</regs>         <!-- <point id="DCW_SF" offset="30" type="sunssf" /> -->
+  <regs type="s16">401</regs>       <!-- <point id="TmpCab" offset="31" type="int16" sf="Tmp_SF" units="C" mandatory="true" /> -->
+  <regs type="s16">402</regs>       <!-- <point id="TmpSnk" offset="32" type="int16" sf="Tmp_SF" units="C" /> -->
+  <regs type="s16">403</regs>       <!-- <point id="TmpTrns" offset="33" type="int16" sf="Tmp_SF" units="C" /> -->
+  <regs type="s16">404</regs>       <!-- <point id="TmpOt" offset="34" type="int16" sf="Tmp_SF" units="C" /> -->
+  <regs type="s16">-1</regs>        <!-- <point id="Tmp_SF" offset="35" type="sunssf" mandatory="true" /> -->
+  <regs type="u16">1</regs>         <!-- <point id="St" offset="36" type="enum16" mandatory="true" /> -->
+  <regs type="u16">2</regs>         <!-- <point id="StVnd" offset="37" type="enum16" /> -->
+  <regs type="u32">3</regs>         <!-- <point id="Evt1" offset="38" type="bitfield32" mandatory="true" /> -->
+  <regs type="u32">4</regs>         <!-- <point id="Evt2" offset="40" type="bitfield32" mandatory="true" /> -->
+  <regs type="u32">5</regs>         <!-- <point id="EvtVnd1" offset="42" type="bitfield32" /> -->
+  <regs type="u32">6</regs>         <!-- <point id="EvtVnd2" offset="44" type="bitfield32" /> -->
+  <regs type="u32">7</regs>         <!-- <point id="EvtVnd3" offset="46" type="bitfield32" /> -->
+  <regs type="u32">8</regs>         <!-- <point id="EvtVnd4" offset="48" type="bitfield32" /> -->
+
+  <regs type="u16">0xffff</regs>    <!-- 0xffff, 0x0000 -->
+  <regs type="u16">0</regs>
+
+</mbmap>
+

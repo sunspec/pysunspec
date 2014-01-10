@@ -1,0 +1,43 @@
+<sunSpecPics>
+  <device v="1">
+    <model id="1" len="66">
+      <block>
+        <point id="Mn">SunSpecTest</point>
+        <point id="Md">TestInverter-2</point>
+        <point id="Opt">Option-a-b-c</point>
+        <point id="Vr">1.2.3</point>
+        <point id="SN">987654321</point>
+      </block>
+    </model>
+    <model id="101" len="50">
+      <block>
+        <point id="AphB" impl="false" />
+        <point id="AphC" impl="false" />
+        <point id="PPVphAB" impl="false" />
+        <point id="PPVphBC" impl="false" />
+        <point id="PPVphCA" impl="false" />
+        <point id="PhVphB" impl="false" />
+        <point id="PhVphC" impl="false" />
+        <point id="TmpCab" impl="false" />
+        <point id="TmpSnk" impl="false" />
+        <point id="TmpTrns" impl="false" />
+        <point id="TmpOt" impl="false" />
+        <point id="DCV_SF">0</point>
+        <point id="DCW_SF">-1</point>
+        <point id="Hz_SF">-2</point>
+        <point id="DCA_SF">-2</point>
+        <point id="VAr_SF">0</point>
+        <point id="V_SF">0</point>
+        <point id="PF_SF">-1</point>
+        <point id="VA_SF">0</point>
+        <point id="WH_SF">0</point>
+        <point id="Tmp_SF" impl="false" />
+        <point id="W_SF">0</point>
+        <point id="A_SF">-2</point>
+      </block>
+    </model>
+    <model id="160" len="68"/>
+    <model id="160" len="68"/>
+    <model id="160" len="68"/>
+  </device>
+</sunSpecPics>

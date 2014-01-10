@@ -1,0 +1,16 @@
+<mbmap>
+  <!-- common model with lenght of 65 -->
+  <regs offset="0" type="string" len="2">SunS</regs>
+  <regs offset="2" type="u16">1</regs>
+  <regs offset="3" type="u16">65</regs>
+  <regs offset="4" type="string" len="16">SunSpecTest</regs>
+  <regs offset="20" type="string" len="16">TestDevice-2</regs>
+  <regs offset="36" type="string" len="8">opt_a_b_c</regs>
+  <regs offset="44" type="string" len="8">1.2.3</regs>
+  <regs offset="52" type="string" len="16">sn-123456789</regs>
+  <regs offset="68" type="u16">1</regs>
+
+  <regs offset="69" type="u16">0xffff</regs>     <!-- 0xffff, 0x0000 -->
+  <regs offset="70" type="u16">0</regs>
+</mbmap>
+
