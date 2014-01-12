@@ -1,4 +1,0 @@
-pysunspec
-=========
-
-Python SunSpec Tools
