@@ -30,6 +30,7 @@ SMDX_NOTES = 'notes'
 
 SMDX_TYPE_INT16 = 'int16'
 SMDX_TYPE_UINT16 = 'uint16'
+SMDX_TYPE_COUNT = 'count'
 SMDX_TYPE_ACC16 = 'acc16'
 SMDX_TYPE_ENUM16 = 'enum16'
 SMDX_TYPE_BITFIELD16 = 'bitfield16'
@@ -41,6 +42,7 @@ SMDX_TYPE_ENUM32 = 'enum32'
 SMDX_TYPE_BITFIELD32 = 'bitfield32'
 SMDX_TYPE_IPADDR = 'ipaddr'
 SMDX_TYPE_INT64 = 'int64'
+SMDX_TYPE_UINT64 = 'uint64'
 SMDX_TYPE_ACC64 = 'acc64'
 SMDX_TYPE_IPV6ADDR = 'ipv6addr'
 SMDX_TYPE_FLOAT32 = 'float32'
@@ -73,6 +75,7 @@ smdx_block_types = {
 smdx_point_types = {
     SMDX_TYPE_INT16: suns.SUNS_TYPE_INT16,
     SMDX_TYPE_UINT16: suns.SUNS_TYPE_UINT16,
+    SMDX_TYPE_COUNT: suns.SUNS_TYPE_COUNT,
     SMDX_TYPE_ACC16: suns.SUNS_TYPE_ACC16,
     SMDX_TYPE_ENUM16: suns.SUNS_TYPE_ENUM16,
     SMDX_TYPE_BITFIELD16: suns.SUNS_TYPE_BITFIELD16,
@@ -84,9 +87,26 @@ smdx_point_types = {
     SMDX_TYPE_BITFIELD32: suns.SUNS_TYPE_BITFIELD32,
     SMDX_TYPE_IPADDR: suns.SUNS_TYPE_IPADDR,
     SMDX_TYPE_INT64: suns.SUNS_TYPE_INT64,
+    SMDX_TYPE_UINT64: suns.SUNS_TYPE_UINT64,
     SMDX_TYPE_ACC64: suns.SUNS_TYPE_ACC64,
     SMDX_TYPE_IPV6ADDR: suns.SUNS_TYPE_IPV6ADDR,
     SMDX_TYPE_FLOAT32: suns.SUNS_TYPE_FLOAT32,
     SMDX_TYPE_STRING: suns.SUNS_TYPE_STRING,
     SMDX_TYPE_SUNSSF: suns.SUNS_TYPE_SUNSSF
 }
+
+def model_id_to_filename(model_id):
+
+    return 'smdx_%05d.xml' % (int(model_id))
+
+def model_filename_to_id(filename):
+
+    model_id = None
+
+    if filename[0:5] == 'smdx_' and filename[-4:] == '.xml':
+        try:
+            model_id = int(filename[5:-4])
+        except Exception, e:
+            pass
+
+    return model_id

@@ -489,6 +489,24 @@ def test_device_common_len_65(pathlist=None):
         return False
     return True
 
+# verify all models in the default models directory can be read
+def test_device_models_smdx(pathlist=None):
+
+    path = device.model_type_path_default
+    try:
+        files = os.listdir(path)
+        model_id = None
+        for f in files:
+            try:
+                model_id = smdx.model_filename_to_id(f)
+                if model_id is not None:
+                    device.model_type_get(model_id)
+            except Exception, e:
+                raise Exception('Error scanning model %s: %s' % (str(model_id), e))
+    except Exception, e:
+        raise Exception('Error scanning model directory %s: %s' % (path, e))
+    return True
+
 test_device_tests = [
     test_device_modeltype,
     test_device_pointtype,
@@ -499,7 +517,8 @@ test_device_tests = [
     test_device_to_pics,
     test_device_value_get,
     test_device_value_set,
-    test_device_common_len_65
+    test_device_common_len_65,
+    test_device_models_smdx
 ]
 
 def test_all(pathlist=None, stop_on_failure=True):

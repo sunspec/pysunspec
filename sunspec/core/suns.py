@@ -12,6 +12,7 @@ SUNS_SUNS_LEN = 2
 
 SUNS_TYPE_INT16 = 'int16'
 SUNS_TYPE_UINT16 = 'uint16'
+SUNS_TYPE_COUNT = 'count'
 SUNS_TYPE_ACC16 = 'acc16'
 SUNS_TYPE_ENUM16 = 'enum16'
 SUNS_TYPE_BITFIELD16 = 'bitfield16'
@@ -23,6 +24,7 @@ SUNS_TYPE_ENUM32 = 'enum32'
 SUNS_TYPE_BITFIELD32 = 'bitfield32'
 SUNS_TYPE_IPADDR = 'ipaddr'
 SUNS_TYPE_INT64 = 'int64'
+SUNS_TYPE_UINT64 = 'uint64'
 SUNS_TYPE_ACC64 = 'acc64'
 SUNS_TYPE_IPV6ADDR = 'ipv6addr'
 SUNS_TYPE_FLOAT32 = 'float32'
@@ -47,6 +49,7 @@ SUNS_UNIMPL_ENUM32 = 0xffffffff
 SUNS_UNIMPL_BITFIELD32 = 0xffffffff
 SUNS_UNIMPL_IPADDR = 0
 SUNS_UNIMPL_INT64 = -9223372036854775808
+SUNS_UNIMPL_UINT64 = 0xffffffffffffffff
 SUNS_UNIMPL_ACC64 = 0
 SUNS_UNIMPL_IPV6ADDR = 0
 SUNS_UNIMPL_FLOAT32 = 0x7fc00000
@@ -109,6 +112,9 @@ def suns_is_impl_ipaddr(value):
 def suns_is_impl_int64(value):
     return not value == SUNS_UNIMPL_INT64
 
+def suns_is_impl_uint64(value):
+    return not value == SUNS_UNIMPL_UINT64
+
 def suns_is_impl_acc64(value):
     return not value == SUNS_UNIMPL_ACC64
 
@@ -132,6 +138,7 @@ def suns_is_impl_sunssf(value):
 suns_point_type_info = {
     SUNS_TYPE_INT16: (1, suns_is_impl_int16, util.data_to_s16, util.s16_to_data, suns_to_int, 0),
     SUNS_TYPE_UINT16: (1, suns_is_impl_uint16, util.data_to_u16, util.u16_to_data, suns_to_int, 0),
+    SUNS_TYPE_COUNT: (1, suns_is_impl_uint16, util.data_to_u16, util.u16_to_data, suns_to_int, 0),
     SUNS_TYPE_ACC16: (1, suns_is_impl_acc16, util.data_to_u16, util.u16_to_data, suns_to_int, 0),
     SUNS_TYPE_ENUM16: (1, suns_is_impl_enum16, util.data_to_u16, util.u16_to_data, suns_to_int, 0),
     SUNS_TYPE_BITFIELD16: (1, suns_is_impl_bitfield16, util.data_to_u16, util.u16_to_data, suns_to_int, 0),
@@ -143,6 +150,7 @@ suns_point_type_info = {
     SUNS_TYPE_BITFIELD32: (2, suns_is_impl_bitfield32, util.data_to_u32, util.u32_to_data, suns_to_long, 0),
     SUNS_TYPE_IPADDR: (2, suns_is_impl_ipaddr, util.data_to_u32, util.u32_to_data, suns_to_long, 0),
     SUNS_TYPE_INT64: (4, suns_is_impl_int64, util.data_to_s64, util.s64_to_data, suns_to_long, 0),
+    SUNS_TYPE_UINT64: (4, suns_is_impl_uint64, util.data_to_s64, util.s64_to_data, suns_to_long, 0),
     SUNS_TYPE_ACC64: (4, suns_is_impl_acc64, util.data_to_s64, util.s64_to_data, suns_to_long, 0),
     SUNS_TYPE_IPV6ADDR: (8, suns_is_impl_ipv6addr, util.data_to_ipv6addr, util.ipv6addr_to_data, suns_to_str, 0),
     SUNS_TYPE_FLOAT32: (2, suns_is_impl_float32, util.data_to_float, util.float_to_data32, suns_to_float, 0),

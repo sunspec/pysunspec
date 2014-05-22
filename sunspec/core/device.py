@@ -492,7 +492,7 @@ def model_type_get(model_id):
     if model_type is None:
         smdx_data = ''
         # create model file name
-        filename = 'smdx_%05d.xml' % (int(model_id))
+        filename = smdx.model_id_to_filename(model_id)
  
         # check in file path list if set
         if file_pathlist is not None:
@@ -588,6 +588,7 @@ class ModelType(object):
                             self.notes = e.text
                 for e in s.findall(smdx.SMDX_POINT):
                     pid = e.attrib.get(smdx.SMDX_ATTR_ID)
+                    point_type = None
                     if self.fixed_block is not None:
                         point_type = self.fixed_block.points.get(pid)
                     if point_type is None and self.repeating_block is not None:
