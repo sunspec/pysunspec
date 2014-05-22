@@ -70,7 +70,22 @@ class SunSpecData(object):
                 dd.from_xml(d)
                 self.device_data.append(dd)
 
-    def to_xml(self, pretty_print=False):
+    def to_xml(self, parent=None):
+
+        attr = {}
+
+        if self.version:
+            attr[SDX_SUNSPEC_DATA_VERSION] = self.version
+
+        if parent is None:
+            self.root = ET.Element(SDX_SUNSPEC_DATA, attrib=attr)
+        else:
+            self.root = ET.SubElement(parent, SDX_SUNSPEC_DATA, attrib=attr)
+
+        for d in self.device_data:
+            d.to_xml(self.root)
+
+    def to_xml_str(self, pretty_print=False):
 
         attr = {}
 
