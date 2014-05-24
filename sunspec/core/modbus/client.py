@@ -281,6 +281,7 @@ class ModbusClientDeviceRTU(object):
 
     def __init__(self, slave_id, name, baudrate=None, parity=None, timeout=None, ctx=None, trace_func=None, max_count=REQ_COUNT_MAX):
         self.slave_id = slave_id
+        self.name = name
         self.client = None
         self.ctx = ctx
         self.trace_func = trace_func
@@ -524,6 +525,7 @@ class ModbusClientDeviceMapped(object):
     def __init__(self, slave_id, name, pathlist=None, max_count=None, ctx=None):
 
         self.slave_id = slave_id
+        self.name = name
         self.ctx = ctx
         self.modbus_map = None
 
