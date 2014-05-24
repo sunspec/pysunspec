@@ -57,7 +57,7 @@ class SunSpecData(object):
         elif element is not None:
             self.root = element
 
-        if self.root:
+        if self.root is not None:
             if self.root.tag != SDX_SUNSPEC_DATA:
                 raise SunSpecDataError("Unexpected root element: %s" % (self.root.tag))
 
