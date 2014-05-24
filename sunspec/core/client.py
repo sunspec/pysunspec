@@ -380,8 +380,6 @@ class SunSpecClientDevice(object):
                 setattr(self, name, model_class)
                 self.models.append(name)
 
-            self.device.read_points()
-
     def close(self):
         self.device.close()
 

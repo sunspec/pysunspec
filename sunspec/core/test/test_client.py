@@ -34,6 +34,7 @@ def test_sunspec_client_device_1(pathlist=None):
 
     try:
         d = client.SunSpecClientDevice(client.MAPPED, slave_id=1, name='mbmap_test_device_1.xml', pathlist = pathlist)
+        d.read()
 
         dp = device.Device()
         dp.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)

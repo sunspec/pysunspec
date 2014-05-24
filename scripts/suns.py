@@ -84,6 +84,9 @@ if __name__ == "__main__":
     if sd is not None:
         print '\nTimestamp: %s' % (time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()))
 
+        # read all models in the device
+        sd.read()
+
         for model in sd.device.models_list:
             if model.model_type.label:
                 label = '%s (%s)' % (model.model_type.label, str(model.id))
