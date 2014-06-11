@@ -111,27 +111,17 @@ class SunSpecData(object):
 
 class DeviceData(object):
 
-    def __init__(self, logger_id=None, man=None, mod=None, sn=None, timestamp=None, cid=None, device_id=None, ifc=None, namespace=None):
-
-        self.logger_id = logger_id
-        self.namespace = namespace
-        self.device_id = device_id
-        self.ifc = ifc
-        self.man = man
-        self.mod = mod
-        self.sn = sn
-        self.timestamp = timestamp
-        self.cid = cid
-        self.model_data = []
-
-        if timestamp:
-        	self.timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(timestamp))
-
     def model_add(self, model_id=None, index=None, namespace=None):
 
     	m = ModelData(model_id, namespace, index)
     	self.model_data.append(m)
     	return m
+
+    def timestamp_add(self, timestamp=None):
+
+        if timestamp is None:
+            timestamp = time.time()
+        self.timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(timestamp))
 
     def from_xml(self, element):
 
@@ -179,6 +169,22 @@ class DeviceData(object):
         for m in self.model_data:
             m.to_xml(e)
 
+    def __init__(self, logger_id=None, man=None, mod=None, sn=None, timestamp=None, cid=None, device_id=None, ifc=None, namespace=None):
+
+        self.logger_id = logger_id
+        self.namespace = namespace
+        self.device_id = device_id
+        self.ifc = ifc
+        self.man = man
+        self.mod = mod
+        self.sn = sn
+        self.timestamp = timestamp
+        self.cid = cid
+        self.model_data = []
+
+        if timestamp is not None:
+            self.timestamp_add(timestamp)
+
 class ModelData(object):
 
     def __init__(self, model_id=None, index=None, namespace=None):
@@ -198,7 +204,10 @@ class ModelData(object):
 
         self.model_id = element.attrib.get(SDX_MODEL_ID)
         self.namespace = element.attrib.get(SDX_MODEL_NAMESPACE)
-        self.index = element.attrib.get(SDX_MODEL_INDEX)
+        index = element.attrib.get(SDX_MODEL_INDEX)
+        if index is not None:
+            index = int(index)
+        self.index = index
         for p in element.findall('*'):
             if p.tag != SDX_POINT:
                 raise SunSpecDataError("Unexpected '%s' element in '%s' element" % (p.tag, element.tag))
@@ -210,7 +219,7 @@ class ModelData(object):
 
         attr = {SDX_MODEL_ID: str(self.model_id)}
 
-        if self.index:
+        if self.index > 1:
             attr[SDX_MODEL_INDEX] = self.index
         if self.namespace:
             attr[SDX_MODEL_NAMESPACE] = self.namespace
@@ -235,8 +244,14 @@ class PointData(object):
     def from_xml(self, element):
 
         self.point_id = element.attrib.get(SDX_POINT_ID)
-        self.index = element.attrib.get(SDX_POINT_INDEX)
-        self.sf = element.attrib.get(SDX_POINT_SF)
+        index = element.attrib.get(SDX_POINT_INDEX)
+        if index is not None:
+            index = int(index)
+        self.index = index
+        sf = element.attrib.get(SDX_POINT_SF)
+        if sf is not None:
+            sf = int(sf)
+        self.sf = sf
         # self.units = element.attrib.get(SDX_POINT_UNITS)
         # self.desc = element.attrib.get(SDX_POINT_DESC)
         self.time = element.attrib.get(SDX_POINT_TIME)
@@ -248,13 +263,13 @@ class PointData(object):
 
         if self.index:
             attr[SDX_POINT_INDEX] = str(self.index)
-        if self.sf:
+        if self.sf is not None:
             attr[SDX_POINT_SF] = str(self.sf)
         if self.time:
             attr[SDX_POINT_TIME] = self.time
 
         e = ET.SubElement(parent, SDX_POINT, attrib=attr)
-        if self.value:
+        if self.value is not None:
             e.text = str(self.value)
 
 
