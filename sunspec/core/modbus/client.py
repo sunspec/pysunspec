@@ -533,7 +533,7 @@ class ModbusClientDeviceMapped(object):
             self.modbus_map = mbmap.ModbusMap(slave_id)
             self.modbus_map.from_xml(name, pathlist)
         else:
-            raise ModbusMapError('No modbus map file provided during initialization')
+            raise mbmap.ModbusMapError('No modbus map file provided during initialization')
 
     def close(self):
 
