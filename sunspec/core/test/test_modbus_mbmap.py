@@ -8,11 +8,16 @@
 import sys
 import os
 
+try:
+    import xml.etree.ElementTree as ET
+except:
+    import elementtree.ElementTree as ET
+
 import sunspec.core.device as device
 import sunspec.core.util as util
 import sunspec.core.modbus.mbmap as mbmap
 
-def test_modbus_mbmap_from_xml(pathlist=None):
+def test_modbus_mbmap_from_xml_file(pathlist=None):
 
     try:
         m1 = mbmap.ModbusMap()
@@ -41,9 +46,45 @@ def test_modbus_mbmap_from_xml(pathlist=None):
         return False
     return True
 
+def test_modbus_mbmap_from_xml_element(pathlist=None):
+
+    try:
+        filename = os.path.join(pathlist.path[1], 'mbmap_test_device_1.xml')
+
+        f = open(filename, 'r')
+        map_data = f.read()
+        f.close()
+        root = ET.fromstring(map_data)
+
+        m1 = mbmap.ModbusMap()
+        m1.from_xml(element=root)
+
+        m2 = mbmap.ModbusMap()
+        m2.from_xml('mbmap_test_device_1_a.xml', pathlist)
+        not_equal =  m1.not_equal(m2)
+        if not_equal:
+            raise Exception(not_equal)
+
+        m3 = mbmap.ModbusMap()
+        m3.from_xml('mbmap_test_device_1_b.xml', pathlist)
+        not_equal =  m1.not_equal(m3)
+        if not_equal:
+            raise Exception(not_equal)
+
+        m4 = mbmap.ModbusMap()
+        m4.from_xml('mbmap_test_device_1_c.xml', pathlist)
+        not_equal =  m1.not_equal(m4)
+        if not_equal:
+            raise Exception(not_equal)
+
+    except Exception, e:
+        print '*** Failure test_modbus_mbmap_from_xml: %s' % str(e)
+        return False
+    return True
+
 tests = [
-    test_modbus_mbmap_from_xml,
-]
+    test_modbus_mbmap_from_xml_file,
+    test_modbus_mbmap_from_xml_element,]
 
 def test_all(pathlist=None, stop_on_failure=True):
 

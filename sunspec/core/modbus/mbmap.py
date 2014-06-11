@@ -39,6 +39,7 @@ MBMAP_REGS_TYPE_HEX_STRING = 'hexstr'
 MBMAP_BASE_ADDR_DEFAULT = 40000
 
 func_value = {MBMAP_FUNC_INPUT: 4, MBMAP_FUNC_HOLDING: 3}
+func_name = {4: MBMAP_FUNC_INPUT, 3: MBMAP_FUNC_HOLDING}
 
 class ModbusMapError(Exception):
     pass
@@ -86,20 +87,25 @@ class ModbusMap(object):
                 pass
             raise ModbusMapError('Error loading map file: %s' % str(e))
 
-    def from_xml(self, filename, pathlist=None):
+    def from_xml(self, filename=None, pathlist=None, element=None):
 
         offset = 0
         next_offset = offset
 
         try:
-            if pathlist is not None:
-                map_data = pathlist.read(filename)
-            else:
-                f = open(filename, 'r')
-                map_data = f.read()
-                f.close()
+            if filename is not None:
+                if pathlist is not None:
+                    map_data = pathlist.read(filename)
+                else:
+                    f = open(filename, 'r')
+                    map_data = f.read()
+                    f.close()
 
-            root = ET.fromstring(map_data)
+                root = ET.fromstring(map_data)
+            elif element is not None:
+                root = element
+            else:
+                raise ModbusMapError('Root element not provided')
 
             self.type = root.attrib.get(MBMAP_FUNC, MBMAP_FUNC_HOLDING)
             self.base_addr = root.attrib.get(MBMAP_ADDR, 40000)
@@ -180,8 +186,11 @@ class ModbusMap(object):
                         else:
                             data += c
                     # fill remainder of string with nulls
-                    # if regs_len > text_len:
-                    #     data += struct.pack(str(regs_len - text_len) + 's', '')
+                    regs_len = rlen * 2
+                    if regs_len > text_len:
+                        if data is None:
+                            data = ''
+                        data += struct.pack(str(regs_len - text_len) + 's', '')
                 else:
                     raise ModbusMapError('Unknown type at offset %d' % (offset))
 
@@ -198,12 +207,63 @@ class ModbusMap(object):
         except Exception, e:
             raise ModbusMapError('Error loading %s (%s) at offset %d - %s' % (filename, pathlist, offset, str(e)))
 
+    def to_xml(self, parent=None, no_data=False):
+
+        attr = {}
+        attr[MBMAP_ADDR] = str(self.base_addr)
+        attr[MBMAP_FUNC] =  func_name.get(self.func, MBMAP_FUNC_HOLDING)
+ 
+        if parent is None:
+            element = ET.Element(MBMAP_ROOT, attrib=attr)
+        else:
+            element = ET.SubElement(parent, MBMAP_ROOT, attrib=attr)
+
+        for regs in self.regs:
+            e = ET.SubElement(element, MBMAP_REGS, attrib={MBMAP_REGS_OFFSET: str(regs.offset), MBMAP_REGS_LEN: str(regs.count)})
+
+            if no_data is False:
+                s = ''
+                for d in regs.data:
+                    s += '%02x' % ord(d)
+                e.text = s
+
+        return element
+
+    def regs_add(self, addr=None, offset=None, count=1, access=MBMAP_REGS_ACCESS_RW):
+
+        if addr is not None:
+            if addr < self.base_addr:
+                raise ModbusMapError('Address out of range')
+            offset = addr - self.base_addr
+
+        if len(self.regs) > 0:
+            last_regs = self.regs[-1]
+            last_regs_next = last_regs.offset + last_regs.count
+        else:
+            last_regs = None
+            last_regs_next = 0
+
+        if offset < last_regs_next:
+            raise ModbusMapError('Register offsets must be in ascending order with no overlap %d  %d' % (offset, last_regs_next))
+
+        data = struct.pack(str(count * 2) + 's', '')
+
+        if last_regs is None or offset > last_regs_next:
+            mmr = ModbusMapRegs(offset, count, data, access)
+            self.regs.append(mmr)
+        # append to last register block
+        else:
+            mmr = last_regs
+            last_regs.append(offset, count, data, access)
+
+        return mmr
+
     def read(self, addr, count):
 
         data = ''
         count_remaining = count
 
-        offset = addr - self.base_addr
+        offset = addr - int(self.base_addr)
         for regs in self.regs:
             if count_remaining > 0:
                 regs_end_offset = regs.offset + regs.count
@@ -235,7 +295,7 @@ class ModbusMap(object):
             raise ModbusMapError('Data length not even number of bytes - addr: %d  data len: %d' % (addr, data_len))
 
         data_offset = 0
-        offset = addr - self.base_addr
+        offset = addr - int(self.base_addr)
         for regs in self.regs:
             if count_remaining > 0:
                 regs_end_offset = regs.offset + regs.count
