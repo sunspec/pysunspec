@@ -107,7 +107,11 @@ class ModbusMap(object):
             else:
                 raise ModbusMapError('Root element not provided')
 
-            self.type = root.attrib.get(MBMAP_FUNC, MBMAP_FUNC_HOLDING)
+            func = root.attrib.get(MBMAP_FUNC, MBMAP_FUNC_HOLDING)
+            value = func_value.get(func)
+            if value is None:
+                raise ModbusMapError('Unsupported function: %s' % (func))
+            self.func = value
             self.base_addr = root.attrib.get(MBMAP_ADDR, 40000)
 
             for r in root.findall(MBMAP_REGS):
@@ -258,10 +262,13 @@ class ModbusMap(object):
 
         return mmr
 
-    def read(self, addr, count):
+    def read(self, addr, count, op=None):
 
         data = ''
         count_remaining = count
+
+        if op and op != self.func:
+            raise ModbusMapError('Data read error - function mismatch: request func = %s map func = %s' % (str(op), str(self.func)))
 
         offset = addr - int(self.base_addr)
         for regs in self.regs:
