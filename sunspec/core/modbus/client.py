@@ -539,10 +539,10 @@ class ModbusClientDeviceMapped(object):
 
         pass
 
-    def read(self, addr, count):
+    def read(self, addr, count, op=None):
 
         if self.modbus_map is not None:
-            return self.modbus_map.read(addr, count)
+            return self.modbus_map.read(addr, count, op)
         else:
             raise ModbusClientError('No modbus map set for device')
 
