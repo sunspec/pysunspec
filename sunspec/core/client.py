@@ -84,6 +84,11 @@ class ClientDevice(device.Device):
 
         error = ''
 
+        connect = False
+        if self.modbus_device and type(self.modbus_device) == modbus.ModbusClientDeviceTCP:
+            self.modbus_device.connect()
+            connect = True
+
         if self.base_addr is None:
             for addr in self.base_addr_list:
                 # print 'trying base address %s' % (addr)
@@ -124,13 +129,16 @@ class ClientDevice(device.Device):
                     if data and len(data) == 2:
                         model_id = util.data_to_u16(data)
                     else:
-                        return
+                        break
                 else:
-                    return
+                    break
         else:
             if not error:
                 error = 'Unknown error'
             raise SunSpecClientError(error)
+
+        if connect:
+            self.modbus_device.disconnect()
 
 class ClientModel(device.Model):
 
