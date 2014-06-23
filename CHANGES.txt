@@ -2,6 +2,19 @@
  pySunSpec Release Notes
 ========================
 
-Version 1.0.3   10 Jan 2014
+Version 1.0.4   21 Jun 2014
 ---------------------------
-- Initial release.
+- Updated to not read point values of all models on client device creation. Model point values need to be read explicitly after creation either at the device or model level. Speeds up device creation/scan significantly for devices with multiple models.
+- Updated connection usage for device scan for Modbus TCP devices.
+- Augmented mbmap functionality.
+- Augmented SunSpec data record functionality.
+- Corrected uninitialized point type variable when processing model types.
+- Added support for count and uint64 types.
+- Added unit test to read all smdx model files in the model directory.
+
+--- Include latest SMDX model definitions which have been updated with the following changes:
+- Common model documentation typo (fix the description for Opt and Vr to correct length of 16 chars)
+- Update SC and MPPT models to use "count".
+- Changed the 'N' attribute to be of type count. (This does not effect device implementations, clients may treat 'count' as uint16)
+- Corrected model name attributes in model 201 and model 306.
+
