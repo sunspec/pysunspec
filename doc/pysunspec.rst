@@ -298,7 +298,7 @@ Update a portion of volt_var curve 2 and make active curve::
     >>> d.volt_var.curve[2].VAr1 = 100
     >>> d.volt_var.curve[2].V2 = 97
     >>> d.volt_var.curve[2].VAr2 = 0
-    >>> d.volt_var.curve[2].ActCrv = 2
+    >>> d.volt_var.curve.ActCrv = 2
     >>> d.volt_var.write()
     >>>
 
