@@ -540,6 +540,7 @@ class ModelType(object):
         self.notes = None
         self.fixed_block = None
         self.repeating_block = None
+        self.symbols = {}
 
     def from_smdx(self, element):
 
@@ -558,7 +559,7 @@ class ModelType(object):
                 self.len = int(self.len)
 
                 for b in m.findall(smdx.SMDX_BLOCK):
-                    block = BlockType()
+                    block = BlockType(model_type=self)
                     block.from_smdx(b)
 
                     if block.type == suns.SUNS_BLOCK_FIXED:
@@ -597,7 +598,13 @@ class ModelType(object):
                         point_type.from_smdx(e, strings=True)
 
         if self.fixed_block is None:
-            self.fixed_block = BlockType(suns.SUNS_BLOCK_FIXED)
+            self.fixed_block = BlockType(suns.SUNS_BLOCK_FIXED, model_type=self)
+
+    def symbol_add(self, symbol):
+        self.symbols[symbol.id] = symbol
+
+    def symbol_get(self, sid):
+        return self.symbols.get(sid)
 
     def not_equal(self, model_type):
 
@@ -642,7 +649,8 @@ class ModelType(object):
 
 class BlockType(object):
 
-    def __init__(self, btype=None, blen=0, name=None):
+    def __init__(self, btype=None, blen=0, name=None, model_type=None):
+        self.model_type = model_type
         self.type = btype
         self.len = blen
         self.name = name
@@ -666,7 +674,7 @@ class BlockType(object):
 
         # process points
         for e in element.findall(smdx.SMDX_POINT):
-            pt = PointType()
+            pt = PointType(block_type=self)
             pt.from_smdx(e)
 
             if self.points.get(pt.id) is not None:
@@ -706,14 +714,16 @@ class BlockType(object):
 
 class PointType(object):
 
-    def __init__(self, pid=None, offset=None, ptype=None, plen=None, mandatory=None, access=None, sf=None):
-
+    def __init__(self, pid=None, offset=None, ptype=None, plen=None, mandatory=None, access=None, sf=None,
+                 block_type=None):
+        self.block_type = block_type
         self.id = pid
         self.offset = offset
         self.type = ptype
         self.len = plen
         self.mandatory = mandatory
         self.access = access
+        self.units = None
         self.sf = sf
         self.label = None
         self.description = None
@@ -723,6 +733,7 @@ class PointType(object):
         self.data_to = None
         self.to_data = None
         self.to_value = None
+        self.symbols = []
 
     def from_smdx(self, element, strings=False):
 
@@ -733,6 +744,15 @@ class PointType(object):
                 self.description = e.text
             elif e.tag == smdx.SMDX_NOTES:
                 self.notes = e.text
+            elif e.tag == smdx.SMDX_SYMBOL:
+                sid = e.attrib.get(smdx.SMDX_ATTR_ID)
+                symbol = self.block_type.model_type.symbol_get(sid)
+                if symbol is None:
+                    symbol = Symbol()
+                    symbol.from_smdx(e, strings)
+                    self.block_type.model_type.symbol_add(symbol)
+                    self.symbols.append(symbol)
+                symbol.from_smdx(e, strings)
 
         if strings is False:
             self.id = element.attrib.get(smdx.SMDX_ATTR_ID)
@@ -780,10 +800,11 @@ class PointType(object):
         if len(self.__dict__) != len(point_type.__dict__):
             return "PointType '%s' attribute count not equal': %s  %s" % (str(self.id))
         for k, v in self.__dict__.items():
-            value = point_type.__dict__.get(k)
-            if v is not None and value is not None:
-                if value is None or v != value:
-                    return "PointType '%s' attribute '%s' not equal: %s  %s" % (str(self.id), str(k), str(v), str(value))
+            if k != 'block_type':
+                value = point_type.__dict__.get(k)
+                if v is not None and value is not None:
+                    if value is None or v != value:
+                        return "PointType '%s' attribute '%s' not equal: %s  %s" % (str(self.id), str(k), str(v), str(value))
 
         return False
 
@@ -792,3 +813,31 @@ class PointType(object):
         return 'PointType: id = %s offset = %d type = %s len = %d sf = %s access = %s mandatory = %s' % \
             (self.id, self.offset, self.type, self.len, self.sf, self.access, self.mandatory)
 
+class Symbol(object):
+
+    def __init__(self, sid=None):
+        self.id = sid
+        self.value = None
+        self.label = None
+        self.description = None
+        self.notes = None
+
+    def from_smdx(self, element, strings=False):
+
+        for e in element.findall('*'):
+            if e.tag == smdx.SMDX_LABEL:
+                self.label = e.text
+            elif e.tag == smdx.SMDX_DESCRIPTION:
+                self.description = e.text
+            elif e.tag == smdx.SMDX_NOTES:
+                self.notes = e.text
+
+        if strings is False:
+            self.id = element.attrib.get(smdx.SMDX_ATTR_ID)
+            self.value = element.text
+            if self.id is None:
+                raise SunSpecError('Missing point id attribute')
+
+    def __str__(self):
+
+        return 'Symbol: id = %s value = %s' % (self.id, self.value)

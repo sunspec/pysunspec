@@ -23,6 +23,8 @@ SMDX_ATTR_ACCESS = 'access'
 SMDX_ATTR_SF = 'sf'
 SMDX_ATTR_UNITS = 'units'
 
+SMDX_SYMBOL = 'symbol'
+
 SMDX_STRINGS = 'strings'
 SMDX_LABEL = 'label'
 SMDX_DESCRIPTION = 'description'

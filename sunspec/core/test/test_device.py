@@ -28,10 +28,16 @@ test_device_pointtype_smdx_1 = """
       <point id="sunssf_2"      offset="1"    type="sunssf" />
       <point id="sunssf_3"      offset="2"    type="sunssf" />
       <point id="sunssf_4"      offset="3"    type="sunssf" />
-      <point id="int16_1"       offset="4"    type="int16"   sf="sunssf_1" />
-      <point id="int16_2"       offset="5"    type="int16"   sf="sunssf_2" />
-      <point id="int16_3"       offset="6"    type="int16"   sf="sunssf_3" />
-      <point id="int16_4"       offset="7"    type="int16"   sf="sunssf_4" />
+      <point id="int16_1"       offset="4"    type="int16"   sf="sunssf_1"  units="units_1" />
+        <symbol id="SYMBOL_1_1">1</symbol>
+        <symbol id="SYMBOL_1_2">2</symbol>
+        <symbol id="SYMBOL_1_3">3</symbol>
+      <point id="int16_2"       offset="5"    type="int16"   sf="sunssf_2"  units="units_2" />
+        <symbol id="SYMBOL_2_1">1</symbol>
+        <symbol id="SYMBOL_2_2">2</symbol>
+        <symbol id="SYMBOL_2_3">3</symbol>
+      <point id="int16_3"       offset="6"    type="int16"   sf="sunssf_3"  units="units_3" />
+      <point id="int16_4"       offset="7"    type="int16"   sf="sunssf_4"  units="units_4" />
       <point id="int16_5"       offset="8"    type="int16" />
       <point id="int16_u"       offset="9"    type="int16" />
       <point id="uint16_1"      offset="10"   type="uint16"  sf="sunssf_1" />
