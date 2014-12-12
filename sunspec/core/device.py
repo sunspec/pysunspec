@@ -275,7 +275,8 @@ class Point(object):
         if self.value_sf:
             self.value_base = int(round(float(v), abs(self.value_sf)) / math.pow(10, self.value_sf))
         else:
-            self.value_base = v
+            self.value_base = self.point_type.to_value(v)
+
         self.dirty = True
     
     value = property(value_getter, value_setter, None)
