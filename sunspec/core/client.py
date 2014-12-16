@@ -12,9 +12,9 @@ import sunspec.core.util as util
 import sunspec.core.suns as suns
 from sunspec.core.util import SunSpecError
 
-RTU = 'rtu'
-TCP = 'tcp'
-MAPPED = 'mapped'
+RTU = 'RTU'
+TCP = 'TCP'
+MAPPED = 'Mapped'
 
 PARITY_NONE = modbus.PARITY_NONE
 PARITY_EVEN = modbus.PARITY_EVEN
