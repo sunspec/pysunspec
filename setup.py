@@ -8,7 +8,7 @@
 from distutils.core import setup
 
 setup(name = 'pysunspec',
-      version = '1.0.4',
+      version = '1.0.5c',
       description = 'Python SunSpec Tools',
       author = ['Bob Fox'],
       author_email = ['bob.fox@loggerware.com'],

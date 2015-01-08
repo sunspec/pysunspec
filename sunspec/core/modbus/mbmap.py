@@ -17,6 +17,7 @@ MBMAP_ADDR = 'addr'
 MBMAP_FUNC = 'func'
 MBMAP_FUNC_INPUT = 'input'
 MBMAP_FUNC_HOLDING = 'holding'
+MBMAP_MAPID = 'mapid'
 MBMAP_REGS = 'regs'
 MBMAP_REGS_OFFSET = 'offset'
 MBMAP_REGS_LEN = 'len'
@@ -46,10 +47,11 @@ class ModbusMapError(Exception):
 
 class ModbusMap(object):
 
-    def __init__(self, slave_id=None, func=MBMAP_FUNC_HOLDING, base_addr=MBMAP_BASE_ADDR_DEFAULT):
+    def __init__(self, slave_id=None, func=MBMAP_FUNC_HOLDING, base_addr=MBMAP_BASE_ADDR_DEFAULT, mapid=None):
 
         self.slave_id = slave_id
         self.base_addr = base_addr
+        self.mapid = mapid
         self.regs = []
 
         value = func_value.get(func)
@@ -113,6 +115,7 @@ class ModbusMap(object):
                 raise ModbusMapError('Unsupported function: %s' % (func))
             self.func = value
             self.base_addr = root.attrib.get(MBMAP_ADDR, 40000)
+            self.mapdid = root.attrib.get(MBMAP_MAPID)
 
             for r in root.findall(MBMAP_REGS):
                 offset = r.attrib.get(MBMAP_REGS_OFFSET)
@@ -216,6 +219,8 @@ class ModbusMap(object):
         attr = {}
         attr[MBMAP_ADDR] = str(self.base_addr)
         attr[MBMAP_FUNC] =  func_name.get(self.func, MBMAP_FUNC_HOLDING)
+        if self.mapid is not None:
+            attr[MBMAP_MAPID] = str(self.mapid)
  
         if parent is None:
             element = ET.Element(MBMAP_ROOT, attrib=attr)
