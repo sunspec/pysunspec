@@ -62,10 +62,16 @@ SUNS_BLOCK_REPEATING = 'repeating'
 SUNS_END_MODEL_ID = 0xffff
 
 def suns_to_int(x):
-    return int(x, 0)
+    try:
+        return int(x, 0)
+    except TypeError:
+        return int(x)
 
 def suns_to_long(x):
-    return long(x, 0)
+    try:
+        return long(x, 0)
+    except TypeError:
+        return long(x)
 
 def suns_to_str(s):
     return str(s)
