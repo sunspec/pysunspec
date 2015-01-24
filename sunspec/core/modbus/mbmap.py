@@ -115,7 +115,7 @@ class ModbusMap(object):
                 raise ModbusMapError('Unsupported function: %s' % (func))
             self.func = value
             self.base_addr = root.attrib.get(MBMAP_ADDR, 40000)
-            self.mapdid = root.attrib.get(MBMAP_MAPID)
+            self.mapid = root.attrib.get(MBMAP_MAPID)
 
             for r in root.findall(MBMAP_REGS):
                 offset = r.attrib.get(MBMAP_REGS_OFFSET)
