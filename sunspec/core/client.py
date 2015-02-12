@@ -48,7 +48,7 @@ class ClientDevice(device.Device):
                 else:
                     raise SunSpecClientError('Map file required for mapped device')
         except modbus.ModbusClientError, e:
-            raise SunSpecClientError('Modbus error: %s' % (e))
+            raise SunSpecClientError('Modbus error: %s' % str(e))
 
     def close(self):
 
@@ -63,7 +63,7 @@ class ClientDevice(device.Device):
             else:
                 raise SunSpecClientError('No modbus device set for SunSpec device')
         except modbus.ModbusClientError, e:
-            raise SunSpecClientError('Modbus read error: %s' % (e))
+            raise SunSpecClientError('Modbus read error: %s' % str(e))
 
     def write(self, addr, data):
 
@@ -73,7 +73,7 @@ class ClientDevice(device.Device):
             else:
                 raise SunSpecClientError('No modbus device set for SunSpec device')
         except modbus.ModbusClientError, e:
-            raise SunSpecClientError('Modbus write error: %s' % (e))
+            raise SunSpecClientError('Modbus write error: %s' % str(e))
 
     def read_points(self):
 
@@ -195,7 +195,7 @@ class ClientModel(device.Model):
             except SunSpecError, e:
                 raise SunSpecClientError(e)
             except modbus.ModbusClientError, e:
-                raise SunSpecClientError('Modbus error: %s' % (e))
+                raise SunSpecClientError('Modbus error: %s' % str(e))
             except:
                 raise
 

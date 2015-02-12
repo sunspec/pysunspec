@@ -18,6 +18,7 @@ MBMAP_FUNC = 'func'
 MBMAP_FUNC_INPUT = 'input'
 MBMAP_FUNC_HOLDING = 'holding'
 MBMAP_MAPID = 'mapid'
+MBMAP_TIME = 'time'
 MBMAP_REGS = 'regs'
 MBMAP_REGS_OFFSET = 'offset'
 MBMAP_REGS_LEN = 'len'
@@ -47,11 +48,12 @@ class ModbusMapError(Exception):
 
 class ModbusMap(object):
 
-    def __init__(self, slave_id=None, func=MBMAP_FUNC_HOLDING, base_addr=MBMAP_BASE_ADDR_DEFAULT, mapid=None):
+    def __init__(self, slave_id=None, func=MBMAP_FUNC_HOLDING, base_addr=MBMAP_BASE_ADDR_DEFAULT, mapid=None, time=None):
 
         self.slave_id = slave_id
         self.base_addr = base_addr
         self.mapid = mapid
+        self.time = time
         self.regs = []
 
         value = func_value.get(func)
@@ -116,6 +118,7 @@ class ModbusMap(object):
             self.func = value
             self.base_addr = root.attrib.get(MBMAP_ADDR, 40000)
             self.mapid = root.attrib.get(MBMAP_MAPID)
+            self.time = root.attrib.get(MBMAP_TIME)
 
             for r in root.findall(MBMAP_REGS):
                 offset = r.attrib.get(MBMAP_REGS_OFFSET)

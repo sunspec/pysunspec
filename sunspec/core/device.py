@@ -752,6 +752,7 @@ class PointType(object):
                     symbol = Symbol()
                     symbol.from_smdx(e, strings)
                     self.block_type.model_type.symbol_add(symbol)
+                if self.symbol_get(sid) is None:
                     self.symbols.append(symbol)
                 symbol.from_smdx(e, strings)
 
@@ -790,6 +791,11 @@ class PointType(object):
                 self.len, self.is_impl, self.data_to, self.to_data, self.to_value, self.value_default = info
                 if plen is not None:
                     self.len = int(plen)
+
+    def symbol_get(self, sid):
+        for symbol in self.symbols:
+            if symbol.id == sid:
+                return symbol
 
     def not_equal(self, point_type):
 

@@ -104,7 +104,7 @@ class ModbusClientRTU(object):
             if self.serial is not None:
                 self.serial.close()
                 self.serial = None
-            raise ModbusClientError('Serial init error: %s' % (e))
+            raise ModbusClientError('Serial init error: %s' % str(e))
 
     def close(self):
 
@@ -112,7 +112,7 @@ class ModbusClientRTU(object):
             if self.serial is not None:
                 self.serial.close()
         except Exception, e:
-            raise ModbusClientError('Serial close error: %s' % (e))
+            raise ModbusClientError('Serial close error: %s' % str(e))
 
     def add_device(self, slave_id, device):
 
@@ -147,7 +147,7 @@ class ModbusClientRTU(object):
         try:
             self.serial.write(req)
         except Exception, e:
-            raise ModbusClientError('Serial write error: %s' % (e))
+            raise ModbusClientError('Serial write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
@@ -225,7 +225,7 @@ class ModbusClientRTU(object):
         try:
             self.serial.write(req)
         except Exception, e:
-            raise ModbusClientError('Serial write error: %s' % (e))
+            raise ModbusClientError('Serial write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
@@ -343,17 +343,20 @@ class ModbusClientDeviceTCP(object):
 
         self.disconnect()
 
-    def connect(self, timeout=TCP_DEFAULT_TIMEOUT):
+    def connect(self, timeout=None):
 
         if self.socket:
             self.disconnect()
+
+        if timeout is None:
+            timeout = self.timeout
 
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.settimeout(timeout)
             self.socket.connect((self.ipaddr, self.ipport))
         except Exception, e:
-            raise ModbusClientError('Connection error: %s' % (e))
+            raise ModbusClientError('Connection error: %s' % str(e))
 
     def disconnect(self):
 
@@ -382,7 +385,7 @@ class ModbusClientDeviceTCP(object):
         try:
             self.socket.sendall(req)
         except Exception, e:
-            raise ModbusClientError('Socket write error: %s' % (e))
+            raise ModbusClientError('Socket write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
@@ -466,7 +469,7 @@ class ModbusClientDeviceTCP(object):
         try:
             self.socket.sendall(req)
         except Exception, e:
-            raise ModbusClientError('Socket write error: %s' % (e))
+            raise ModbusClientError('Socket write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)

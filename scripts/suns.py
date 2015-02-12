@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     try:
         if options.t == 'tcp':
-            sd = client.SunSpecClientDevice(client.TCP, 1, ipaddr=options.i, ipport=options.P, timeout=options.T)
+            sd = client.SunSpecClientDevice(client.TCP, options.a, ipaddr=options.i, ipport=options.P, timeout=options.T)
         elif options.t == 'rtu':
             sd = client.SunSpecClientDevice(client.RTU, options.a, name=options.p, baudrate=options.b, timeout=options.T)
         elif options.t == 'mapped':
