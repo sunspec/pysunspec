@@ -224,6 +224,8 @@ class ModbusMap(object):
         attr[MBMAP_FUNC] =  func_name.get(self.func, MBMAP_FUNC_HOLDING)
         if self.mapid is not None:
             attr[MBMAP_MAPID] = str(self.mapid)
+        if self.time is not None:
+            attr[MBMAP_TIME] = str(self.time)
  
         if parent is None:
             element = ET.Element(MBMAP_ROOT, attrib=attr)
