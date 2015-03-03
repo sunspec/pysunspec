@@ -30,6 +30,7 @@ SUNS_TYPE_IPV6ADDR = 'ipv6addr'
 SUNS_TYPE_FLOAT32 = 'float32'
 SUNS_TYPE_STRING = 'string'
 SUNS_TYPE_SUNSSF = 'sunssf'
+SUNS_TYPE_EUI48 = 'eui48'
 
 SUNS_ACCESS_R = 'r'
 SUNS_ACCESS_RW = 'rw'
@@ -55,6 +56,7 @@ SUNS_UNIMPL_IPV6ADDR = 0
 SUNS_UNIMPL_FLOAT32 = 0x7fc00000
 SUNS_UNIMPL_STRING = 0
 SUNS_UNIMPL_SUNSSF = -32768
+SUNS_UNIMPL_EUI48 = 0
 
 SUNS_BLOCK_FIXED = 'fixed'
 SUNS_BLOCK_REPEATING = 'repeating'
@@ -140,6 +142,9 @@ def suns_is_impl_string(value):
 def suns_is_impl_sunssf(value):
     return not value == SUNS_UNIMPL_SUNSSF
 
+def suns_is_impl_eui48(value):
+    return not value == SUNS_UNIMPL_EUI48
+
 # each entry contains: (len in registers, uniplemented value, data to value function, value to data function, to value function, default value)
 suns_point_type_info = {
     SUNS_TYPE_INT16: (1, suns_is_impl_int16, util.data_to_s16, util.s16_to_data, suns_to_int, 0),
@@ -161,5 +166,6 @@ suns_point_type_info = {
     SUNS_TYPE_IPV6ADDR: (8, suns_is_impl_ipv6addr, util.data_to_ipv6addr, util.ipv6addr_to_data, suns_to_str, 0),
     SUNS_TYPE_FLOAT32: (2, suns_is_impl_float32, util.data_to_float, util.float_to_data32, suns_to_float, 0),
     SUNS_TYPE_STRING: (None, suns_is_impl_string, util.data_to_str, util.str_to_data, suns_to_str, ''),
-    SUNS_TYPE_SUNSSF: (1, suns_is_impl_sunssf, util.data_to_s16, util.s16_to_data, suns_to_int, 0)
+    SUNS_TYPE_SUNSSF: (1, suns_is_impl_sunssf, util.data_to_s16, util.s16_to_data, suns_to_int, 0),
+    SUNS_TYPE_EUI48: (4, suns_is_impl_eui48, util.data_to_s64, util.s64_to_data, suns_to_long, 0)
 }

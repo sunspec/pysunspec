@@ -96,7 +96,10 @@ class Device(object):
 
                 # move address past model id and length (even though address is not real in the case)
                 model = Model(self, model_id, addr + 2, model_len)
-                model.load()
+                try:
+                    model.load()
+                except Exception, e:
+                    model.load_error = str(e)
                 model.from_pics(m)
                 self.add_model(model)
 
@@ -350,6 +353,7 @@ class Model(object):
         self.points = {}               # fixed block non-scale factor points
         self.points_sf = {}            # fixed block scale factor points
         self.blocks = []
+        self.load_error = None
 
     def load(self, block_class=Block, point_class=Point):
 

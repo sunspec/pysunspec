@@ -6,6 +6,7 @@
 """
 
 import os
+import time
 import sunspec.core.modbus.client as modbus
 import sunspec.core.device as device 
 import sunspec.core.util as util
@@ -80,7 +81,7 @@ class ClientDevice(device.Device):
         for model in self.models_list:
             model.read_points()
 
-    def scan(self):
+    def scan(self, progress=None, delay=None):
 
         error = ''
 
@@ -88,6 +89,9 @@ class ClientDevice(device.Device):
         if self.modbus_device and type(self.modbus_device) == modbus.ModbusClientDeviceTCP:
             self.modbus_device.connect()
             connect = True
+
+            if delay is not None:
+                time.sleep(delay)
 
         if self.base_addr is None:
             for addr in self.base_addr_list:
@@ -105,6 +109,9 @@ class ClientDevice(device.Device):
                     if not error:
                         error = str(e)
 
+                if delay is not None:
+                    time.sleep(delay)
+
         if self.base_addr:
             # print 'base address = %s' % (self.base_addr)
             model_id = util.data_to_u16(data[4:6])
@@ -115,13 +122,20 @@ class ClientDevice(device.Device):
                 # count for the end model id
                 data = self.read(addr + 1, 1)
                 if data and len(data) == 2:
+                    if progress is not None:
+                        cont = progress('Scanning model %s' % (model_id))
+                        if not cont:
+                            raise SunSpecClientError('Device scan terminated')
                     model_len = util.data_to_u16(data)
                     # print 'model_id = %s  model_len = %s' % (model_id, model_len)
 
                     # move address past model id and length
                     model = ClientModel(self, model_id, addr + 2, model_len)
                     # print 'loading model %s at %d' % (model_id, addr + 2)
-                    model.load()
+                    try:
+                        model.load()
+                    except Exception, e:
+                        model.load_error = str(e)
                     self.add_model(model)
 
                     addr += model_len + 2
@@ -132,6 +146,10 @@ class ClientDevice(device.Device):
                         break
                 else:
                     break
+
+                if delay is not None:
+                    time.sleep(delay)
+
         else:
             if not error:
                 error = 'Unknown error'
@@ -332,9 +350,13 @@ def model_class_get(model_id):
         class_ = type(class_name, (SunSpecClientModelBase,), {'__init__' : class_init})
         globals()[class_name] = class_
 
-    model_type = device.model_type_get(model_id)
+    setattr(class_, 'points', [])
+    model_type = None
+    try:
+        model_type = device.model_type_get(model_id)
+    except Exception, e:
+        setattr(class_, 'load_error', str(e))
     if model_type is not None:
-        setattr(class_, 'points', [])
         for point_type in model_type.fixed_block.points_list:
             if point_type.type != suns.SUNS_TYPE_SUNSSF and point_type.type != suns.SUNS_TYPE_PAD:
                 add_property(class_, point_type.id, None)
@@ -358,20 +380,23 @@ def model_class_get(model_id):
 class SunSpecClientDevice(object):
 
     def __init__(self, device_type, slave_id=None, name=None, pathlist = None, baudrate=None, parity=None, ipaddr=None, ipport=None,
-                 timeout=None, trace=False):
+                 timeout=None, trace=False, scan_progress=None, scan_delay=None):
 
         # super(self.__class__, self).__init__(device_type, slave_id, name, pathlist, baudrate, parity, ipaddr, ipport)
         self.device = ClientDevice(device_type, slave_id, name, pathlist, baudrate, parity, ipaddr, ipport, timeout, trace)
         self.models = []
 
         # scan device models
-        self.device.scan()
+        self.device.scan(progress=scan_progress, delay=scan_delay)
 
         # create named attributes for each model
         for model in self.device.models_list:
             model_id = str(model.id)
             c = model_class_get(model_id)
-            name = model.model_type.name
+            if model.model_type is not None:
+                name = model.model_type.name
+            else:
+                name = 'model_' + model_id
             model_class = c(model, name)
             existing = getattr(self, name, None)
             # if model id already defined

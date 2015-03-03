@@ -17,6 +17,8 @@ MBMAP_ADDR = 'addr'
 MBMAP_FUNC = 'func'
 MBMAP_FUNC_INPUT = 'input'
 MBMAP_FUNC_HOLDING = 'holding'
+MBMAP_NS = 'ns'
+MBMAP_LID = 'lid'
 MBMAP_MAPID = 'mapid'
 MBMAP_TIME = 'time'
 MBMAP_REGS = 'regs'
@@ -48,10 +50,13 @@ class ModbusMapError(Exception):
 
 class ModbusMap(object):
 
-    def __init__(self, slave_id=None, func=MBMAP_FUNC_HOLDING, base_addr=MBMAP_BASE_ADDR_DEFAULT, mapid=None, time=None):
+    def __init__(self, slave_id=None, func=MBMAP_FUNC_HOLDING, base_addr=MBMAP_BASE_ADDR_DEFAULT, ns=None, lid=None,
+                 mapid=None, time=None):
 
         self.slave_id = slave_id
         self.base_addr = base_addr
+        self.ns = ns
+        self.lid = lid
         self.mapid = mapid
         self.time = time
         self.regs = []
@@ -117,6 +122,8 @@ class ModbusMap(object):
                 raise ModbusMapError('Unsupported function: %s' % (func))
             self.func = value
             self.base_addr = root.attrib.get(MBMAP_ADDR, 40000)
+            self.ns = root.attrib.get(MBMAP_NS)
+            self.lid = root.attrib.get(MBMAP_LID)
             self.mapid = root.attrib.get(MBMAP_MAPID)
             self.time = root.attrib.get(MBMAP_TIME)
 
@@ -222,6 +229,10 @@ class ModbusMap(object):
         attr = {}
         attr[MBMAP_ADDR] = str(self.base_addr)
         attr[MBMAP_FUNC] =  func_name.get(self.func, MBMAP_FUNC_HOLDING)
+        if self.ns is not None:
+            attr[MBMAP_NS] = str(self.ns)
+        if self.lid is not None:
+            attr[MBMAP_LID] = str(self.lid)
         if self.mapid is not None:
             attr[MBMAP_MAPID] = str(self.mapid)
         if self.time is not None:
