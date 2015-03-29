@@ -167,5 +167,5 @@ suns_point_type_info = {
     SUNS_TYPE_FLOAT32: (2, suns_is_impl_float32, util.data_to_float, util.float_to_data32, suns_to_float, 0),
     SUNS_TYPE_STRING: (None, suns_is_impl_string, util.data_to_str, util.str_to_data, suns_to_str, ''),
     SUNS_TYPE_SUNSSF: (1, suns_is_impl_sunssf, util.data_to_s16, util.s16_to_data, suns_to_int, 0),
-    SUNS_TYPE_EUI48: (3, suns_is_impl_eui48, util.data_to_eui48, util.eui48_to_data, suns_to_str, 0)
+    SUNS_TYPE_EUI48: (4, suns_is_impl_eui48, util.data_to_eui48, util.eui48_to_data, suns_to_str, 0)
 }

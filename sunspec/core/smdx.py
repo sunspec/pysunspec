@@ -50,6 +50,7 @@ SMDX_TYPE_IPV6ADDR = 'ipv6addr'
 SMDX_TYPE_FLOAT32 = 'float32'
 SMDX_TYPE_STRING = 'string'
 SMDX_TYPE_SUNSSF = 'sunssf'
+SMDX_TYPE_EUI48 = 'eui48'
 
 SMDX_ACCESS_R = 'r'
 SMDX_ACCESS_RW = 'rw'
@@ -94,7 +95,8 @@ smdx_point_types = {
     SMDX_TYPE_IPV6ADDR: suns.SUNS_TYPE_IPV6ADDR,
     SMDX_TYPE_FLOAT32: suns.SUNS_TYPE_FLOAT32,
     SMDX_TYPE_STRING: suns.SUNS_TYPE_STRING,
-    SMDX_TYPE_SUNSSF: suns.SUNS_TYPE_SUNSSF
+    SMDX_TYPE_SUNSSF: suns.SUNS_TYPE_SUNSSF,
+    SMDX_TYPE_EUI48: suns.SUNS_TYPE_EUI48
 }
 
 def model_id_to_filename(model_id):

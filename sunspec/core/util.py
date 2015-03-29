@@ -45,7 +45,7 @@ def data_to_ipv6addr(data):
     return addr[0]
 
 def data_to_eui48(data):
-    return '%02X:%02X:%02X:%02X:%02X:%02X' % (ord(data[0]), ord(data[1]), ord(data[2]), ord(data[3]), ord(data[4]), ord(data[5]))
+    return '%02X:%02X:%02X:%02X:%02X:%02X' % (ord(data[2]), ord(data[3]), ord(data[4]), ord(data[5]), ord(data[6]), ord(data[7]))
 
 try:
     float('nan')
@@ -122,7 +122,7 @@ def str_to_data(s, slen=None):
     return struct.pack(str(slen) + 's', s)
 
 def eui48_to_data(eui48):
-    return (eui48.replace(':', '') + '0000').decode('hex')
+    return ('0000' + eui48.replace(':', '')).decode('hex')
 
 """ Simple XML pretty print support function
 
