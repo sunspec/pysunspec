@@ -18,3 +18,16 @@ Version 1.0.4   21 Jun 2014
 - Changed the 'N' attribute to be of type count. (This does not effect device implementations, clients may treat 'count' as uint16)
 - Corrected model name attributes in model 201 and model 306.
 
+Version 1.0.5   7 Apr 2015
+---------------------------
+- Corrected curve example in documentation.
+- Added SMDX symbol support.
+- Updated setting of point base value based on type.
+- Updated client interface type strings.
+- Updated ModbusMap to support 'mapid' attribute.
+- Corrected suns integer and long conversion to handle non-string arguments.
+- Added support for eui48 (MAC) SunSpec type.
+
+--- Include latest SMDX model definitions which have been updated with the following changes:
+- Corrected MAC address point in model 11.
+- Added storage models 801, 802, 803.
