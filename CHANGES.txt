@@ -31,3 +31,13 @@ Version 1.0.5   7 Apr 2015
 --- Include latest SMDX model definitions which have been updated with the following changes:
 - Corrected MAC address point in model 11.
 - Added storage models 801, 802, 803.
+
+Version 1.0.6   4 Jun 2015
+---------------------------
+- Corrected support for constant scale factor.
+- Updated to observe point address boundy on model read.
+
+--- Include latest SMDX model definitions which have been updated with the following changes:
+- Model 63001 - Added constant scale factor point and label info.
+- Model 63002 - Added label info.
+
