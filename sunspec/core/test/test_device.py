@@ -61,7 +61,7 @@ test_device_pointtype_smdx_1 = """
       <point id="uint32_1"      offset="34"   type="uint32"  sf="sunssf_5" />
       <point id="uint32_2"      offset="36"   type="uint32"  sf="sunssf_6" />
       <point id="uint32_3"      offset="38"   type="uint32"  sf="sunssf_7" />
-      <point id="uint32_4"      offset="40"   type="uint32" />
+      <point id="uint32_4"      offset="40"   type="uint32"  sf="1" />
       <point id="uint32_5"      offset="42"   type="uint32" />
       <point id="uint32_u"      offset="44"   type="uint32" />
       <point id="acc32"         offset="46"   type="acc32" />
@@ -513,6 +513,23 @@ def test_device_models_smdx(pathlist=None):
         raise Exception('Error scanning model directory %s: %s' % (path, e))
     return True
 
+def test_device_constant_sf(pathlist=None):
+    try:
+        d = device.Device()
+        d.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)
+
+        m = d.models[63001][0]
+        p = 'uint32_4'
+        value = m.points[p].value
+        expected_value = 190
+        if value != expected_value:
+            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+
+    except Exception, e:
+        print '*** Failure test_device_constant_sf: %s' % str(e)
+        return False
+    return True
+
 test_device_tests = [
     test_device_modeltype,
     test_device_pointtype,
@@ -524,7 +541,8 @@ test_device_tests = [
     test_device_value_get,
     test_device_value_set,
     test_device_common_len_65,
-    test_device_models_smdx
+    test_device_models_smdx,
+    test_device_constant_sf
 ]
 
 def test_all(pathlist=None, stop_on_failure=True):

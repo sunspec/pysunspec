@@ -21,6 +21,8 @@ from sunspec.core.util import SunSpecError
 # file path list
 file_pathlist = None
 
+MAX_READ_COUNT = 125
+
 class Device(object):
 
     def __init__(self, addr=suns.SUNS_BASE_ADDR_DEFAULT):
@@ -339,6 +341,12 @@ class Point(object):
             point_str += ' sf_value = %s' % (str(self.sf_point.value_base))
         return point_str
 
+class ScaleFactor(object):
+
+    def __init__(self, value=None):
+
+        self.value_base = value
+
 class Model(object):
 
     def __init__(self, device=None, mid=None, addr=0, mlen=0, index=1):
@@ -354,8 +362,12 @@ class Model(object):
         self.points_sf = {}            # fixed block scale factor points
         self.blocks = []
         self.load_error = None
+        self.read_blocks = []
 
     def load(self, block_class=Block, point_class=Point):
+
+        last_read_addr = self.addr
+        self.read_blocks.append(last_read_addr)
 
         self.model_type = model_type_get(self.id)
 
@@ -380,7 +392,11 @@ class Model(object):
 
                 for point_type in block_type.points_list:
                     if point_type.type != suns.SUNS_TYPE_PAD:
-                        point = point_class(block, point_type, str(int(block_addr) + int(point_type.offset)))
+                        point_addr = int(block_addr) + int(point_type.offset)
+                        point = point_class(block, point_type, str(point_addr))
+                        if point_addr + point.point_type.len - last_read_addr > MAX_READ_COUNT:
+                            last_read_addr = point_addr
+                            self.read_blocks.append(last_read_addr)
                         if point_type.type == suns.SUNS_TYPE_SUNSSF:
                             block.points_sf[point_type.id] = point
                         else:
@@ -390,8 +406,15 @@ class Model(object):
                 # resolve scale factor addresses for repeating block
                 for point in block.points_list:
                     if point.point_type.sf is not None and point.sf_point is None:
+                        # check for constant scale factor
+                        try:
+                            sf_value = int(point.point_type.sf)
+                            point.sf_point = ScaleFactor(sf_value)
+                        except Exception:
+                            pass
                         # try local repeating block first
-                        point.sf_point = block.points_sf.get(point.point_type.sf)
+                        if point.sf_point is None:
+                            point.sf_point = block.points_sf.get(point.point_type.sf)
                         if point.sf_point is None:
                             # if repeating block, try fixed block
                             if index > 0:

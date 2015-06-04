@@ -57,7 +57,6 @@ class ClientDevice(device.Device):
             self.modbus_device.close()
 
     def read(self, addr, count):
-
         try:
             if self.modbus_device is not None:
                 return self.modbus_device.read(addr, count)
@@ -173,7 +172,20 @@ class ClientModel(device.Model):
         if self.model_type is not None:
             # read current model
             try:
-                data = self.device.read(self.addr, self.len)
+                end_index = len(self.read_blocks)
+                if end_index == 1:
+                    data = self.device.read(self.addr, self.len)
+                else:
+                    data = ''
+                    index = 0
+                    while index < end_index:
+                        addr = self.read_blocks[index]
+                        index += 1
+                        if index < end_index:
+                            read_len = self.read_blocks[index] - addr
+                        else:
+                            read_len = self.addr + self.len - addr
+                        data += self.device.read(addr, read_len)
                 if data:
                     # print 'data len = ', len(data)
                     data_len = len(data)/2
@@ -272,11 +284,11 @@ class SunSpecClientModelBase(object):
         if point:
             point.value = value
 
-    def __getitem__(self, key):
+    def __getitem__(self, name):
         return self._get_property(name)
         # return self.__dict__.get(key, None)
 
-    def __setitem__(self, key, item):
+    def __setitem__(self, name, item):
         return self._set_property(name, item)
         # self.__dict__.set(key, item)
 
