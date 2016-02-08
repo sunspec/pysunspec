@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 """
-  Copyright (c) 2014, SunSpec Alliance
+  Copyright (c) 2016, SunSpec Alliance
   All Rights Reserved
 
 """
 from distutils.core import setup
 
 setup(name = 'pysunspec',
-      version = '1.0.6',
+      version = '1.0.7',
       description = 'Python SunSpec Tools',
       author = ['Bob Fox'],
       author_email = ['bob.fox@loggerware.com'],
