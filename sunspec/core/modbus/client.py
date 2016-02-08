@@ -64,7 +64,7 @@ def modbus_rtu_client_remove(name=None):
 
     global modbus_rtu_clients
 
-    if modbus_rtu_clients[name]:
+    if modbus_rtu_clients.get(name):
         del modbus_rtu_clients[name]
 
 class ModbusClientRTU(object):

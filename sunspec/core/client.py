@@ -47,8 +47,12 @@ class ClientDevice(device.Device):
                 if name is not None:
                     self.modbus_device = modbus.ModbusClientDeviceMapped(slave_id, name, pathlist, self)
                 else:
+                    if self.modbus_device is not None:
+                        self.modbus_device.close()
                     raise SunSpecClientError('Map file required for mapped device')
         except modbus.ModbusClientError, e:
+            if self.modbus_device is not None:
+                self.modbus_device.close()
             raise SunSpecClientError('Modbus error: %s' % str(e))
 
     def close(self):
@@ -398,32 +402,37 @@ class SunSpecClientDevice(object):
         self.device = ClientDevice(device_type, slave_id, name, pathlist, baudrate, parity, ipaddr, ipport, timeout, trace)
         self.models = []
 
-        # scan device models
-        self.device.scan(progress=scan_progress, delay=scan_delay)
+        try:
+            # scan device models
+            self.device.scan(progress=scan_progress, delay=scan_delay)
 
-        # create named attributes for each model
-        for model in self.device.models_list:
-            model_id = str(model.id)
-            c = model_class_get(model_id)
-            if model.model_type is not None:
-                name = model.model_type.name
-            else:
-                name = 'model_' + model_id
-            model_class = c(model, name)
-            existing = getattr(self, name, None)
-            # if model id already defined
-            if existing:
-                # if model id definition is not a list, turn it into a list and add existing model
-                if type(self[name]) is not list:
-                    # model instance index starts at 1 so first first list element is None
-                    setattr(self, name, [None])
-                    self[name].append(existing)
-                # add new model to the list
-                self[name].append(model_class)
-            # if first model id instance, set attribute as model
-            else:
-                setattr(self, name, model_class)
-                self.models.append(name)
+            # create named attributes for each model
+            for model in self.device.models_list:
+                model_id = str(model.id)
+                c = model_class_get(model_id)
+                if model.model_type is not None:
+                    name = model.model_type.name
+                else:
+                    name = 'model_' + model_id
+                model_class = c(model, name)
+                existing = getattr(self, name, None)
+                # if model id already defined
+                if existing:
+                    # if model id definition is not a list, turn it into a list and add existing model
+                    if type(self[name]) is not list:
+                        # model instance index starts at 1 so first first list element is None
+                        setattr(self, name, [None])
+                        self[name].append(existing)
+                    # add new model to the list
+                    self[name].append(model_class)
+                # if first model id instance, set attribute as model
+                else:
+                    setattr(self, name, model_class)
+                    self.models.append(name)
+        except Exception, e:
+            if self.device is not None:
+                self.device.close()
+            raise
 
     def close(self):
         self.device.close()
