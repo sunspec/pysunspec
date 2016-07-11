@@ -114,7 +114,7 @@ class ClientDevice(device.Device):
 
         if self.base_addr is None:
             for addr in self.base_addr_list:
-                print 'trying base address %s' % (addr)
+                # print 'trying base address %s' % (addr)
                 try:
                     data = self.read(addr, 3)
 
@@ -125,14 +125,13 @@ class ClientDevice(device.Device):
                     else:
                         error = 'Device responded - not SunSpec register map'
                 except SunSpecClientError, e:
-                    print 'Error'
                     if not error:
                         error = str(e)
 
                 if delay is not None:
                     time.sleep(delay)
 
-        if self.base_addr:
+        if self.base_addr is not None:
             # print 'base address = %s' % (self.base_addr)
             model_id = util.data_to_u16(data[4:6])
             addr = self.base_addr + 2
@@ -211,7 +210,7 @@ class ClientModel(device.Model):
                     # print 'data len = ', len(data)
                     data_len = len(data)/2
                     if data_len != self.len:
-                        raise SunSpecClientError('Error reading model %s' % model_type)
+                        raise SunSpecClientError('Error reading model %s' % self.model_type)
 
                     #  for each repeating block
                     for block in self.blocks:
@@ -252,11 +251,30 @@ class ClientModel(device.Model):
 
     def write_points(self):
 
+        addr = None
+        next_addr = None
+        data = ''
+
         for block in self.blocks:
             for point in block.points_list:
                 if point.dirty:
-                    # print 'Updating %s' % (point.point_type.id)
-                    point.write()
+                    point_addr = int(point.addr)
+                    point_len = int(point.point_type.len)
+                    point_data = point.point_type.to_data(point.value_base, (point_len * 2))
+                    if addr is None:
+                        addr = point_addr
+                        data = ''
+                    else:
+                        if point_addr != next_addr:
+                            block.model.device.write(addr, data)
+                            addr = point_addr
+                            data = ''
+                    next_addr = point_addr + point_len
+                    data += point_data
+                    point.dirty = False
+            if addr is not None:
+                block.model.device.write(addr, data)
+                addr = None
 
 class ClientBlock(device.Block):
 
@@ -274,6 +292,7 @@ class ClientPoint(device.Point):
 
         data = self.point_type.to_data(self.value_base, (int(self.point_type.len) * 2))
         self.block.model.device.write(int(self.addr), data)
+        self.dirty = False
 
 class SunSpecClientModelBase(object):
 

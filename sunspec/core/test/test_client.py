@@ -92,6 +92,62 @@ def test_sunspec_client_device_1(pathlist=None):
         if d.model_63001.string != value:
             raise Exception("'model_63001.string' write failure: %s %s" % (d.model_63001.string, value))
 
+        # write multiple
+        d.model_63001.read()
+        expected = 65524
+        if d.model_63001.uint16_3 != expected:
+            raise Exception("'model_63001.uint16_3' point mismatch: %s %s" % (d.model_63001.uint16_3, expected))
+        expected = 60
+        if d.model_63001.uint16_4 != expected:
+            raise Exception("'model_63001.uint16_4' point mismatch: %s %s" % (d.model_63001.uint16_4, expected))
+        expected = 7
+        if d.model_63001.uint16_5 != expected:
+            raise Exception("'model_63001.uint16_5' point mismatch: %s %s" % (d.model_63001.uint16_5, expected))
+        value_3 = 65525
+        value_4 = 70
+        value_5 = 8
+        d.model_63001.uint16_3 = value_3
+        d.model_63001.uint16_4 = value_4
+        d.model_63001.uint16_5 = value_5
+        d.model_63001.write()
+        d.model_63001.read()
+        value = d.model_63001.uint16_3
+        if d.model_63001.uint16_3 != value_3:
+            raise Exception("'model_63001.int16_3' write failure: %s %s" % (d.model_63001.uint16_3, value_3))
+        value = d.model_63001.uint16_4
+        if d.model_63001.uint16_4 != value_4:
+            raise Exception("'model_63001.int16_4' write failure: %s %s" % (d.model_63001.uint16_4, value_4))
+        value = d.model_63001.uint16_5
+        if d.model_63001.uint16_5 != value_5:
+            raise Exception("'model_63001.int16_5' write failure: %s %s" % (d.model_63001.uint16_5, value_5))
+
+        # write multiple
+        d.model_63001.read()
+        expected = value_3
+        if d.model_63001.uint16_3 != expected:
+            raise Exception("'model_63001.uint16_3' point mismatch: %s %s" % (d.model_63001.uint16_3, expected))
+        expected = value_4
+        if d.model_63001.uint16_4 != expected:
+            raise Exception("'model_63001.uint16_4' point mismatch: %s %s" % (d.model_63001.uint16_4, expected))
+        expected = value_5
+        if d.model_63001.uint16_5 != expected:
+            raise Exception("'model_63001.uint16_5' point mismatch: %s %s" % (d.model_63001.uint16_5, expected))
+        value_3 = 65524
+        value_5 = 7
+        d.model_63001.uint16_3 = value_3
+        d.model_63001.uint16_5 = value_5
+        d.model_63001.write()
+        d.model_63001.read()
+        value = d.model_63001.uint16_3
+        if d.model_63001.uint16_3 != value_3:
+            raise Exception("'model_63001.int16_3' write failure: %s %s" % (d.model_63001.uint16_3, value_3))
+        value = d.model_63001.uint16_4
+        if d.model_63001.uint16_4 != value_4:
+            raise Exception("'model_63001.int16_4' write failure: %s %s" % (d.model_63001.uint16_4, value_4))
+        value = d.model_63001.uint16_5
+        if d.model_63001.uint16_5 != value_5:
+            raise Exception("'model_63001.int16_5' write failure: %s %s" % (d.model_63001.uint16_5, value_5))
+
         d.close()
 
     except Exception, e:
@@ -112,6 +168,7 @@ def test_sunspec_client_device_3(pathlist=None):
             raise Exception("'model_63002.int16_1' point mismatch: %s %s" % (value, expected))
 
         d.model_63002.repeating[1].int16_1 = 333.3
+        print 'writing...'
         d.model_63002.write()
         d.model_63002.read()
         expected = 3333
