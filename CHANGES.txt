@@ -41,3 +41,20 @@ Version 1.0.6   4 Jun 2015
 - Model 63001 - Added constant scale factor point and label info.
 - Model 63002 - Added label info.
 
+Version 1.0.7 8 Feb 2016
+------------------------
+- Correct client initialization error handling to close underlying device.
+
+--- Include latest SMDX model definitions which have been updated with the following changes:
+- Corrected acc32 to float32 in models 211, 212, 213, 214.
+- Removed scale factor definition from DeptRef definition in model 126.
+
+Version 1.0.8 20 Jul 2016
+-------------------------
+- Corrected scan for Modbus address 0 (issue #11).
+
+--- Include latest SMDX model definitions which have been updated with the following changes:
+- Corrected model length to the convention of fixed block + one repeating block.
+- Corrected units for model 121 WGra to be per second rather per minute to be consistent with previous correction to IEC 61850-7-420.
+- Updated models 801-809
+
