@@ -91,8 +91,15 @@ $ python setup.py install
 
 ## pySunSpec
 
-Download the pysunspec archive (.zip) from the [pySunSpec Project
-Page](https://github.com/sunspec/pysunspec).
+>If wanting the git repository you have to add the --recursive flag to get the
+>submodule to clone as well
+>
+>```
+>$ git clone --recursive https://github.com/sunspec/pysunspec.git
+>```
+
+Download the pysunspec archive (.zip) from the [pySunSpec Releases
+Page](https://github.com/sunspec/pysunspec/releases).
 
 Unpack the archive, enter the ``pysunspec-x.y`` directory and run
 
