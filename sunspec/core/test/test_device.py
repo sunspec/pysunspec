@@ -306,7 +306,7 @@ def test_device_modeltype(pathlist=None):
 
     except Exception, e:
         raise
-        print '*** Failure test_device_modeltype: %s' % (str(e))
+        print('*** Failure test_device_modeltype: %s' % (str(e)))
         return False
 
     return True
@@ -325,7 +325,7 @@ def test_device_pointtype(pathlist=None):
         if (pt.id != 'p_int16' or pt.offset != 0 or pt.type != suns.SUNS_TYPE_INT16 or pt.len != 1):
             raise Exception('p_int16 error')
     except Exception, e:
-        print '*** Failure test_device_pointtype: %s' % (str(e))
+        print('*** Failure test_device_pointtype: %s' % (str(e)))
         return False
     return True
 
@@ -343,7 +343,7 @@ def test_device_pointtype_not_equal(pathlist=None):
         if not_equal:
             raise Exception(not_equal)
     except Exception, e:
-        print '*** Failure test_device_pointtype_not_equal: %s' % str(e)
+        print('*** Failure test_device_pointtype_not_equal: %s' % str(e))
         return False
     return True
 
@@ -370,7 +370,7 @@ def test_device_blocktype_not_equal(pathlist=None):
         if not_equal:
             raise Exception(not_equal)
     except Exception, e:
-        print '*** Failure test_device_blocktype_not_equal: %s' % str(e)
+        print('*** Failure test_device_blocktype_not_equal: %s' % str(e))
         return False
     return True
 
@@ -400,7 +400,7 @@ def test_device_modeltype_not_equal(pathlist=None):
             raise Exception(not_equal)
 
     except Exception, e:
-        print '*** Failure test_device_blocktype_not_equal: %s' % str(e)
+        print('*** Failure test_device_blocktype_not_equal: %s' % str(e))
         return False
     return True
 
@@ -408,7 +408,7 @@ def test_device_model_type_get(pathlist=None):
     try:
         device.model_type_get(221)
     except Exception, e:
-        print '*** Failure test_model_type_get: %s' % str(e)
+        print('*** Failure test_model_type_get: %s' % str(e))
         return False
     return True
 
@@ -422,7 +422,7 @@ def test_device_from_pics(pathlist=None):
             raise Exception(not_equal)
     except Exception, e:
         raise
-        print '*** Failure test_device_from_pics: %s' % str(e)
+        print('*** Failure test_device_from_pics: %s' % str(e))
         return False
     return True
 
@@ -434,7 +434,7 @@ def test_device_to_pics(pathlist=None):
         root = ET.Element(pics.PICS_ROOT)
         d1.to_pics(root, single_repeating=False)
         # util.indent(root)
-        # print ET.tostring(root)
+        # print(ET.tostring(root))
 
         d = root.find(pics.PICS_DEVICE)
         if d is None:
@@ -447,7 +447,7 @@ def test_device_to_pics(pathlist=None):
         if not_equal:
             raise Exception(not_equal)
     except Exception, e:
-        print '*** Failure test_device_to_pics: %s' % str(e)
+        print('*** Failure test_device_to_pics: %s' % str(e))
         return False
     return True
 
@@ -464,7 +464,7 @@ def test_device_value_get(pathlist=None):
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
     except Exception, e:
-        print '*** Failure test_device_value_get: %s' % str(e)
+        print('*** Failure test_device_value_get: %s' % str(e))
         return False
     return True
 
@@ -482,7 +482,7 @@ def test_device_value_set(pathlist=None):
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
     except Exception, e:
-        print '*** Failure test_device_value_get: %s' % str(e)
+        print('*** Failure test_device_value_get: %s' % str(e))
         return False
     return True
 
@@ -507,7 +507,7 @@ def test_device_common_len_65(pathlist=None):
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
     except Exception, e:
-        print '*** Failure test_device_common_len_65: %s' % str(e)
+        print('*** Failure test_device_common_len_65: %s' % str(e))
         return False
     return True
 
@@ -542,7 +542,7 @@ def test_device_constant_sf(pathlist=None):
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
     except Exception, e:
-        print '*** Failure test_device_constant_sf: %s' % str(e)
+        print('*** Failure test_device_constant_sf: %s' % str(e))
         return False
     return True
 
@@ -581,7 +581,7 @@ def test_all(pathlist=None, stop_on_failure=True):
             if stop_on_failure is True:
                 break
 
-    print 'Test device module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(test_device_tests), count_run, count_passed, count_failed)
+    print('Test device module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(test_device_tests), count_run, count_passed, count_failed))
 
     return (count_run, count_passed, count_failed)
 

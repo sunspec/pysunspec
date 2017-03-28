@@ -405,7 +405,7 @@ class ModbusClientDeviceTCP(object):
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
-            # print 'c = {0}'.format(c)
+            # print('c = {0}'.format(c))
             len_read = len(c);
             if len_read > 0:
                 resp += c
@@ -489,7 +489,7 @@ class ModbusClientDeviceTCP(object):
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
-            # print 'c = {0}'.format(c)
+            # print('c = {0}'.format(c))
             len_read = len(c);
             if len_read > 0:
                 resp += c

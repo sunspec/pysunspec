@@ -40,14 +40,14 @@ def test_data(pathlist=None):
         m.point_add("P1", 23)
         m.point_add("P2", 24)
 
-        # print sd.to_xml(pretty_print=True)
+        # print(sd.to_xml(pretty_print=True))
         xml = sd.to_xml_str()
         if xml != expected_xml:
             raise Exception('XML mismatch: %s %s' % (xml, expected_xml))
 
     except Exception, e:
         raise
-        print '*** Failure test_data: %s' % str(e)
+        print('*** Failure test_data: %s' % str(e))
         return False
     return True
 
@@ -73,7 +73,7 @@ def test_all(pathlist=None, stop_on_failure=True):
             if stop_on_failure is True:
                 break
 
-    print 'Test data module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed)
+    print('Test data module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed))
 
     return (count_run, count_passed, count_failed)
 

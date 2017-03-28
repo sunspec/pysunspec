@@ -114,13 +114,13 @@ class ClientDevice(device.Device):
 
         if self.base_addr is None:
             for addr in self.base_addr_list:
-                # print 'trying base address %s' % (addr)
+                # print('trying base address %s' % (addr))
                 try:
                     data = self.read(addr, 3)
 
                     if data[:4] == 'SunS':
                         self.base_addr = addr
-                        # print 'device base address = %d' % self.base_addr
+                        # print('device base address = %d' % self.base_addr)
                         break
                     else:
                         error = 'Device responded - not SunSpec register map'
@@ -132,7 +132,7 @@ class ClientDevice(device.Device):
                     time.sleep(delay)
 
         if self.base_addr is not None:
-            # print 'base address = %s' % (self.base_addr)
+            # print('base address = %s' % (self.base_addr))
             model_id = util.data_to_u16(data[4:6])
             addr = self.base_addr + 2
 
@@ -146,11 +146,11 @@ class ClientDevice(device.Device):
                         if not cont:
                             raise SunSpecClientError('Device scan terminated')
                     model_len = util.data_to_u16(data)
-                    # print 'model_id = %s  model_len = %s' % (model_id, model_len)
+                    # print('model_id = %s  model_len = %s' % (model_id, model_len))
 
                     # move address past model id and length
                     model = ClientModel(self, model_id, addr + 2, model_len)
-                    # print 'loading model %s at %d' % (model_id, addr + 2)
+                    # print('loading model %s at %d' % (model_id, addr + 2))
                     try:
                         model.load()
                     except Exception, e:
@@ -207,7 +207,7 @@ class ClientModel(device.Model):
                             read_len = self.addr + self.len - addr
                         data += self.device.read(addr, read_len)
                 if data:
-                    # print 'data len = ', len(data)
+                    # print('data len = ', len(data))
                     data_len = len(data)/2
                     if data_len != self.len:
                         raise SunSpecClientError('Error reading model %s' % self.model_type)
@@ -219,7 +219,7 @@ class ClientModel(device.Model):
                             offset = int(point.addr) - int(self.addr)
                             if point.point_type.data_to is not None:
                                 byte_offset = offset * 2
-                                # print pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len
+                                # print(pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len)
                                 point.value_base = point.point_type.data_to(data[byte_offset:byte_offset + (int(point.point_type.len) * 2)])
                                 if not point.point_type.is_impl(point.value_base):
                                     point.value_base = None
@@ -231,7 +231,7 @@ class ClientModel(device.Model):
                             offset = int(point.addr) - int(self.addr)
                             if point.point_type.data_to is not None:
                                 byte_offset = offset * 2
-                                # print pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len
+                                # print(pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len)
                                 point.value_base = point.point_type.data_to(data[byte_offset:byte_offset + (int(point.point_type.len) * 2)])
                                 if point.point_type.is_impl(point.value_base):
                                     if point.sf_point is not None:

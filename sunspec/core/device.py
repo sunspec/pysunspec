@@ -345,9 +345,9 @@ class Point(object):
         if (((self.value_base is not None or point.value_base is not None) and (self.value_base != point.value_base)) or
             ((self.value_sf is not None or point.value_sf is not None) and (self.value_sf != point.value_sf))):
             if self.value_base is not None:
-                print 'self.value_base'
+                print('self.value_base')
             if point.value_base is not None:
-                print 'point.value_base', type(point.value_base), point.value_base
+                print('point.value_base', type(point.value_base), point.value_base)
             return 'point %s not equal: %s %s - %s %s' % (self.point_type.id, self.value_base, self.value_sf, point.value_base, point.value_sf)
         return False
         

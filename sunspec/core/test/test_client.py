@@ -42,7 +42,7 @@ def test_client_device(pathlist=None):
             raise Exception(not_equal)
 
     except Exception, e:
-        print '*** Failure test_client_device: %s' % str(e)
+        print('*** Failure test_client_device: %s' % str(e))
         return False
     return True
 
@@ -151,7 +151,7 @@ def test_sunspec_client_device_1(pathlist=None):
         d.close()
 
     except Exception, e:
-        print '*** Failure test_sunspec_client_device_1: %s' % str(e)
+        print('*** Failure test_sunspec_client_device_1: %s' % str(e))
         return False
     return True
 
@@ -168,7 +168,7 @@ def test_sunspec_client_device_3(pathlist=None):
             raise Exception("'model_63002.int16_1' point mismatch: %s %s" % (value, expected))
 
         d.model_63002.repeating[1].int16_1 = 333.3
-        print 'writing...'
+        print('writing...')
         d.model_63002.write()
         d.model_63002.read()
         expected = 3333
@@ -184,7 +184,7 @@ def test_sunspec_client_device_3(pathlist=None):
         d.close()
 
     except Exception, e:
-        print '*** Failure test_sunspec_client_device_3: %s' % str(e)
+        print('*** Failure test_sunspec_client_device_3: %s' % str(e))
         return False
     return True
 
@@ -212,7 +212,7 @@ def test_all(pathlist=None, stop_on_failure=True):
             if stop_on_failure is True:
                 break
 
-    print 'Test client module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed)
+    print('Test client module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed))
 
     return (count_run, count_passed, count_failed)
 

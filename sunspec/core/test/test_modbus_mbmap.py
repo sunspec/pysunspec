@@ -58,7 +58,7 @@ def test_modbus_mbmap_from_xml_file(pathlist=None):
             raise Exception(not_equal)
 
     except Exception, e:
-        print '*** Failure test_modbus_mbmap_from_xml: %s' % str(e)
+        print('*** Failure test_modbus_mbmap_from_xml: %s' % str(e))
         return False
     return True
 
@@ -94,7 +94,7 @@ def test_modbus_mbmap_from_xml_element(pathlist=None):
             raise Exception(not_equal)
 
     except Exception, e:
-        print '*** Failure test_modbus_mbmap_from_xml: %s' % str(e)
+        print('*** Failure test_modbus_mbmap_from_xml: %s' % str(e))
         return False
     return True
 
@@ -120,7 +120,7 @@ def test_all(pathlist=None, stop_on_failure=True):
             if stop_on_failure is True:
                 break
 
-    print 'Test modbus mbmap module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed)
+    print('Test modbus mbmap module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed))
 
     return (count_run, count_passed, count_failed)
 

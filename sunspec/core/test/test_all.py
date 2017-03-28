@@ -46,12 +46,12 @@ def test_all(pathlist=None, stop_on_failure=False, local=False):
     if local:
     	local_path = os.path.join(current_path, '..', '..', '..')
     	if sys.path[1] != local_path:
-    		print 'Adding local path: ', local_path
+    		print('Adding local path: ', local_path)
     		sys.path.insert(1, local_path)
     	else:
-            print 'Using local path: ', local_path
+            print('Using local path: ', local_path)
 
-    print 'pySunSpec version: %s\nTest device path: %s\n' % (sunspec.version, os.path.join(current_path, 'devices'))
+    print('pySunSpec version: %s\nTest device path: %s\n' % (sunspec.version, os.path.join(current_path, 'devices')))
 
     for m in test_modules:
         module = __import__(m)
@@ -60,7 +60,7 @@ def test_all(pathlist=None, stop_on_failure=False, local=False):
         total_count_passed += count_passed
         total_count_failed += count_failed
 
-    print '\nTotal tests run: %d  Total tests passed: %d  Total tests failed: %d' % (total_count_run, total_count_passed, total_count_failed)
+    print('\nTotal tests run: %d  Total tests passed: %d  Total tests failed: %d' % (total_count_run, total_count_passed, total_count_failed))
     return (total_count_run, total_count_passed, total_count_failed)
 
 if __name__ == "__main__":

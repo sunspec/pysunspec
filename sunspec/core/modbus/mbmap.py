@@ -94,7 +94,7 @@ class ModbusMap(object):
                     data_list = line.rstrip('\r\n').split()
                     data_len = len(data_list)/2
                     if data_len > 0:
-                        # print offset, data_list
+                        # print(offset, data_list)
                         for b in data_list:
                             c = struct.pack('B', int(b, 16))
                             if data is None:
@@ -325,7 +325,7 @@ class ModbusMap(object):
 
         # must have all requested data for success
         if len(data) != int(count) * 2:
-            print self
+            print(self)
             raise ModbusMapError('Data read error - addr = %d  data len = %d  count = %d' % (addr, len(data), count))
 
         return data

@@ -28,7 +28,7 @@ import sunspec.core.device as device
 import sunspec.core.modbus.client as modbus
 
 def test_trace_func(s):
-    print s
+    print(s)
 
 def test_modbus_client_device_rtu_read(pathlist=None):
     """
@@ -53,7 +53,7 @@ def test_modbus_client_device_rtu_read(pathlist=None):
         d.close()
 
     except Exception, e:
-        print '*** Failure test_modbus_client_device_rtu_read: %s' % str(e)
+        print('*** Failure test_modbus_client_device_rtu_read: %s' % str(e))
         return False
     return True
 
@@ -77,7 +77,7 @@ def test_modbus_client_device_rtu_write(pathlist=None):
         d.close()
 
     except Exception, e:
-        print '*** test_modbus_client_device_rtu_write: %s' % str(e)
+        print('*** test_modbus_client_device_rtu_write: %s' % str(e))
         return False
     return True
 
@@ -105,7 +105,7 @@ def test_modbus_client_device_tcp_read(pathlist=None):
 
     except Exception, e:
         raise
-        print '*** Failure test_modbus_client_device_tcp_read: %s' % str(e)
+        print('*** Failure test_modbus_client_device_tcp_read: %s' % str(e))
         return False
     return True
 
@@ -129,7 +129,7 @@ def test_modbus_client_device_tcp_write(pathlist=None):
         d.close()
         
     except Exception, e:
-        print '*** Failure test_modbus_client_device_tcp_write: %s' % str(e)
+        print('*** Failure test_modbus_client_device_tcp_write: %s' % str(e))
         return False
     return True
 
@@ -155,7 +155,7 @@ def test_all(pathlist=None, stop_on_failure=True):
             if stop_on_failure is True:
                 break
 
-    print 'Test modbus client module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed)
+    print('Test modbus client module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(tests), count_run, count_passed, count_failed))
 
     return (count_run, count_passed, count_failed)
 
