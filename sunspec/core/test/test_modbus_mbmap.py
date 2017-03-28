@@ -57,7 +57,7 @@ def test_modbus_mbmap_from_xml_file(pathlist=None):
         if not_equal:
             raise Exception(not_equal)
 
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_modbus_mbmap_from_xml: %s' % str(e))
         return False
     return True
@@ -93,7 +93,7 @@ def test_modbus_mbmap_from_xml_element(pathlist=None):
         if not_equal:
             raise Exception(not_equal)
 
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_modbus_mbmap_from_xml: %s' % str(e))
         return False
     return True

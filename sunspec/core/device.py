@@ -116,14 +116,14 @@ class Device(object):
                 model = Model(self, model_id, addr + 2, model_len)
                 try:
                     model.load()
-                except Exception, e:
+                except Exception as e:
                     model.load_error = str(e)
                 model.from_pics(m)
                 self.add_model(model)
 
                 addr += model.len + 2
         
-        except Exception, e:
+        except Exception as e:
             raise SunSpecError('Error loading PICS: %s' % str(e))
 
     """
@@ -554,7 +554,7 @@ def model_type_get(model_id):
                     f = open(filename, 'r')
                     smdx_data = f.read()
                     f.close()
-                except Exception, e:
+                except Exception as e:
                     raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
       
         if smdx_data:
@@ -565,7 +565,7 @@ def model_type_get(model_id):
                 model_type = ModelType()
                 model_type.from_smdx(root)
                 model_types[model_type.id] = model_type
-            except Exception, e:
+            except Exception as e:
                 raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
         else:
             raise SunSpecError('Model file for model %s not found' % (str(model_id)))

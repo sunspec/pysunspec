@@ -52,7 +52,7 @@ def test_modbus_client_device_rtu_read(pathlist=None):
 
         d.close()
 
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_modbus_client_device_rtu_read: %s' % str(e))
         return False
     return True
@@ -76,7 +76,7 @@ def test_modbus_client_device_rtu_write(pathlist=None):
 
         d.close()
 
-    except Exception, e:
+    except Exception as e:
         print('*** test_modbus_client_device_rtu_write: %s' % str(e))
         return False
     return True
@@ -103,7 +103,7 @@ def test_modbus_client_device_tcp_read(pathlist=None):
 
         d.close()
 
-    except Exception, e:
+    except Exception as e:
         raise
         print('*** Failure test_modbus_client_device_tcp_read: %s' % str(e))
         return False
@@ -128,7 +128,7 @@ def test_modbus_client_device_tcp_write(pathlist=None):
 
         d.close()
         
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_modbus_client_device_tcp_write: %s' % str(e))
         return False
     return True

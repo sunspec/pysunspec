@@ -223,7 +223,7 @@ class PathList(object):
                 zip_file = zipfile.ZipFile(zip_file_path)
                 try:
                     zip_file.getinfo(file_path)
-                except Exception, e:
+                except Exception as e:
                     continue
                 return zip_file.read(file_path)
             else:

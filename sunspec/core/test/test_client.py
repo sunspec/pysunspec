@@ -41,7 +41,7 @@ def test_client_device(pathlist=None):
         if not_equal:
             raise Exception(not_equal)
 
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_client_device: %s' % str(e))
         return False
     return True
@@ -150,7 +150,7 @@ def test_sunspec_client_device_1(pathlist=None):
 
         d.close()
 
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_sunspec_client_device_1: %s' % str(e))
         return False
     return True
@@ -183,7 +183,7 @@ def test_sunspec_client_device_3(pathlist=None):
 
         d.close()
 
-    except Exception, e:
+    except Exception as e:
         print('*** Failure test_sunspec_client_device_3: %s' % str(e))
         return False
     return True
