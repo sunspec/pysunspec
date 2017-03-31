@@ -329,7 +329,7 @@ class Point(object):
             attr[pics.PICS_ATTR_IMPLEMENTED] = str(pics.PICS_IMPLEMENTED_FALSE)
         else:
             if self.point_type.access != suns.SUNS_ACCESS_R:
-                access =  [key for key, value in pics.pics_access_types.iteritems() if value == suns.SUNS_ACCESS_RW][0]
+                access =  [key for key, value in pics.pics_access_types.items() if value == suns.SUNS_ACCESS_RW][0]
                 attr[pics.PICS_ATTR_ACCESS] = str(access)
 
         e = ET.SubElement(parent, pics.PICS_POINT, attrib=attr)

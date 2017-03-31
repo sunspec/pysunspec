@@ -215,7 +215,7 @@ class ClientModel(device.Model):
                     #  for each repeating block
                     for block in self.blocks:
                         # scale factor points
-                        for pname, point in block.points_sf.iteritems():
+                        for pname, point in block.points_sf.items():
                             offset = int(point.addr) - int(self.addr)
                             if point.point_type.data_to is not None:
                                 byte_offset = offset * 2
@@ -227,7 +227,7 @@ class ClientModel(device.Model):
                                 raise SunSpecClientError('No data_to function set for %s : %s' % (pname, point.point_type))
 
                         # non-scale factor points
-                        for pname, point in block.points.iteritems():
+                        for pname, point in block.points.items():
                             offset = int(point.addr) - int(self.addr)
                             if point.point_type.data_to is not None:
                                 byte_offset = offset * 2
