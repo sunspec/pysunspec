@@ -49,29 +49,29 @@ class Serial(object):
         self.open()
 
     def open(self):
-    	self.is_open = True
+        self.is_open = True
 
     def close(self):
-    	self.is_open = False
+        self.is_open = False
 
     def read(self, size=1):
         data = ''
         read_len = size
 
         data_len = len(self.in_buf)
-    	if data_len < read_len:
-    		read_len = data_len
+        if data_len < read_len:
+          read_len = data_len
 
-    	if read_len > 0:
-    		data = self.in_buf[:read_len]
-    		self.in_buf = self.in_buf[read_len:]
-    	return data
+        if read_len > 0:
+                data = self.in_buf[:read_len]
+                self.in_buf = self.in_buf[read_len:]
+        return data
 
     def write(self, data):
-    	self.out_buf += data
+        self.out_buf += data
 
     def flushInput(self):
-    	pass
+        pass
 
     def flushOutput(self):
-    	pass
+        pass
