@@ -22,11 +22,16 @@
 """
 
 import struct
+import sys
 
 try:
     import xml.etree.ElementTree as ET
 except:
     import elementtree.ElementTree as ET
+
+# Python 3 compatibility for long()
+if sys.version_info > (3,):
+    long = int
 
 MBMAP_ROOT = 'mbmap'
 MBMAP_ADDR = 'addr'
