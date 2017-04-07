@@ -23,6 +23,7 @@
 
 import struct
 import sys
+from builtins import bytes
 
 try:
     import xml.etree.ElementTree as ET
@@ -205,7 +206,8 @@ class ModbusMap(object):
                 elif rtype == MBMAP_REGS_TYPE_STRING:
                     if rlen == 0:
                         rlen = (len(text) + 3)/4
-                    data = struct.pack(str(rlen * 2) + 's', str(text))
+                    text = bytes(text, 'utf-8')
+                    data = struct.pack(str(rlen * 2) + 's', text)
                 elif rtype == MBMAP_REGS_TYPE_HEX_STRING:
                     if text:
                         # remove any spaces
