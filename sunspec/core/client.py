@@ -196,7 +196,7 @@ class ClientModel(device.Model):
                 if end_index == 1:
                     data = self.device.read(self.addr, self.len)
                 else:
-                    data = ''
+                    data = b''
                     index = 0
                     while index < end_index:
                         addr = self.read_blocks[index]
