@@ -23,6 +23,7 @@
 
 import os
 import struct
+import sys
 import zipfile
 import array
 
@@ -95,6 +96,12 @@ except Exception:
         return d[0]
 
 def data_to_str(data):
+
+    # Change the data from bytes string to regular string for python 3
+    # compatibility
+    if sys.version_info > (3,):
+        data = str(data, 'utf-8')
+
     if len(data) > 1:
         data = data[0] + data[1:].rstrip('\0')
     return data
