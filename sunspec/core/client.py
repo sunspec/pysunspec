@@ -118,7 +118,7 @@ class ClientDevice(device.Device):
                 try:
                     data = self.read(addr, 3)
 
-                    if data[:4] == 'SunS':
+                    if data[:4] == b'SunS':
                         self.base_addr = addr
                         # print('device base address = %d' % self.base_addr)
                         break

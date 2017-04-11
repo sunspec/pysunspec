@@ -311,7 +311,7 @@ class ModbusMap(object):
 
     def read(self, addr, count, op=None):
 
-        data = ''
+        data = b''
         count_remaining = count
 
         if op and op != self.func:
