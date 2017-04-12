@@ -1,0 +1,3 @@
+[submodule "sunspec/models"]
+	path = sunspec/models
+	url = https://github.com/sunspec/models.git
