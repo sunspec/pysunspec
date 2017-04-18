@@ -91,6 +91,10 @@ $ python setup.py install
 
 ## pySunSpec
 
+**Note:** If getting errors your sunspec/models folder may not have loaded
+during installation due to being a separate repository. Please use the
+following steps to ensure that the library is installed correctly.
+
 >If wanting the git repository you have to add the --recursive flag to get the
 >submodule to clone as well
 >
@@ -132,8 +136,8 @@ You should now be ready to use the pySunSpec package.
 
 # Documentation
 
-We are in the process of getting the docs hosted on www.readthedocs.org but in
-the meantime they can be found in the /docs/ folder.
+The documentation can be found on the [Read the
+Docs](pysunspec.readthedocs.io/en/latest/) site.
 
 
 # Questions, Bugs, Feature Requests
