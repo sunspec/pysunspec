@@ -23,6 +23,8 @@
 
 import os
 import time
+import struct
+import sys
 import sunspec.core.modbus.client as modbus
 import sunspec.core.device as device 
 import sunspec.core.util as util
@@ -233,6 +235,9 @@ class ClientModel(device.Model):
                                 byte_offset = offset * 2
                                 # print(pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len)
                                 point.value_base = point.point_type.data_to(data[byte_offset:byte_offset + (int(point.point_type.len) * 2)])
+                                if (type(point.value_base) == bytes and
+                                        sys.version_info > (3,)):
+                                    point.value_base = str(point.value_base, 'utf-8')
                                 if point.point_type.is_impl(point.value_base):
                                     if point.sf_point is not None:
                                         point.value_sf = point.sf_point.value_base
