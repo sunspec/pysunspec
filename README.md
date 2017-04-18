@@ -137,7 +137,7 @@ You should now be ready to use the pySunSpec package.
 # Documentation
 
 The documentation can be found on the [Read the
-Docs](pysunspec.readthedocs.io/en/latest/) site.
+Docs](https://pysunspec.readthedocs.io/en/latest/) site.
 
 
 # Questions, Bugs, Feature Requests
