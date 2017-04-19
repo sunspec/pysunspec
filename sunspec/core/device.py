@@ -286,12 +286,21 @@ class Point(object):
     # use older property format to support earlier python 2.x versions
     def value_getter(self):
 
-        if self.value_sf:
+        # assert the scale factor if one was read
+        if self.sf_point is not None:
+            self.value_sf = self.sf_point.value_base
+
+        # if base value is none just return it as multiplying raises exception
+        if self.value_sf and self.value_base is not None:
             return self.value_base * math.pow(10, self.value_sf)
         else:
             return self.value_base
 
     def value_setter(self, v):
+
+        # assert the scale factor if one was read
+        if self.sf_point is not None:
+            self.value_sf = self.sf_point.value_base
 
         if self.value_sf:
             self.value_base = int(round(float(v), abs(self.value_sf)) / math.pow(10, self.value_sf))
