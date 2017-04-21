@@ -142,6 +142,8 @@ def float_to_data(f, len=None):
 def str_to_data(s, slen=None):
     if slen is None:
         slen = len(s)
+    if sys.version_info > (3,):
+        s = bytes(s, 'utf-8')
     return struct.pack(str(slen) + 's', s)
 
 def eui48_to_data(eui48):
