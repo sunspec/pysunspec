@@ -359,7 +359,9 @@ class ModbusMap(object):
                         write_count = count_remaining
                     # regs
                     # data += regs.read(offset, read_count)
-                    regs.write(offset, data[data_offset:data_offset+(write_count * 2)])
+                    start = data_offset
+                    end = int(data_offset + (write_count * 2))
+                    regs.write(offset, data[start:end])
                     offset += write_count
                     data_offset += write_count
                     count_remaining -= write_count
