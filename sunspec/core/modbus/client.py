@@ -25,6 +25,7 @@ import os
 import socket
 import struct
 import serial
+import sys
 
 try:
     import xml.etree.ElementTree as ET
@@ -602,6 +603,9 @@ def computeCRC(data):
     :returns: The calculated CRC
     '''
     crc = 0xffff
+    if sys.version_info > (3,):
+        data = str(data)
+        data = data[2:-1]
     for a in data:
         idx = __crc16_table[(crc ^ ord(a)) & 0xff];
         crc = ((crc >> 8) & 0xff) ^ idx
