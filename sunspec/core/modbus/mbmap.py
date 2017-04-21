@@ -422,7 +422,7 @@ class ModbusMapRegs(object):
         count = len(data)/2
         if (offset >= self.offset) and (offset + count <= self.offset + self.count):
             start = (offset - self.offset) * 2
-            end = start + (count * 2)
+            end = int(start + (count * 2))
             self.data = self.data[:start] + data + self.data[end:]
         else:
            raise ModbusMapError('Data write error')
