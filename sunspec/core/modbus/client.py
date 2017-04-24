@@ -168,7 +168,7 @@ class ModbusClientRTU(object):
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
-            if sys.version_info > (3,):
+            if type(c) == bytes and sys.version_info > (3,):
                 c = bytearray(c)
                 c = c.decode(errors="ignore")
             len_read = len(c);
