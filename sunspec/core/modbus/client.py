@@ -168,6 +168,9 @@ class ModbusClientRTU(object):
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
+            if sys.version_info > (3,):
+                c = bytearray(c)
+                c = c.decode(errors="ignore")
             len_read = len(c);
             if len_read > 0:
                 resp += c
@@ -604,8 +607,8 @@ def computeCRC(data):
     '''
     crc = 0xffff
     if sys.version_info > (3,):
-        data = str(data)
-        data = data[2:-1]
+        data = bytearray(data)
+        data = data.decode(errors="ignore")
     for a in data:
         idx = __crc16_table[(crc ^ ord(a)) & 0xff];
         crc = ((crc >> 8) & 0xff) ^ idx

@@ -43,10 +43,11 @@ class Serial(object):
         self.dsrdtr = dsrdtr
         self.interCharTimeout = interCharTimeout
         self.is_open = False
-        self.in_buf = ''
-        self.out_buf = ''
+        self.in_buf = b''
+        self.out_buf = b''
 
         self.open()
+
 
     def open(self):
         self.is_open = True
