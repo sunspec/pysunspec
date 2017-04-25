@@ -31,8 +31,8 @@ class socket(object):
         self.proto = proto
         self.connected = False
         self.timeout = 0
-        self.in_buf = ''
-        self.out_buf = ''
+        self.in_buf = b''
+        self.out_buf = b''
 
     def connect(self, addr_port):
     	self.connected = True
