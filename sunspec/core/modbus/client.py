@@ -294,7 +294,10 @@ class ModbusClientRTU(object):
                     write_count = max_count
                 else:
                     write_count = count
-                self._write(slave_id, addr + write_offset, data[(write_offset * 2):((write_offset + write_count) * 2)], trace_func=trace_func)
+                start = int(write_offset * 2)
+                end = int((write_offset + write_count) * 2)
+                self._write(slave_id, addr + write_offset, data[start:end],
+                            trace_func=trace_func)
                 count -= write_count
                 write_offset += write_count
         else:
