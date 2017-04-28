@@ -232,11 +232,18 @@ class ModbusClientRTU(object):
         except_code = None
         func = FUNC_WRITE_MULTIPLE
         len_data = len(data)
-        count = len_data/2
+        count = int(len_data/2)
 
         req = struct.pack('>BBHHB', int(slave_id), func, int(addr), count, len_data)
+        if sys.version_info > (3,):
+            data = bytes(data, "latin-1")
         req += data
         req += struct.pack('>H', computeCRC(req))
+        if sys.version_info > (3,):
+            temp = ""
+            for i in req:
+                temp += chr(i)
+            req = temp
 
         if trace_func:
             s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
@@ -246,12 +253,19 @@ class ModbusClientRTU(object):
 
         self.serial.flushInput()
         try:
+            if sys.version_info > (3,):
+                req = bytes(req, "latin-1")
             self.serial.write(req)
         except Exception as e:
             raise ModbusClientError('Serial write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
+            if type(c) == bytes and sys.version_info > (3,):
+                temp = ""
+                for i in c:
+                    temp += chr(i)
+                c = temp
             len_read = len(c);
             if len_read > 0:
                 resp += c
@@ -279,6 +293,8 @@ class ModbusClientRTU(object):
         if except_code:
             raise ModbusClientException('Modbus exception: %d' % (except_code))
         else:
+            if sys.version_info > (3,):
+                resp = bytes(resp, 'latin-1')
             resp_slave_id, resp_func, resp_addr, resp_count, resp_crc = struct.unpack('>BBHHH', resp)
             if resp_slave_id != slave_id or resp_func != func or resp_addr != addr or resp_count != count:
                 raise ModbusClientError('Mobus response format error')
