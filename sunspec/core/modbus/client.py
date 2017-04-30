@@ -411,7 +411,7 @@ class ModbusClientDeviceTCP(object):
 
     def _read(self, addr, count, op=FUNC_READ_HOLDING):
 
-        resp = ''
+        resp = b''
         len_remaining = TCP_HDR_LEN + TCP_RESP_MIN_LEN
         len_found = False
         except_code = None
@@ -442,6 +442,12 @@ class ModbusClientDeviceTCP(object):
             else:
                 raise ModbusClientError('Response timeout')
 
+        if sys.version_info > (3,):
+            temp = ""
+            for i in resp:
+                temp += chr(i)
+            resp = temp
+        
         if not (ord(resp[TCP_HDR_LEN + 1]) & 0x80):
             len_remaining = (ord(resp[TCP_HDR_LEN + 2]) + TCP_HDR_LEN) - len(resp)
             len_found = True
@@ -477,6 +483,7 @@ class ModbusClientDeviceTCP(object):
                 else:
                     read_count = count
                 data = self._read(addr + read_offset, read_count, op=op)
+
                 if data:
                     resp += data
                     count -= read_count
@@ -498,8 +505,10 @@ class ModbusClientDeviceTCP(object):
         func = FUNC_WRITE_MULTIPLE
 
         write_len = len(data)
-        write_count = write_len/2
+        write_count = int(write_len/2)
         req = struct.pack('>HHHBBHHB', 0, 0, TCP_WRITE_MULT_REQ_LEN + write_len, int(self.slave_id), func, int(addr), write_count, write_len)
+        if sys.version_info > (3,):
+            data = bytes(data, "latin-1")
         req += data
 
         if self.trace_func:
@@ -518,11 +527,23 @@ class ModbusClientDeviceTCP(object):
             # print('c = {0}'.format(c))
             len_read = len(c);
             if len_read > 0:
+                if type(c) == bytes and sys.version_info > (3,):
+                    temp = ""
+                    for i in c:
+                        temp += chr(i)
+                    c = temp
                 resp += c
                 len_remaining -= len_read
                 if len_found is False and len(resp) >= TCP_HDR_LEN + TCP_RESP_MIN_LEN:
+                    if sys.version_info > (3,):
+                        resp = bytes(resp, "latin-1")
                     data_len = struct.unpack('>H', resp[TCP_HDR_O_LEN:TCP_HDR_O_LEN + 2])
                     len_remaining = data_len[0] - (len(resp) - TCP_HDR_LEN)
+                if type(resp) == bytes and sys.version_info > (3,):
+                    temp = ""
+                    for i in resp:
+                        temp += chr(i)
+                    resp = temp
             else:
                 raise ModbusClientTimeout('Response timeout')
 
@@ -558,7 +579,9 @@ class ModbusClientDeviceTCP(object):
                     write_count = self.max_count
                 else:
                     write_count = count
-                self._write(addr + write_offset, data[(write_offset * 2):((write_offset + write_count) * 2)])
+                    start = (write_offset * 2)
+                    end = int((write_offset + write_count) * 2)
+                self._write(addr + write_offset, data[start:end])
                 count -= write_count
                 write_offset += write_count
         finally:
