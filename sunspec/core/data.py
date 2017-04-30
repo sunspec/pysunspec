@@ -238,9 +238,11 @@ class ModelData(object):
         attr = {SDX_MODEL_ID: str(self.model_id)}
 
         if self.index is None and sys.version_info > (3,):
-            self.index = 3
+            self.index = -233
         if self.index > 1:
             attr[SDX_MODEL_INDEX] = self.index
+        if self.index is -233 and sys.version_info > (3,):
+            self.index = None
         if self.namespace:
             attr[SDX_MODEL_NAMESPACE] = self.namespace
 
