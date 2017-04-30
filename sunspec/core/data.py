@@ -22,6 +22,8 @@
 """
 
 import time
+import sys
+
 
 try:
     import xml.etree.ElementTree as ET
@@ -235,6 +237,8 @@ class ModelData(object):
 
         attr = {SDX_MODEL_ID: str(self.model_id)}
 
+        if self.index is None and sys.version_info > (3,):
+            self.index = 3
         if self.index > 1:
             attr[SDX_MODEL_INDEX] = self.index
         if self.namespace:
