@@ -117,7 +117,14 @@ class SunSpecData(object):
         if pretty_print:
             util.indent(self.root)
 
-        return ET.tostring(self.root)
+        out = ET.tostring(self.root)
+        if sys.version_info > (3,):
+            temp = ""
+            for i in out:
+                temp += chr(i)
+            out = temp
+
+        return out
 
     def __init__(self, element=None, data_record=None):
 
