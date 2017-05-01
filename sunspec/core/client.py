@@ -237,7 +237,7 @@ class ClientModel(device.Model):
                                 point.value_base = point.point_type.data_to(data[byte_offset:byte_offset + (int(point.point_type.len) * 2)])
                                 if (type(point.value_base) == bytes and
                                         sys.version_info > (3,)):
-                                    point.value_base = str(point.value_base, 'utf-8')
+                                    point.value_base = str(point.value_base, 'latin-1')
                                 if point.point_type.is_impl(point.value_base):
                                     if point.sf_point is not None:
                                         point.value_sf = point.sf_point.value_base

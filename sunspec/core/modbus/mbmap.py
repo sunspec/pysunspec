@@ -208,7 +208,7 @@ class ModbusMap(object):
 
                     # Python 3 compatibility for byte strings
                     if sys.version_info > (3,):
-                        text = bytes(text, 'utf-8')
+                        text = bytes(text, 'latin-1')
 
                     data = struct.pack(str(rlen * 2) + 's', text)
                 elif rtype == MBMAP_REGS_TYPE_HEX_STRING:

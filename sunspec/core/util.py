@@ -100,7 +100,7 @@ def data_to_str(data):
     # Change the data from bytes string to regular string for python 3
     # compatibility
     if sys.version_info > (3,):
-        data = str(data, 'utf-8')
+        data = str(data, 'latin-1')
 
     if len(data) > 1:
         data = data[0] + data[1:].rstrip('\0')
@@ -143,7 +143,7 @@ def str_to_data(s, slen=None):
     if slen is None:
         slen = len(s)
     if sys.version_info > (3,):
-        s = bytes(s, 'utf-8')
+        s = bytes(s, 'latin-1')
     return struct.pack(str(slen) + 's', s)
 
 def eui48_to_data(eui48):
