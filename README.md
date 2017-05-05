@@ -9,7 +9,6 @@ Copyright (c) 2014 SunSpec Alliance ([License](https://github.com/sunspec/pysuns
 
 
 # Features
-
 - Provides access to SunSpec Modbus RTU and TCP devices
 - High level object model allowing easy device scripting
 - Minimal dependencies for core package allowing it to run in more constrained
@@ -18,8 +17,7 @@ Copyright (c) 2014 SunSpec Alliance ([License](https://github.com/sunspec/pysuns
 
 
 # Requirements
-
-- Python 2.7, 3.X
+- Python 2.4 - 2.7 (2.7 recommended for most uses)
 - pySerial
 
 
@@ -51,9 +49,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 
 If Python did not show up you can acquire it from the Python Software
-Foundation's [download page](http://www.python.org/download). Make sure you
-choose the correct python version for your needs keeping with the requirements
-listed above. 
+Foundation's [download page](http://www.python.org/download). Keep in mind this
+repository currently uses Python 2.7 and not any Python 3.X. Accept all the
+default settings during the installation.
 
 > ### If using Windows and just downloaded Python you need to set environment variables
 > 
