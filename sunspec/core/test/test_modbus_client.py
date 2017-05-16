@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2016 SunSpec Alliance
+    Copyright (C) 2017 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -127,7 +127,7 @@ def test_modbus_client_device_tcp_write(pathlist=None):
             raise Exception("Modbus request mismatch")
 
         d.close()
-        
+
     except Exception, e:
         print '*** Failure test_modbus_client_device_tcp_write: %s' % str(e)
         return False
