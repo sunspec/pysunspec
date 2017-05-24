@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2016 SunSpec Alliance
+    Copyright (C) 2017 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -477,7 +477,7 @@ def test_device_value_set(pathlist=None):
         expected_value = -180
         p = 'int16_4'
         m.points[p].value = expected_value
-        value = m.points[p].value 
+        value = m.points[p].value
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
@@ -502,7 +502,7 @@ def test_device_common_len_65(pathlist=None):
         expected_value = -180
         p = 'int16_4'
         m_63001.points[p].value = expected_value
-        value = m_63001.points[p].value 
+        value = m_63001.points[p].value
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
