@@ -11,12 +11,6 @@ install:
     - git submodule update --init --recursive
     - python setup.py install
 
-matrix:
-    allow_failures:
-        - python: 3.3
-        - python: 3.4
-        - python: 3.5
-
 script: python scripts/pysunspec_test.py
 
 notifications:
