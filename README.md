@@ -5,7 +5,8 @@ interaction with SunSpec compliant devices and documents.  It can be run in
 most environments that support Python and is tested on Wndows 7, MAC OS X, and
 Ubuntu.
 
-Copyright (c) 2014 SunSpec Alliance ([License](https://github.com/sunspec/pysunspec/blob/master/LICENSE))
+Copyright (c) 2017 SunSpec Alliance
+([License](https://github.com/sunspec/pysunspec/blob/master/LICENSE))
 
 
 # Features
