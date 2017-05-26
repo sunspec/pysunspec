@@ -17,7 +17,7 @@ matrix:
         - python: 3.4
         - python: 3.5
 
-script: python scripts/pysunspec_test.py
+script: python -m unittest discover -v sunspec
 
 notifications:
     email: false

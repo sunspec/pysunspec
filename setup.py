@@ -14,5 +14,5 @@ setup(name = 'pysunspec',
       author_email = ['bob.fox@loggerware.com'],
       packages = ['sunspec', 'sunspec.core', 'sunspec.core.modbus', 'sunspec.core.test', 'sunspec.core.test.fake'],
       package_data = {'sunspec': ['models/smdx/*'], 'sunspec.core.test': ['devices/*']},
-      scripts = ['scripts/suns.py', 'scripts/pysunspec_test.py']
+      scripts = ['scripts/suns.py']
       )
