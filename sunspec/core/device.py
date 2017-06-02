@@ -34,6 +34,16 @@ import sunspec.core.smdx as smdx
 import sunspec.core.suns as suns
 from sunspec.core.util import SunSpecError
 
+# Check to see if Models directory was installed correctly
+scripts_dir = os.path.abspath(os.path.dirname(__file__))  # sunspec/
+sunspec_dir = os.path.split(scripts_dir)[0]  # ../
+models_dir = os.path.join(sunspec_dir, 'models')
+smdx_dir = os.path.join(models_dir, 'smdx')
+if not os.path.exists(smdx_dir):
+    raise SunSpecError("Models directory not properly installed: Models is a "
+                       "subrepository and requires special installation "
+                       "procedures. Please reference the README")
+
 # file path list
 file_pathlist = None
 
@@ -157,10 +167,12 @@ class Device(object):
                     raise SunSpecError('Module id error')
                 model_len = m.attrib.get(pics.PICS_ATTR_LEN)
                 if model_len is not None:
-                    # raise SunSpecError('Module len error in model %d' % (model_id))
+                    # raise SunSpecError('Module len error in model %d' %
+                    # (model_id))
                     model_len = int(model_len)
 
-                # move address past model id and length (even though address is not real in the case)
+                # move address past model id and length (even though address is
+                # not real in the case)
                 model = Model(self, model_id, addr + 2, model_len)
                 try:
                     model.load()
