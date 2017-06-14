@@ -28,6 +28,8 @@ import unittest
 import sunspec.core.client as client
 import sunspec.core.device as device
 import sunspec.core.util as util
+import sunspec.core.test.util
+
 
 class TestClientDevice(unittest.TestCase):
     def setUp(self):
@@ -35,6 +37,8 @@ class TestClientDevice(unittest.TestCase):
         self.pathlist = util.PathList(['.',
                                        os.path.join(os.path.dirname(path),
                                                     'devices')])
+
+        sunspec.core.test.util.check_for_models(pathlist=self.pathlist)
 
     def test_client_device(self):
         d = client.ClientDevice(client.MAPPED, slave_id=1,
