@@ -35,7 +35,6 @@ import sunspec.core.util as util
 import sunspec.core.pics as pics
 import sunspec.core.smdx as smdx
 import sunspec.core.suns as suns
-import sunspec.core.util
 
 test_device_pointtype_smdx_1 = """
 <sunSpecModels v="1">
@@ -304,7 +303,7 @@ class TestDevice(unittest.TestCase):
                                        os.path.join(os.path.dirname(path),
                                                     'devices')])
 
-        sunspec.core.util.check_for_models(pathlist=self.pathlist)
+        device.check_for_models(pathlist=self.pathlist)
 
     def test_device_modeltype(self):
         mt = device.ModelType()

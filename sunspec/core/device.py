@@ -900,6 +900,16 @@ def model_type_get(model_id):
 
     return model_type
 
+def check_for_models(pathlist):
+    # The common model (1) should be accessible.
+    try:
+        model_type_get(1)
+    except:
+        raise Exception(
+            'Unable to open common model (1).  '
+            'Make certain model repository is available.'
+        )
+
 class ModelType(object):
     """
     Parameters:

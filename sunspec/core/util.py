@@ -26,9 +26,6 @@ import struct
 import zipfile
 import array
 
-import sunspec.core.device
-
-
 class SunSpecError(Exception):
     pass
 
@@ -251,12 +248,3 @@ class PathList(object):
 
 
 
-def check_for_models(pathlist):
-    # The common model (1) should be accessible.
-    try:
-        sunspec.core.device.model_type_get(1)
-    except:
-        raise Exception(
-            'Unable to open common model (1).  '
-            'Make certain model repository is available.'
-        )
