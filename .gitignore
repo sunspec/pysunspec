@@ -36,3 +36,7 @@ doc/sphinx/
 
 # Backup files
 *~
+
+# Coverage.py files
+.coverage
+htmlcov
