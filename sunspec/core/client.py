@@ -549,11 +549,11 @@ class SunSpecClientModelBase(object):
 
     def __getitem__(self, name):
         return self._get_property(name)
-        # return self.__dict__.get(key, None)
+        # return self.__dict__.get(name, None)
 
     def __setitem__(self, name, item):
         return self._set_property(name, item)
-        # self.__dict__.set(key, item)
+        # self.__dict__.set(name, item)
 
     def read(self):
         """Read all points in the model from the physical device."""
@@ -625,11 +625,11 @@ class SunSpecClientBlockBase(object):
 
     def __getitem__(self, name):
         return self._get_property(name)
-        # return self.__dict__.get(key, None)
+        # return self.__dict__.get(name, None)
 
-    def __setitem__(self, key, item):
+    def __setitem__(self, name, item):
         return self._set_property(name, item)
-        # self.__dict__.set(key, item)
+        # self.__dict__.set(name, item)
 
     def __str__(self):
         s = '\n%s[%d]:\n' % (self.name, self.block.index)
