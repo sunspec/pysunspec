@@ -1,0 +1,25 @@
+environment:
+  global:
+    PYTHON: "C:\\Python27"
+
+# https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+init:
+  - ps: if (Get-ChildItem Env:ENABLE_RDP -ErrorAction SilentlyContinue) {iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))} else {echo RDP not enabled}
+
+build_script:
+  - SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - python -m pip install --upgrade pip setuptools wheel
+  - python -m pip install --user virtualenv
+  - python -m virtualenv -p %PYTHON%\\python.exe venv
+  - git submodule update --init
+  - venv\\scripts\\python -m pip install -e .
+  - venv\\scripts\\python -m unittest discover -v sunspec
+  - venv\\scripts\\python -m pip wheel --wheel-dir dist --no-deps .
+  - venv\\scripts\\python setup.py sdist
+
+artifacts:
+  - path: 'dist/*'
+
+# https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+on_finish:
+  - ps: if (Get-ChildItem Env:ENABLE_RDP -ErrorAction SilentlyContinue) {$blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))} else {echo RDP not enabled}
