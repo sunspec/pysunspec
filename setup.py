@@ -8,7 +8,12 @@
 from distutils.core import setup
 
 setup(name = 'pysunspec',
-      version = '1.0.8',
+      setup_requires=['vcversioner==2.16.0.0'],
+      vcversioner={
+            'version_module_paths': ['sunspec/_version.py'],
+            'vcs_args': ['git', '--git-dir', '%(root)s/.git', 'describe',
+                         '--tags', '--long', '--abbrev=999']
+      },
       description = 'Python SunSpec Tools',
       author = ['Bob Fox'],
       author_email = ['bob.fox@loggerware.com'],
