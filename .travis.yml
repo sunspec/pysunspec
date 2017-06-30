@@ -7,8 +7,9 @@ python:
     - 3.5
 
 install: 
+    - python -m pip install --upgrade pip setuptools wheel
     - git submodule update --init --recursive
-    - python setup.py install
+    - pip install -e .
 
 matrix:
     allow_failures:
