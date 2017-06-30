@@ -907,7 +907,8 @@ def check_for_models(pathlist):
     except:
         raise Exception(
             'Unable to open common model (1).  '
-            'Make certain model repository is available.'
+            'Make certain model repository is available.  '
+            'Please reference the README.md.'
         )
 
 class ModelType(object):
