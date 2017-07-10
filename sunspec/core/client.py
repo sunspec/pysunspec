@@ -26,7 +26,7 @@ import time
 import struct
 import sys
 import sunspec.core.modbus.client as modbus
-import sunspec.core.device as device 
+import sunspec.core.device as device
 import sunspec.core.util as util
 import sunspec.core.suns as suns
 from sunspec.core.util import SunSpecError
@@ -119,7 +119,6 @@ class ClientDevice(device.Device):
                 # print('trying base address %s' % (addr))
                 try:
                     data = self.read(addr, 3)
-
                     if data[:4] == b'SunS':
                         self.base_addr = addr
                         # print('device base address = %d' % self.base_addr)
@@ -385,7 +384,7 @@ class SunSpecClientBlockBase(object):
             value = getattr(self, name)
             if value is not None:
                 s += '%s:  %s\n' % (name, str(value))
-    
+
         return s
 
 def model_class_get(model_id):
@@ -486,7 +485,7 @@ class SunSpecClientDevice(object):
 
     def __setitem__(self, key, item):
         self.__dict__.set(key, item)
-        
+
     def __str__(self):
 
         s = ''

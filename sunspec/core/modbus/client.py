@@ -96,7 +96,7 @@ class ModbusClientRTU(object):
         self.devices = {}
 
         self.open()
-        
+
     def open(self):
 
         try:
@@ -153,7 +153,7 @@ class ModbusClientRTU(object):
 
         req = struct.pack('>BBHH', int(slave_id), op, int(addr), int(count))
         req += struct.pack('>H', computeCRC(req))
-        
+
         if trace_func:
             s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
             for c in req:
@@ -447,7 +447,7 @@ class ModbusClientDeviceTCP(object):
             for i in resp:
                 temp += chr(i)
             resp = temp
-        
+
         if not (ord(resp[TCP_HDR_LEN + 1]) & 0x80):
             len_remaining = (ord(resp[TCP_HDR_LEN + 2]) + TCP_HDR_LEN) - len(resp)
             len_found = True
@@ -494,6 +494,7 @@ class ModbusClientDeviceTCP(object):
             if local_connect:
                 self.disconnect()
 
+        resp = bytes(resp, 'latin-1')
         return resp
 
     def _write(self, addr, data):
@@ -508,7 +509,8 @@ class ModbusClientDeviceTCP(object):
         write_count = int(write_len/2)
         req = struct.pack('>HHHBBHHB', 0, 0, TCP_WRITE_MULT_REQ_LEN + write_len, int(self.slave_id), func, int(addr), write_count, write_len)
         if sys.version_info > (3,):
-            data = bytes(data, "latin-1")
+            if type(data) is not bytes:
+                data = bytes(data, "latin-1")
         req += data
 
         if self.trace_func:
