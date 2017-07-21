@@ -85,6 +85,60 @@ def modbus_rtu_client_remove(name=None):
         del modbus_rtu_clients[name]
 
 class ModbusClientRTU(object):
+    """A Modbus RTU client that multiple devices can use to access devices over
+    the same serial interface. Currently, the implementation does not support
+    concurent device requests so the support of multiple devices must be single
+    threaded.
+
+    Parameters:
+
+        name :
+            Name of the serial port such as 'com4' or '/dev/ttyUSB0'.
+
+        baudrate :
+            Baud rate such as 9600 or 19200. Default is 9600 if not specified.
+
+        parity :
+            Parity. Possible values:
+                :const:`sunspec.core.modbus.client.PARITY_NONE`,
+                :const:`sunspec.core.modbus.client.PARITY_EVEN`.  Defaults to
+                :const:`PARITY_NONE`.
+
+    Raises:
+
+        ModbusClientError: Raised for any general modbus client error.
+
+        ModbusClientTimeoutError: Raised for a modbus client request timeout.
+
+        ModbusClientException: Raised for an exception response to a modbus
+            client request.
+
+    Attributes:
+
+        name
+            Name of the serial port such as 'com4' or '/dev/ttyUSB0'.
+
+        baudrate
+            Baud rate.
+
+        parity
+            Parity. Possible values:
+                :const:`sunspec.core.modbus.client.PARITY_NONE`,
+                :const:`sunspec.core.modbus.client.PARITY_EVEN`
+
+        serial
+            The pyserial.Serial object used for serial communications.
+
+        timeout
+            Read timeout in seconds. Fractional values are permitted.
+
+        write_timeout
+            Write timeout in seconds. Fractional values are permitted.
+
+        devices
+            List of :const:`sunspec.core.modbus.client.ModbusClientDeviceRTU`
+            devices currently using the client.
+    """
 
     def __init__(self, name='/dev/ttyUSB0', baudrate=9600, parity=None):
         self.name = name
@@ -98,6 +152,8 @@ class ModbusClientRTU(object):
         self.open()
 
     def open(self):
+        """Open the RTU client serial interface.
+        """
 
         try:
             if self.parity == PARITY_EVEN:
@@ -124,6 +180,8 @@ class ModbusClientRTU(object):
             raise ModbusClientError('Serial init error: %s' % str(e))
 
     def close(self):
+        """Close the RTU client serial interface.
+        """
 
         try:
             if self.serial is not None:
@@ -132,10 +190,27 @@ class ModbusClientRTU(object):
             raise ModbusClientError('Serial close error: %s' % str(e))
 
     def add_device(self, slave_id, device):
+        """Add a device to the RTU client.
+
+        Parameters:
+
+            slave_id :
+                Modbus slave id.
+
+            device :
+                Device to add to the client.
+        """
 
         self.devices[slave_id] = device
 
     def remove_device(self, slave_id):
+        """Remove a device from the RTU client.
+
+        Parameters:
+
+            slave_id :
+                Modbus slave id.
+        """
 
         if self.devices.get(slave_id):
             del self.devices[slave_id]
@@ -203,6 +278,34 @@ class ModbusClientRTU(object):
         return resp[3:-2]
 
     def read(self, slave_id, addr, count, op=FUNC_READ_HOLDING, trace_func=None, max_count=REQ_COUNT_MAX):
+        """
+        Parameters:
+
+            slave_id :
+                Modbus slave id.
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Read length in Modbus registers.
+
+            op :
+                Modbus function code for request. Possible values:
+                    :const:`FUNC_READ_HOLDING`, :const:`FUNC_READ_INPUT`.
+
+            trace_func :
+                Trace function to use for detailed logging. No detailed logging
+                is perform is a trace function is not supplied.
+
+            max_count :
+                Maximum register count for a single Modbus request.
+
+        Returns:
+
+            Byte string containing register contents.
+        """
+
         resp = ''
         read_count = 0
         read_offset = 0
@@ -300,6 +403,26 @@ class ModbusClientRTU(object):
                 raise ModbusClientError('Mobus response format error')
 
     def write(self, slave_id, addr, data, trace_func=None, max_count=REQ_COUNT_MAX):
+        """
+        Parameters:
+
+            slave_id :
+                Modbus slave id.
+
+            addr :
+                Starting Modbus address.
+
+            data :
+                Byte string containing register contents.
+
+            trace_func :
+                Trace function to use for detailed logging. No detailed logging
+                is perform is a trace function is not supplied.
+
+            max_count :
+                Maximum register count for a single Modbus request.
+        """
+
         write_count = 0
         write_offset = 0
         count = len(data)/2
@@ -320,6 +443,49 @@ class ModbusClientRTU(object):
             raise ModbusClientError('Client serial port not open: %s' % self.name)
 
 class ModbusClientDeviceRTU(object):
+    """Provides access to a Modbus RTU device.
+
+    Parameters:
+
+        slave_id :
+            Modbus slave id.
+
+        name :
+            Name of the serial port such as 'com4' or '/dev/ttyUSB0'.
+
+        baudrate :
+            Baud rate such as 9600 or 19200. Default is 9600 if not specified.
+
+        parity :
+            Parity. Possible values:
+                :const:`sunspec.core.modbus.client.PARITY_NONE`,
+                :const:`sunspec.core.modbus.client.PARITY_EVEN` Defaulted to
+                :const:`PARITY_NONE`.
+
+        timeout :
+            Modbus request timeout in seconds. Fractional seconds are permitted
+            such as .5.
+
+        ctx :
+            Context variable to be used by the object creator. Not used by the
+            modbus module.
+
+        trace_func :
+            Trace function to use for detailed logging. No detailed logging is
+            perform is a trace function is not supplied.
+
+        max_count :
+            Maximum register count for a single Modbus request.
+
+    Raises:
+
+        ModbusClientError: Raised for any general modbus client error.
+
+        ModbusClientTimeoutError: Raised for a modbus client request timeout.
+
+        ModbusClientException: Raised for an exception response to a modbus
+            client request.
+    """
 
     def __init__(self, slave_id, name, baudrate=None, parity=None, timeout=None, ctx=None, trace_func=None, max_count=REQ_COUNT_MAX):
         self.slave_id = slave_id
@@ -339,15 +505,44 @@ class ModbusClientDeviceRTU(object):
             self.client.serial.writeTimeout = timeout
 
     def close(self):
+        """Close the device. Called when device is not longer in use.
+        """
 
         if self.client:
             self.client.remove_device(self.slave_id)
 
     def read(self, addr, count, op=FUNC_READ_HOLDING):
+        """Read Modbus device registers.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Read length in Modbus registers.
+
+            op :
+                Modbus function code for request.
+
+        Returns:
+
+            Byte string containing register contents.
+        """
 
         return self.client.read(self.slave_id, addr, count, op=op, trace_func=self.trace_func, max_count=self.max_count)
 
     def write(self, addr, data):
+        """Write Modbus device registers.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Byte string containing register contents.
+        """
 
         return self.client.write(self.slave_id, addr, data, trace_func=self.trace_func, max_count=self.max_count)
 
@@ -361,6 +556,77 @@ TCP_DEFAULT_PORT = 502
 TCP_DEFAULT_TIMEOUT = 2
 
 class ModbusClientDeviceTCP(object):
+    """Provides access to a Modbus TCP device.
+
+    Parameters:
+
+        slave_id :
+            Modbus slave id.
+
+        ipaddr :
+            IP address string.
+
+        ipport :
+            IP port.
+
+        timeout :
+            Modbus request timeout in seconds. Fractional seconds are permitted
+            such as .5.
+
+        ctx :
+            Context variable to be used by the object creator. Not used by the
+            modbus module.
+
+        trace_func :
+            Trace function to use for detailed logging. No detailed logging is
+            perform is a trace function is not supplied.
+
+        max_count :
+            Maximum register count for a single Modbus request.
+
+        test :
+            Use test socket. If True use the fake socket module for network
+            communications.
+
+
+    Raises:
+
+        ModbusClientError: Raised for any general modbus client error.
+
+        ModbusClientTimeoutError: Raised for a modbus client request timeout.
+
+        ModbusClientException: Raised for an exception response to a modbus
+            client request.
+
+    Attributes:
+
+        slave_id
+            Modbus slave id.
+
+        ipaddr
+            Destination device IP address string.
+
+        ipport
+            Destination device IP port.
+
+        timeout
+            Modbus request timeout in seconds. Fractional seconds are permitted
+            such as .5.
+
+        ctx
+            Context variable to be used by the object creator. Not used by the
+            modbus module.
+
+        socket
+            Socket used for network connection. If no connection active, value
+            is None.
+
+        trace_func
+            Trace function to use for detailed logging.
+
+        max_count
+            Maximum register count for a single Modbus request.
+    """
 
     def __init__(self, slave_id, ipaddr, ipport=502, timeout=None, ctx=None, trace_func=None, max_count=REQ_COUNT_MAX, test=False):
         self.slave_id = slave_id
@@ -386,6 +652,13 @@ class ModbusClientDeviceTCP(object):
         self.disconnect()
 
     def connect(self, timeout=None):
+        """Connect to TCP destination.
+
+        Parameters:
+
+            timeout :
+                Connection timeout in seconds.
+        """
 
         if self.socket:
             self.disconnect()
@@ -401,6 +674,8 @@ class ModbusClientDeviceTCP(object):
             raise ModbusClientError('Connection error: %s' % str(e))
 
     def disconnect(self):
+        """Disconnect from TCP destination.
+        """
 
         try:
             if self.socket:
@@ -466,6 +741,24 @@ class ModbusClientDeviceTCP(object):
         return resp[(TCP_HDR_LEN + 3):]
 
     def read(self, addr, count, op=FUNC_READ_HOLDING):
+        """ Read Modbus device registers. If no connection exists to the
+        destination, one is created and disconnected at the end of the request.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Read length in Modbus registers.
+
+            op :
+                Modbus function code for request.
+
+        Returns:
+
+            Byte string containing register contents.
+        """
 
         resp = ''
         read_count = 0
@@ -565,6 +858,17 @@ class ModbusClientDeviceTCP(object):
             raise ModbusClientException('Modbus exception: %d' % (except_code))
 
     def write(self, addr, data):
+        """ Write Modbus device registers. If no connection exists to the
+        destination, one is created and disconnected at the end of the request.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Byte string containing register contents.
+        """
 
         write_count = 0
         write_offset = 0
@@ -591,6 +895,49 @@ class ModbusClientDeviceTCP(object):
                 self.disconnect()
 
 class ModbusClientDeviceMapped(object):
+    """Provides access to a Modbus device implemented as a modbus map (mbmap)
+    formatted file.
+
+    Parameters:
+
+        slave_id :
+            Modbus slave id.
+
+        name :
+            Modbus map file name. Must be in mbmap format.
+
+        pathlist :
+            Pathlist object containing alternate paths for modbus map file.
+
+        max_count :
+            Maximum register count for a single Modbus request.
+
+        ctx :
+            Context variable to be used by the object creator. Not used by the
+            modbus module.
+
+    Raises:
+
+        ModbusClientError: Raised for any general modbus client error.
+
+        ModbusClientTimeoutError: Raised for a modbus client request timeout.
+
+        ModbusClientException: Raised for an exception response to a modbus
+            client request.
+
+    Attributes:
+
+        slave_id
+            Modbus slave id.
+
+        ctx
+            Context variable to be used by the object creator. Not used by the
+            modbus module.
+
+        modbus_map
+            The :const:`sunspec.core.modbus.mbmap.ModbusMap` instance associated
+            with the device.
+    """
 
     def __init__(self, slave_id, name, pathlist=None, max_count=None, ctx=None):
 
@@ -606,10 +953,30 @@ class ModbusClientDeviceMapped(object):
             raise mbmap.ModbusMapError('No modbus map file provided during initialization')
 
     def close(self):
+        """Close the device. Called when device is not longer in use.
+        """
 
         pass
 
     def read(self, addr, count, op=None):
+        """Read Modbus device registers. If no connection exists to the
+        destination, one is created and disconnected at the end of the request.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Read length in Modbus registers.
+
+            op :
+                Modbus function code for request.
+
+        Returns:
+
+            Byte string containing register contents.
+        """
 
         if self.modbus_map is not None:
             return self.modbus_map.read(addr, count, op)
@@ -617,6 +984,17 @@ class ModbusClientDeviceMapped(object):
             raise ModbusClientError('No modbus map set for device')
 
     def write(self, addr, data):
+        """Write Modbus device registers. If no connection exists to the
+        destination, one is created and disconnected at the end of the request.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Byte string containing register contents.
+        """
 
         if self.modbus_map is not None:
             return self.modbus_map.write(addr, data)

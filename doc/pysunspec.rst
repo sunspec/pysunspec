@@ -5,7 +5,7 @@
 The pySunSpec package provides objects and applications that support interaction with SunSpec compliant devices and documents.
 It can be run in most environments that support Python and is tested on Wndows 7, MAC OS X, and Ubuntu.
 
-Copyright (c) 2014 SunSpec Alliance
+Copyright (c) 2017 SunSpec Alliance
 
 
 Features
@@ -69,20 +69,38 @@ Unpack the archive, enter the ``pysunspec-x.y`` directory and run::
 
     C:\> python setup.py install
 
-You can test the installation by opening a Command Prompt window and running the pysunspec_test.py script. You should see the results
+You can test the installation by opening a Command Prompt window and running the unittest discover command. You should see the results
 of the test execution with no test failures::
 
-    C:\> pysunspec_test.py
+    C:\> python -m unittest discover -v sunspec
 
-    Test device path: C:\Python27\lib\site-packages\sunspec\core\test\devices
+    test_client_device (core.test.test_client.TestClientDevice) ... ok
+    test_sunspec_client_device_1 (core.test.test_client.TestClientDevice) ... ok
+    test_sunspec_client_device_3 (core.test.test_client.TestClientDevice) ... ok
+    test_data (core.test.test_data.TestData) ... ok
+    test_device_blocktype_not_equal (core.test.test_device.TestDevice) ... ok
+    test_device_common_len_65 (core.test.test_device.TestDevice) ... ok
+    test_device_constant_sf (core.test.test_device.TestDevice) ... ok
+    test_device_from_pics (core.test.test_device.TestDevice) ... ok
+    test_device_models_smdx (core.test.test_device.TestDevice) ... ok
+    test_device_modeltype (core.test.test_device.TestDevice) ... ok
+    test_device_modeltype_not_equal (core.test.test_device.TestDevice) ... ok
+    test_device_pointtype (core.test.test_device.TestDevice) ... ok
+    test_device_pointtype_not_equal (core.test.test_device.TestDevice) ... ok
+    test_device_to_pics (core.test.test_device.TestDevice) ... ok
+    test_device_value_get (core.test.test_device.TestDevice) ... ok
+    test_device_value_set (core.test.test_device.TestDevice) ... ok
+    test_modbus_client_device_rtu_read (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_client_device_rtu_write (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_client_device_tcp_read (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_client_device_tcp_write (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_mbmap_from_xml_element (core.test.test_modbus_mbmap.TestModbusMap) ... ok
+    test_modbus_mbmap_from_xml_file (core.test.test_modbus_mbmap.TestModbusMap) ... ok
 
-    Test device module: total tests: 10  tests run: 10  tests passed: 10  tests failed: 0
-    Test client module: total tests: 3  tests run: 3  tests passed: 3  tests failed: 0
-    Test modbus client module: total tests: 4  tests run: 4  tests passed: 4  tests failed: 0
-    Test modbus mbmap module: total tests: 1  tests run: 1  tests passed: 1  tests failed: 0
-    Test data module: total tests: 1  tests run: 1  tests passed: 1  tests failed: 0
+    ----------------------------------------------------------------------
+    Ran 22 tests in 0.634s
 
-    Total tests run: 19  Total tests passed: 19  Total tests failed: 0
+    OK
 
     C:\>
 
@@ -132,20 +150,38 @@ Unpack the archive, enter the ``pysunspec-x.y`` directory and run::
 
     $ python setup.py install
 
-You can test the installation by opening a Command Prompt window and running the pysunspec_test.py script. You should see the results
+You can test the installation by opening a Command Prompt window and running the unittest discover command. You should see the results
 of the test execution with no test failures::
 
-    $ pysunspec_test.py
+    $ python -m unittest discover -v sunspec
 
-    Test device path: C:\Python27\lib\site-packages\sunspec\core\test\devices
+    test_client_device (core.test.test_client.TestClientDevice) ... ok
+    test_sunspec_client_device_1 (core.test.test_client.TestClientDevice) ... ok
+    test_sunspec_client_device_3 (core.test.test_client.TestClientDevice) ... ok
+    test_data (core.test.test_data.TestData) ... ok
+    test_device_blocktype_not_equal (core.test.test_device.TestDevice) ... ok
+    test_device_common_len_65 (core.test.test_device.TestDevice) ... ok
+    test_device_constant_sf (core.test.test_device.TestDevice) ... ok
+    test_device_from_pics (core.test.test_device.TestDevice) ... ok
+    test_device_models_smdx (core.test.test_device.TestDevice) ... ok
+    test_device_modeltype (core.test.test_device.TestDevice) ... ok
+    test_device_modeltype_not_equal (core.test.test_device.TestDevice) ... ok
+    test_device_pointtype (core.test.test_device.TestDevice) ... ok
+    test_device_pointtype_not_equal (core.test.test_device.TestDevice) ... ok
+    test_device_to_pics (core.test.test_device.TestDevice) ... ok
+    test_device_value_get (core.test.test_device.TestDevice) ... ok
+    test_device_value_set (core.test.test_device.TestDevice) ... ok
+    test_modbus_client_device_rtu_read (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_client_device_rtu_write (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_client_device_tcp_read (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_client_device_tcp_write (core.test.test_modbus_client.TestModbusClient) ... ok
+    test_modbus_mbmap_from_xml_element (core.test.test_modbus_mbmap.TestModbusMap) ... ok
+    test_modbus_mbmap_from_xml_file (core.test.test_modbus_mbmap.TestModbusMap) ... ok
 
-    Test device module: total tests: 10  tests run: 10  tests passed: 10  tests failed: 0
-    Test client module: total tests: 3  tests run: 3  tests passed: 3  tests failed: 0
-    Test modbus client module: total tests: 4  tests run: 4  tests passed: 4  tests failed: 0
-    Test modbus mbmap module: total tests: 1  tests run: 1  tests passed: 1  tests failed: 0
-    Test data module: total tests: 1  tests run: 1  tests passed: 1  tests failed: 0
+    ----------------------------------------------------------------------
+    Ran 22 tests in 0.634s
 
-    Total tests run: 19  Total tests passed: 19  Total tests failed: 0
+    OK
 
     $
 

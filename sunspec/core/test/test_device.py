@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2016 SunSpec Alliance
+    Copyright (C) 2017 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,7 @@
 
 import sys
 import os
+import unittest
 
 try:
     import xml.etree.ElementTree as ET
@@ -294,27 +295,27 @@ def create_test_device_1():
 
     return d
 
-def test_device_modeltype(pathlist=None):
-    mt = device.ModelType()
 
-    try:
+class TestDevice(unittest.TestCase):
+    def setUp(self):
+        path = os.path.abspath(__file__)
+        self.pathlist = util.PathList(['.',
+                                       os.path.join(os.path.dirname(path),
+                                                    'devices')])
+
+    def test_device_modeltype(self):
+        mt = device.ModelType()
+
         root = ET.fromstring(test_device_pointtype_smdx_1)
         mt.from_smdx(root)
 
         if mt.id != 63001 or mt.len != 152:
             raise Exception('model type attribute error: id = %s  len = %d' % (mt.id, mt.len))
 
-    except Exception as e:
-        raise
-        print('*** Failure test_device_modeltype: %s' % (str(e)))
-        return False
 
-    return True
+    def test_device_pointtype(self):
+        points = {}
 
-def test_device_pointtype(pathlist=None):
-    points = {}
-
-    try:
         block = ET.fromstring(test_device_pointtype_smdx_2)
         for p in block.findall('*'):
             pt = device.PointType()
@@ -324,17 +325,13 @@ def test_device_pointtype(pathlist=None):
         pt = points.get('p_int16')
         if (pt.id != 'p_int16' or pt.offset != 0 or pt.type != suns.SUNS_TYPE_INT16 or pt.len != 1):
             raise Exception('p_int16 error')
-    except Exception as e:
-        print('*** Failure test_device_pointtype: %s' % (str(e)))
-        return False
-    return True
 
-def test_device_pointtype_not_equal(pathlist=None):
-    pt1 = device.PointType('point_1', 0, smdx.SMDX_TYPE_INT16)
-    pt2 = device.PointType('point_1', 0, smdx.SMDX_TYPE_INT16)
-    pt3 = device.PointType('point_1', 0, smdx.SMDX_TYPE_INT16)
 
-    try:
+    def test_device_pointtype_not_equal(self):
+        pt1 = device.PointType('point_1', 0, smdx.SMDX_TYPE_INT16)
+        pt2 = device.PointType('point_1', 0, smdx.SMDX_TYPE_INT16)
+        pt3 = device.PointType('point_1', 0, smdx.SMDX_TYPE_INT16)
+
         not_equal = pt1.not_equal(pt2)
         if not_equal:
             raise Exception(not_equal)
@@ -342,26 +339,22 @@ def test_device_pointtype_not_equal(pathlist=None):
         not_equal = pt1.not_equal(pt3)
         if not_equal:
             raise Exception(not_equal)
-    except Exception as e:
-        print('*** Failure test_device_pointtype_not_equal: %s' % str(e))
-        return False
-    return True
 
-def test_device_blocktype_not_equal(pathlist=None):
-    pt1a = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
-    pt1b = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
-    pt2a = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
-    pt2b = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
-    bt1a = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
-    bt1b = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
-    bt1a.points[pt1a.id] = pt1a
-    bt1a.points[pt2a.id] = pt2a
-    bt1b.points[pt1b.id] = pt1b
-    bt1b.points[pt2b.id] = pt2b
-    bt2a = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
-    bt2b = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
 
-    try:
+    def test_device_blocktype_not_equal(self):
+        pt1a = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
+        pt1b = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
+        pt2a = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
+        pt2b = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
+        bt1a = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
+        bt1b = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
+        bt1a.points[pt1a.id] = pt1a
+        bt1a.points[pt2a.id] = pt2a
+        bt1b.points[pt1b.id] = pt1b
+        bt1b.points[pt2b.id] = pt2b
+        bt2a = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
+        bt2b = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
+
         not_equal = bt1a.not_equal(bt1b)
         if not_equal:
             raise Exception(not_equal)
@@ -369,67 +362,45 @@ def test_device_blocktype_not_equal(pathlist=None):
         not_equal = bt2a.not_equal(bt2b)
         if not_equal:
             raise Exception(not_equal)
-    except Exception as e:
-        print('*** Failure test_device_blocktype_not_equal: %s' % str(e))
-        return False
-    return True
 
-def test_device_modeltype_not_equal(pathlist=None):
-    pt1a = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
-    pt1b = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
-    pt2a = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
-    pt2b = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
-    bt1a = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
-    bt1b = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
-    bt1a.points[pt1a.id] = pt1a
-    bt1a.points[pt2a.id] = pt2a
-    bt1b.points[pt1b.id] = pt1b
-    bt1b.points[pt2b.id] = pt2b
-    bt2a = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
-    bt2b = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
-    mt1 = device.ModelType(1)
-    mt2 = device.ModelType(1)
-    mt1.fixed_block = bt1a
-    mt1.repeating_block = bt2a
-    mt2.fixed_block = bt1b
-    mt2.repeating_block = bt2b
 
-    try:
+    def test_device_modeltype_not_equal(self):
+        pt1a = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
+        pt1b = device.PointType('point_1', 0, suns.SUNS_TYPE_INT16)
+        pt2a = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
+        pt2b = device.PointType('point_2', 0, suns.SUNS_TYPE_UINT16)
+        bt1a = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
+        bt1b = device.BlockType(suns.SUNS_BLOCK_FIXED, 20)
+        bt1a.points[pt1a.id] = pt1a
+        bt1a.points[pt2a.id] = pt2a
+        bt1b.points[pt1b.id] = pt1b
+        bt1b.points[pt2b.id] = pt2b
+        bt2a = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
+        bt2b = device.BlockType(suns.SUNS_BLOCK_REPEATING, 30)
+        mt1 = device.ModelType(1)
+        mt2 = device.ModelType(1)
+        mt1.fixed_block = bt1a
+        mt1.repeating_block = bt2a
+        mt2.fixed_block = bt1b
+        mt2.repeating_block = bt2b
+
         not_equal = mt1.not_equal(mt2)
         if not_equal:
             raise Exception(not_equal)
 
-    except Exception as e:
-        print('*** Failure test_device_blocktype_not_equal: %s' % str(e))
-        return False
-    return True
 
-def test_device_model_type_get(pathlist=None):
-    try:
-        device.model_type_get(221)
-    except Exception as e:
-        print('*** Failure test_model_type_get: %s' % str(e))
-        return False
-    return True
-
-def test_device_from_pics(pathlist=None):
-    try:
+    def test_device_from_pics(self):
         d1 = device.Device()
-        d1.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)
+        d1.from_pics(filename='pics_test_device_1.xml', pathlist=self.pathlist)
         d2 = create_test_device_1()
         not_equal = d1.not_equal(d2)
         if not_equal:
             raise Exception(not_equal)
-    except Exception as e:
-        raise
-        print('*** Failure test_device_from_pics: %s' % str(e))
-        return False
-    return True
 
-def test_device_to_pics(pathlist=None):
-    try:
+
+    def test_device_to_pics(self):
         d1 = device.Device()
-        d1.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)
+        d1.from_pics(filename='pics_test_device_1.xml', pathlist=self.pathlist)
 
         root = ET.Element(pics.PICS_ROOT)
         d1.to_pics(root, single_repeating=False)
@@ -446,15 +417,10 @@ def test_device_to_pics(pathlist=None):
         not_equal = d1.not_equal(d2)
         if not_equal:
             raise Exception(not_equal)
-    except Exception as e:
-        print('*** Failure test_device_to_pics: %s' % str(e))
-        return False
-    return True
 
-def test_device_value_get(pathlist=None):
-    try:
+    def test_device_value_get(self):
         d = device.Device()
-        d.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)
+        d.from_pics(filename='pics_test_device_1.xml', pathlist=self.pathlist)
 
         m = d.models[63001][0]
         p = 'int16_4'
@@ -463,33 +429,23 @@ def test_device_value_get(pathlist=None):
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
-    except Exception as e:
-        print('*** Failure test_device_value_get: %s' % str(e))
-        return False
-    return True
 
-def test_device_value_set(pathlist=None):
-    try:
+    def test_device_value_set(self):
         d = device.Device()
-        d.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)
+        d.from_pics(filename='pics_test_device_1.xml', pathlist=self.pathlist)
 
         m = d.models[63001][0]
         expected_value = -180
         p = 'int16_4'
         m.points[p].value = expected_value
-        value = m.points[p].value 
+        value = m.points[p].value
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
-    except Exception as e:
-        print('*** Failure test_device_value_get: %s' % str(e))
-        return False
-    return True
 
-def test_device_common_len_65(pathlist=None):
-    try:
+    def test_device_common_len_65(self):
         d = device.Device()
-        d.from_pics(filename='pics_test_device_2.xml', pathlist=pathlist)
+        d.from_pics(filename='pics_test_device_2.xml', pathlist=self.pathlist)
 
         m_1 = d.models[1][0]
         expected_value = 'TestDevice-2'
@@ -502,20 +458,15 @@ def test_device_common_len_65(pathlist=None):
         expected_value = -180
         p = 'int16_4'
         m_63001.points[p].value = expected_value
-        value = m_63001.points[p].value 
+        value = m_63001.points[p].value
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
-    except Exception as e:
-        print('*** Failure test_device_common_len_65: %s' % str(e))
-        return False
-    return True
 
-# verify all models in the default models directory can be read
-def test_device_models_smdx(pathlist=None):
+    # verify all models in the default models directory can be read
+    def test_device_models_smdx(self):
 
-    path = device.model_type_path_default
-    try:
+        path = device.model_type_path_default
         files = os.listdir(path)
         model_id = None
         for f in files:
@@ -525,14 +476,10 @@ def test_device_models_smdx(pathlist=None):
                     device.model_type_get(model_id)
             except Exception as e:
                 raise Exception('Error scanning model %s: %s' % (str(model_id), e))
-    except Exception as e:
-        raise Exception('Error scanning model directory %s: %s' % (path, e))
-    return True
 
-def test_device_constant_sf(pathlist=None):
-    try:
+    def test_device_constant_sf(self):
         d = device.Device()
-        d.from_pics(filename='pics_test_device_1.xml', pathlist=pathlist)
+        d.from_pics(filename='pics_test_device_1.xml', pathlist=self.pathlist)
 
         m = d.models[63001][0]
         p = 'uint32_4'
@@ -541,52 +488,7 @@ def test_device_constant_sf(pathlist=None):
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
-    except Exception as e:
-        print('*** Failure test_device_constant_sf: %s' % str(e))
-        return False
-    return True
-
-test_device_tests = [
-    test_device_modeltype,
-    test_device_pointtype,
-    test_device_pointtype_not_equal,
-    test_device_blocktype_not_equal,
-    test_device_modeltype_not_equal,
-    test_device_from_pics,
-    test_device_to_pics,
-    test_device_value_get,
-    test_device_value_set,
-    test_device_common_len_65,
-    test_device_models_smdx,
-    test_device_constant_sf
-]
-
-def test_all(pathlist=None, stop_on_failure=True):
-
-    if pathlist is not None:
-        device.file_pathlist = pathlist
-    else:
-        device.file_pathlist = util.PathList(['.', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'devices')])
-
-    count_passed = 0
-    count_failed = 0
-    count_run = 0
-
-    for test in test_device_tests:
-        count_run += 1
-        if test(pathlist) is True:
-            count_passed += 1
-        else:
-            count_failed += 1
-            if stop_on_failure is True:
-                break
-
-    print('Test device module: total tests: %d  tests run: %d  tests passed: %d  tests failed: %d' %  (len(test_device_tests), count_run, count_passed, count_failed))
-
-    return (count_run, count_passed, count_failed)
 
 if __name__ == "__main__":
 
-  (count_run, count_passed, count_failed) = test_all()
-  sys.exit(count_failed)
-
+  unittest.main()

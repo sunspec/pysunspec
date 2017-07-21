@@ -40,6 +40,31 @@ file_pathlist = None
 MAX_READ_COUNT = 125
 
 class Device(object):
+    """
+    Parameters:
+
+        addr :
+            Modbus base address of device.
+
+    Raises:
+        SunSpecError: Any error encountered in device processing.
+
+
+    Attributes:
+
+        base_addr
+            Modbus base address of the device.
+
+        models_list
+            List of model objects present in the device in the order in which
+            they appear in the device.
+
+        models
+            Dictionary of model object lists reperesenting model types present
+            in the device indexed by model id. The elements are model lists to
+            allow more than one model of the same model type to be present in
+            the device.
+    """
 
     def __init__(self, addr=suns.SUNS_BASE_ADDR_DEFAULT):
 
@@ -48,6 +73,13 @@ class Device(object):
         self.models = {}               # dict of model arrays to support more than one instance of a model
 
     def add_model(self, model):
+        """Add a model object to the device.
+
+        Parameters:
+
+            model :
+                Model object to add to the device.
+        """
 
         models = self.models.get(model.id)
         if models is None:
@@ -57,6 +89,22 @@ class Device(object):
         self.models_list.append(model)
 
     def from_pics(self, element=None, filename=None, pathlist=None):
+        """The PICS information for the device can be either an Element Tree
+        element for a device from a document already being processed or the file
+        name of document in the file system. Populates the device based on the
+        elements within the device element.
+
+        Parameters:
+
+            element :
+                Element Tree device element.
+
+            filename :
+                File name of the PICS document.
+
+            pathlist :
+                Pathlist object containing alternate paths to the PICS document.
+        """
 
         global file_pathlist
 
@@ -122,7 +170,7 @@ class Device(object):
                 self.add_model(model)
 
                 addr += model.len + 2
-        
+
         except Exception as e:
             raise SunSpecError('Error loading PICS: %s' % str(e))
 
@@ -144,6 +192,19 @@ class Device(object):
     """
 
     def to_pics(self, parent, single_repeating=True):
+        """Adds the device and all elements within the device to the parent
+        element. If *single_repeating* is True, only the first repeating block
+        for each model is added to the document.
+
+        Parameters:
+
+            parent :
+                Element Tree element on which to place the device element.
+
+            single_repeating :
+                Flag to indicate whether to include a single or all repeating
+                blocks within each model in the PICS document.
+        """
 
         attr = {pics.PICS_ATTR_VERSION: str(pics.PICS_VERSION)}
 
@@ -153,6 +214,16 @@ class Device(object):
             model.to_pics(e, single_repeating=single_repeating)
 
     def not_equal(self, device):
+        """Determines if the specified device instance is not equal based on all
+        the device attribute values including models, blocks and points.  If not
+        equal, returns a string indicating why the device is not equal. Returns
+        False if the device is equal.
+
+        Parameters:
+
+            device :
+                Device to compare.
+        """
 
         if len(self.models_list) != len(device.models_list):
             return 'Devices not equal - model counts: %d  %d' % (len(self.models_list), len(device.models_list))
@@ -170,6 +241,57 @@ class Device(object):
         return device_str
 
 class Block(object):
+    """
+    Parameters:
+
+        model :
+            Model associated with the block.
+
+        addr :
+            Modbus address of the first point in the block.
+
+        blen :
+            Length of the block in Modbus registers.
+
+        block_type :
+            The :const:`sunspec.core.device.BlockType` instance associated with
+            the block.
+
+        index :
+            Block instance index for the block type within the model.
+
+    Attributes:
+
+        model
+            Model associated with the block.
+
+        block_type
+            The :const:`sunspec.core.device.BlockType` instance associated with
+            the block.
+
+        addr
+            Modbus address of the first point in the block.
+
+        len
+            Length of the block in Modbus registers.
+
+        type
+            Block type, either :const:`sunspec.core.suns.SUNS_BLOCK_FIXED` or
+            :const:`sunspec.core.suns.SUNS_BLOCK_REPEATING`.
+
+        index
+            Block instance index for the block type within the model.
+
+        points_list
+            List of non-scale factor points in the block ordered by offset.
+
+        points
+            Dictionary of non-scale factor points in the block indexed by point
+            id.
+
+        points_sf
+            Dictionary of scale factor points int the block indexed by point id.
+    """
 
     def __init__(self, model, addr, blen, block_type, index=1):
 
@@ -184,6 +306,14 @@ class Block(object):
         self.points_sf = {}
 
     def from_pics(self, element):
+        """Sets the block contents based on an element tree model type element
+        contained in a SunSpec PICS document.
+
+        Parameters:
+
+            element :
+                Element Tree model element.
+        """
 
         for p in element.findall('*'):
             if p.tag != pics.PICS_POINT:
@@ -201,6 +331,14 @@ class Block(object):
                 point.value_sf = point.sf_point.value_base
 
     def to_pics(self, parent):
+        """Adds the block and all elements within the block to the parent
+        element.
+
+        Parameters:
+
+            parent :
+                Element Tree element on which to place the block element.
+        """
 
         attr = {}
 
@@ -221,6 +359,16 @@ class Block(object):
                 point.to_pics(e)
 
     def not_equal(self, block):
+        """Determines if the specified block instance is not equal based on all
+        the block attribute values including points.  If not equal, returns a
+        string indicating why the block is not equal. Returns False if the block
+        is equal.
+
+        Parameters:
+
+            device :
+                Block to compare.
+        """
 
         s = self.block_type.not_equal(block.block_type)
         if s:
@@ -240,6 +388,60 @@ class Block(object):
         return block_str
 
 class Point(object):
+    """
+    Parameters:
+
+        block :
+            Block associated with the point.
+
+        point_type :
+            The :const:`sunspec.core.device.PointType` instance associated with
+            the point.
+
+        addr :
+            The Modbus address of the point.
+
+        sf_point :
+            Scale factor point associated with the point if present.
+
+        value :
+            Initial value for the *value_base* attribute of the point.
+
+    Attributes:
+
+        block
+            Block associated with the point.
+
+        point_type
+            The :const:`sunspec.core.device.PointType` instance associated with
+            the point.
+
+        addr
+            Modbus address of the point.
+
+        sf_point
+            Scale factor point associated with the point if present.
+
+        impl
+            Indication if the point is implemented. A value of True indicates
+            the point is implmented. Intended to be used for cases when no
+            initial value is given for the point but the implementation status
+            is known as in SunSpec PICS documents.
+
+        value_base
+            Value of the point without the point scale factor applied.
+
+        value_sf
+            Scale factor point value.
+
+        dirty
+            Indication if the point has been written to the physical device
+            since the last update of the point. A value of True indicates that
+            the point has not been written since the last update.
+
+        value
+            Value of the point with the scale factor applied.
+    """
 
     def __init__(self, block=None, point_type=None, addr=None, sf_point=None, value=None):
 
@@ -252,7 +454,7 @@ class Point(object):
         self.value_sf = None
         self.dirty = False
 
-    """ 
+    """
     @property
     def value(self):
         if self.value_sf:
@@ -299,10 +501,18 @@ class Point(object):
             self.value_base = self.point_type.to_value(v)
 
         self.dirty = True
-    
+
     value = property(value_getter, value_setter, None)
 
     def from_pics(self, element):
+        """Sets the block contents based on an element tree model type element
+        contained in a SunSpec PICS document.
+
+        Parameters:
+
+            element :
+                Element Tree model element.
+        """
 
         impl = True
         impl_attr = element.attrib.get(pics.PICS_ATTR_IMPLEMENTED)
@@ -322,6 +532,13 @@ class Point(object):
             self.value_base = value
 
     def to_pics(self, parent):
+        """Adds the point to the parent element.
+
+        Parameters:
+
+            parent :
+                Element Tree element on which to place the point element.
+        """
 
         attr = {pics.PICS_ATTR_ID: str(self.point_type.id)}
 
@@ -337,6 +554,15 @@ class Point(object):
             e.text = str(self.value_base).rstrip('\0')
 
     def not_equal(self, point):
+        """ Determines if the specified point instance is not equal based on all
+        the point attribute values.  If not equal, returns a string indicating
+        why the point is not equal. Returns False if the point is equal.
+
+        Parameters:
+
+            device :
+                Point to compare.
+        """
 
         s = self.point_type.not_equal(point.point_type)
         if s:
@@ -350,7 +576,7 @@ class Point(object):
                 print('point.value_base', type(point.value_base), point.value_base)
             return 'point %s not equal: %s %s - %s %s' % (self.point_type.id, self.value_base, self.value_sf, point.value_base, point.value_sf)
         return False
-        
+
     def __str__(self):
         point_str = 'Point: id = %s impl= %s addr = %s value_base = %s' % (self.point_type.id, str(self.impl), self.addr, str(self.value_base))
         if self.sf_point is not None:
@@ -364,6 +590,66 @@ class ScaleFactor(object):
         self.value_base = value
 
 class Model(object):
+    """
+    Parameters:
+
+        device :
+            Device associated with the model.
+
+        mid :
+            Model id.
+
+        addr :
+            Modbus address of the first point in the model.
+
+        mlen :
+            Length of the model in Modbus registers.
+
+        index :
+            Model instance index for the model type within the device.
+
+    Raises:
+
+        SunSpecError: Any error encountered in device processing.
+
+
+    Attributes:
+
+        device
+            Device instance that contains the model instance.
+
+        id
+            Model id. The model id maps to a SunSpec model type definition.
+
+        index
+            Model instance index for the model type within the device. Model
+            instance indexes start at 1 for the first model type instance.
+
+        model_type
+            The :const:`sunspec.core.device.ModelType` instance associated with
+            the model.
+
+        addr
+            Modbus address of the first point in the model.
+
+        len
+            Length of the model in Modbus registers.
+
+        points_list
+            List of fixed block non-scale factor points ordered by offset.
+
+        points
+            Dictionary of fixed block non-scale factor points indexed by point
+            id.
+
+        points_sf
+            Dictionary of fixed block scale factor points indexed by point id.
+
+        blocks
+            List of blocks contained in the model instance. Block 0 is the fixed
+            block if present and blocks 1 to n are the repeating block
+            instances.
+    """
 
     def __init__(self, device=None, mid=None, addr=0, mlen=0, index=1):
 
@@ -381,6 +667,17 @@ class Model(object):
         self.read_blocks = []
 
     def load(self, block_class=Block, point_class=Point):
+        """Loads the model instance with blocks and points based on the SunSpec
+        model type definition.
+
+        Parameters:
+
+            block_class :
+                Block class to use to create block instances.
+
+            point_class :
+                Point class to use to create point instances.
+        """
 
         last_read_addr = self.addr
         self.read_blocks.append(last_read_addr)
@@ -459,6 +756,14 @@ class Model(object):
             pass
 
     def from_pics(self, element):
+        """ Sets the model contents based on an element tree model type element
+        contained in a SunSpec PICS document.
+
+        Parameters:
+
+            element :
+                Element Tree model element.
+        """
 
         # update index if present
         self.index = element.attrib.get(pics.PICS_ATTR_INDEX, self.index)
@@ -488,6 +793,19 @@ class Model(object):
                 raise SunSpecError('Internal block type error')
 
     def to_pics(self, parent, single_repeating=True):
+        """ Adds the model and all elements within the model to the parent
+        element. If *single_repeating* is True, only the first repeating block
+        is added to the document.
+
+        Parameters:
+
+            parent :
+                Element Tree element on which to place the model element.
+
+            single_repeating :
+                Flag to indicate whether to include a single or all repeating
+                blocks within the model in the PICS document.
+        """
 
         attr = {pics.PICS_ATTR_ID: str(self.id), pics.PICS_ATTR_LEN: str(self.len)}
 
@@ -501,6 +819,16 @@ class Model(object):
                 block.to_pics(e)
 
     def not_equal(self, model):
+        """ Determines if the specified model instance is not equal based on all
+        the model attribute values including blocks and points.  If not equal,
+        returns a string indicating why the model is not equal. Returns False if
+        the model is equal.
+
+        Parameters:
+
+            device :
+                Model to compare.
+        """
 
         if len(self.blocks) != len(model.blocks):
             return 'model %s not equal - block counts: %d  %d' % (self.model_type.id, len(self.blocks), len(model.blocks))
@@ -537,7 +865,7 @@ def model_type_get(model_id):
         smdx_data = ''
         # create model file name
         filename = smdx.model_id_to_filename(model_id)
- 
+
         # check in file path list if set
         if file_pathlist is not None:
             try:
@@ -556,7 +884,7 @@ def model_type_get(model_id):
                     f.close()
                 except Exception as e:
                     raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
-      
+
         if smdx_data:
             root = ET.fromstring(smdx_data)
 
@@ -573,6 +901,37 @@ def model_type_get(model_id):
     return model_type
 
 class ModelType(object):
+    """
+    Parameters:
+
+        mid :
+            Model id that identifies a specific SunSpec model type definition.
+
+    Attributes:
+
+        id
+            Model id that identifies a specific SunSpec model type definition.
+
+        len
+            Length in Modbus registers of the model type as specified in the
+            model definition.
+
+        label
+            Label string as specified in the model definition.
+
+        description
+            Description string as specified in the model definition.
+
+        notes
+            Notes string as specified in the model definition.
+
+        fixed_block
+            Fixed block type as specified in the model definition if present.
+
+        repeating_block
+            Repeating block type as specified in the model definition if
+            present.
+    """
 
     def __init__(self, mid=None):
 
@@ -587,6 +946,14 @@ class ModelType(object):
         self.symbols = {}
 
     def from_smdx(self, element):
+        """ Sets the model type attributes based on an element tree model type
+        element contained in an SMDX model definition.
+
+        Parameters:
+
+            element :
+                Element Tree model type element.
+        """
 
         smdx_data = ''
 
@@ -651,6 +1018,16 @@ class ModelType(object):
         return self.symbols.get(sid)
 
     def not_equal(self, model_type):
+        """ Determines if the specified model type instance is not equal based
+        on all the model type attribute values including blocks and points.  If
+        not equal, returns a string indicating why the model type is not equal.
+        Returns False if the model type is equal.
+
+        Parameters:
+
+            model_type :
+                Model type to compare.
+        """
 
         if self == model_type:
             return False
@@ -692,6 +1069,32 @@ class ModelType(object):
         return s
 
 class BlockType(object):
+    """
+    Parameters:
+
+        btype :
+            Block type as specified in the model definition. Valid values are
+            sunspec.core.suns.SUNS_BLOCK_FIXED or
+            sunspec.core.suns.SUNS_BLOCK_REPEATING.
+
+        blen : Block length in Modbus registers.
+
+    Attributes:
+
+        type
+            Block type as specified in the model definition. Valid values are
+            sunspec.core.suns.SUNS_BLOCK_FIXED or
+            sunspec.core.suns.SUNS_BLOCK_REPEATING.
+
+        len
+            Block length in Modbus registers.
+
+        points_list
+            List containing the points in the block in offset order.
+
+        points
+            Dictionary containg the points in the block indexed by the point id.
+    """
 
     def __init__(self, btype=None, blen=0, name=None, model_type=None):
         self.model_type = model_type
@@ -702,6 +1105,14 @@ class BlockType(object):
         self.points = {}
 
     def from_smdx(self, element):
+        """ Sets the block type attributes based on an element tree block type
+        element contained in an SMDX model definition.
+
+        Parameters:
+
+            element :
+                Element Tree block type element.
+        """
 
         btype = element.attrib.get(smdx.SMDX_ATTR_TYPE, smdx.SMDX_ATTR_TYPE_FIXED)
 
@@ -729,6 +1140,16 @@ class BlockType(object):
             self.points[pt.id] = pt
 
     def not_equal(self, block_type):
+        """ Determines if the specified block type instance is not equal based
+        on all the block type attribute values including points.  If not equal,
+        returns a string indicating why the block type is not equal. Returns
+        False if the block type is equal.
+
+        Parameters:
+
+            block_type :
+                Block type to compare.
+        """
 
         if self == block_type:
             return False
@@ -757,6 +1178,95 @@ class BlockType(object):
         return s
 
 class PointType(object):
+    """
+    Parameters:
+
+        pid :
+            Point id as specified in the model definition.
+
+        offset :
+            Point offset within the block as specified in the model definition.
+
+        ptype :
+            Point type as specified in the model definition. Valid values are
+            defined in sunspec.core.suns.SUNS_TYPE_*.
+
+        plen :
+            Point length in Modbus registers for points that have a type of
+            'string'.
+
+        mandatory :
+            Mandatory indication as specified in the model definition. Valid
+            values are sunspec.core.suns.SUNS_MANDATORY_TRUE or
+            sunspec.core.suns.SUNS_MANDATORY_FALSE.
+
+        access :
+            Point access setting as specfied in the model definition. Valid
+            values are sunspec.core.suns.SUNS_ACCESS_R or
+            sunspec.core.suns.SUNS_ACCESS_RW.
+
+        sf :
+            Id of the scale factor point associated with the point or None if
+            the point does not have a scale factor.
+
+    Attributes:
+
+        id
+            Point id as specified in the model definition.
+
+        offset
+            Point offset within the block as specified in the model definition.
+
+        type
+            Point type as specified in the model definition. Valid values are
+            defined in sunspec.core.suns.SUNS_TYPE_*.
+
+        len
+            Point length in Modbus registers for points that have a type of
+            'string'.
+
+        mandatory
+            Mandatory indication as specified in the model definition. Valid
+            values are sunspec.core.suns.SUNS_MANDATORY_TRUE or
+            sunspec.core.suns.SUNS_MANDATORY_FALSE.
+
+        access
+            Point access setting as specfied in the model definition. Valid
+            values are sunspec.core.suns.SUNS_ACCESS_R or
+            sunspec.core.suns.SUNS_ACCESS_RW.
+
+        sf
+            Id of the scale factor point associated with the point or None if
+            the point does not have a scale factor.
+
+        label
+            Label string as specified in the model definition.
+
+        description
+            Description string as specified in the model definition.
+
+        notes
+            Notes string as specified in the model definition.
+
+        value_default
+            Default value for a point instance if no value specified.
+
+        is_impl
+            Contains the function to call with the point value as an argument to
+            determine if the point is implemented.
+
+        data_to
+            Contains the function to call to transform a binary data string to
+            the point value.
+
+        to_data
+            Contains the function to call to transform the point value to a
+            binary data string.
+
+        to_value
+            Contains the function to call to transform a point value string into
+            a point value of the type associated with the point.
+    """
 
     def __init__(self, pid=None, offset=None, ptype=None, plen=None, mandatory=None, access=None, sf=None,
                  block_type=None):
@@ -780,6 +1290,18 @@ class PointType(object):
         self.symbols = []
 
     def from_smdx(self, element, strings=False):
+        """ Sets the point attributes based on an element tree point element
+        contained in an SMDX model definition.
+
+        Parameters:
+
+            element :
+                Element Tree point type element.
+
+            strings :
+                Indicates if *element* is a subelement of the 'strings'
+                definintion within the model definition.
+        """
 
         for e in element.findall('*'):
             if e.tag == smdx.SMDX_LABEL:
@@ -841,6 +1363,16 @@ class PointType(object):
                 return symbol
 
     def not_equal(self, point_type):
+        """ Determines if the specified point type instance is not equal based
+        on all the point type attribute values. If not equal, returns string
+        indicating why the point type is not equal. Returns False if the point
+        type is equal.
+
+        Parameters:
+
+            point_type :
+                Point type to compare.
+        """
 
         if self == point_type:
             return False

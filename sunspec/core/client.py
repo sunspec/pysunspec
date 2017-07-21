@@ -43,9 +43,85 @@ class SunSpecClientError(SunSpecError):
 
 class ClientDevice(device.Device):
 
+    """ClientDevice
+
+    A derived class based on :const:`sunspec.core.device.Device`. It adds Modbus
+    device access capability to the device base class.
+
+    Parameters:
+
+        device_type :
+             Device type. Possible values: :const:`RTU`, :const:`TCP`,
+             :const:`MAPPED`.
+
+        slave_id :
+            Modbus slave id.
+
+        name :
+            For :const:`RTU` devices, the name of the serial port such as 'com4'
+            or '/dev/tty2'. For :const:`MAPPED` devices, the name of the modbus
+            map file.
+
+        pathlist :
+            Pathlist object containing alternate paths to support files.
+
+        baudrate :
+            For :const:`RTU` devices, baud rate such as 9600 or 19200. Defaulted
+            by modbus module to 9600.
+
+        parity :
+            For :const:`RTU` devices, parity. Possible values:
+            :const:`PARITY_NONE`, :const:`PARITY_EVEN`
+            Defaulted by modbus module to :const:`PARITY_NONE`.
+
+        ipaddr :
+            For :const:`TCP` devices, device IP address.
+
+        ipport :
+            For :const:`TCP` devices, device IP port. Defaulted by modbus module
+            to 502.
+
+        timeout :
+            Modbus request timeout in seconds. Fractional seconds are permitted
+            such as .5.
+
+        trace :
+            Enable low level trace.
+
+    Raises:
+
+        SunSpecClientError: Raised for any sunspec module error.
+
+    Attributes:
+
+        type
+            Device type. Possible values: :const:`RTU`, :const:`TCP`,
+            :const:`MAPPED`.
+
+        name
+            For :const:`RTU` devices, the name of the serial port such as 'com4'
+            or '/dev/tty2'. For :const:`MAPPED` devices, the name of the modbus
+            map file.
+
+        pathlist
+            Pathlist object containing alternate paths to support files.
+
+        slave_id
+            Modbus slave id.
+
+        modbus_device
+            Modbus device object. Object type is based on the device type.
+
+        retry_count
+            Request retry count. Currently not used.
+
+        base_addr_list
+            List of Modbus base addresses to try when scanning a device for the
+            first time.
+    """
+
     def __init__(self, device_type, slave_id=None, name=None, pathlist = None, baudrate=None, parity=None, ipaddr=None, ipport=None,
                  timeout=None, trace=False):
-
         device.Device.__init__(self, addr=None)
 
         self.type = device_type
@@ -79,6 +155,20 @@ class ClientDevice(device.Device):
             self.modbus_device.close()
 
     def read(self, addr, count):
+        """Read Modbus device registers.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Register count.
+
+        Returns:
+            Byte string containing register contents.
+        """
+
         try:
             if self.modbus_device is not None:
                 return self.modbus_device.read(addr, count)
@@ -88,6 +178,16 @@ class ClientDevice(device.Device):
             raise SunSpecClientError('Modbus read error: %s' % str(e))
 
     def write(self, addr, data):
+        """Write Modbus device registers.
+
+        Parameters:
+
+            addr :
+                Starting Modbus address.
+
+            count :
+                Byte string containing register contents.
+        """
 
         try:
             if self.modbus_device is not None:
@@ -98,11 +198,18 @@ class ClientDevice(device.Device):
             raise SunSpecClientError('Modbus write error: %s' % str(e))
 
     def read_points(self):
+        """Read the points for all models in the device from the physical
+        device.
+        """
 
         for model in self.models_list:
             model.read_points()
 
     def scan(self, progress=None, delay=None):
+        """Scan all the models of the physical device and create the
+        corresponding model objects within the device object based on the
+        SunSpec model definitions.
+        """
 
         error = ''
 
@@ -179,16 +286,45 @@ class ClientDevice(device.Device):
             self.modbus_device.disconnect()
 
 class ClientModel(device.Model):
+    """A derived class based on :const:`sunspec.core.device.Model`. It adds
+    Modbus device access capability to the model base class.
+
+    Parameters:
+
+        dev :
+            Device object associated with the model.
+
+        mid :
+            Model id.
+
+        addr :
+            Starting Modbus address of the model.
+
+        mlen :
+            Model length in Modbus registers.
+
+        index :
+            Model index.
+
+    Raises:
+
+        SunSpecClientError: Raised for any sunspec module error.
+    """
 
     def __init__(self, dev=None, mid=None, addr=0, mlen=None, index=1):
 
         device.Model.__init__(self, device=dev, mid=mid, addr=addr, mlen=mlen, index=index)
 
     def load(self):
+        """Create the block and point objects within the model object based on
+        the corresponding SunSpec model definition.
+        """
 
         device.Model.load(self, block_class=ClientBlock, point_class=ClientPoint)
 
     def read_points(self):
+        """Read all points in the model from the physical device.
+        """
 
         if self.model_type is not None:
             # read current model
@@ -254,6 +390,9 @@ class ClientModel(device.Model):
                 raise
 
     def write_points(self):
+        """Write all points that have been modified since the last write
+        operation to the physical device.
+        """
 
         addr = None
         next_addr = None
@@ -281,24 +420,108 @@ class ClientModel(device.Model):
                 addr = None
 
 class ClientBlock(device.Block):
+    """A derived class based on :const:`sunspec.core.device.Block`. It adds
+    Modbus device access capability to the block base class.
+
+    Parameters:
+
+        model :
+            Model object associated with the block.
+
+        addr :
+            Starting Modbus address of the block.
+
+        blen :
+            Block length in Modbus registers.
+
+        block_type :
+            The block type object associated with block in the model
+            definition.
+
+        index :
+            Block index.
+    """
 
     def __init__(self, model, addr, blen, block_type, index=1):
 
         device.Block.__init__(self, model, addr, blen, block_type, index)
 
 class ClientPoint(device.Point):
+    """A derived class based on :const:`sunspec.core.device.Point`. It adds
+    Modbus device access capability to the point base class.
+
+    Parameters:
+
+        block :
+            Block object associated with the point.
+
+        point_type :
+            The point type object associated with point in the model definition.
+
+        addr :
+            Starting Modbus address of the point.
+
+        sf_point :
+            Point object associated with the point scale factor if present.
+
+        value :
+            Point value.
+
+    Raises:
+
+        SunSpecClientError: Raised for any sunspec module error.
+    """
 
     def __init__(self, block=None, point_type=None, addr=None, sf_point=None, value=None):
 
         device.Point.__init__(self, block, point_type, addr, sf_point, value)
 
     def write(self):
+        """Write the point to the physical device.
+        """
 
         data = self.point_type.to_data(self.value_base, (int(self.point_type.len) * 2))
         self.block.model.device.write(int(self.addr), data)
         self.dirty = False
 
 class SunSpecClientModelBase(object):
+
+    """This class forms the base class of the dynamically generated model
+    classes during SunSpecClientDevice initialization. In addition to the
+    attributes listed below, the model (fixed block) points are placed as
+    attributes on the model.
+
+    Parameters:
+
+        model :
+            The :const:`sunspec.core.device.Model` associated with the model.
+
+        name :
+            Model name as specified in the model definition.
+
+    Raises:
+
+        SunSpecClientError : Raised for any sunspec module error.
+
+    Attributes:
+
+        model
+            The :const:`sunspec.core.device.Model` object associated with the
+            model.
+
+        name
+            Model name as specified in the model definition.
+
+        repeating
+            Repeating block if the model contains one.
+
+        repeating_name
+            Repeating block name.
+
+        points
+            Names of the point attributes added to the model object.
+    """
+
 
     def __init__(self, model, name):
         self.model = model
@@ -337,9 +560,14 @@ class SunSpecClientModelBase(object):
         # self.__dict__.set(key, item)
 
     def read(self):
+        """Read all points in the model from the physical device."""
+
         self.model.read_points()
 
     def write(self):
+        """Write all points that have been modified since the last write
+        operation to the physical device."""
+
         self.model.write_points()
 
     def __str__(self):
@@ -356,6 +584,35 @@ class SunSpecClientModelBase(object):
 
 class SunSpecClientBlockBase(object):
 
+    """SunSpecClientBlockBase
+
+    This class forms the base class of the dynamically generated repeating
+    block classes during SunSpecClientDevice initialization. In addition to
+    the attributes listed below, the repeating block points are placed as
+    attributes on the repeating block.
+
+    Parameters:
+
+        block :
+             The :const:`sunspec.core.device.Block` object associated with the
+             block.
+
+        name :
+             Repeating block name as specified in the model definition.
+
+    Attributes:
+
+        block
+            The :const:`sunspec.core.device.Block` object associated with the
+            block.
+
+        name
+            Block name as specified in the model definition.
+
+        points
+            Names of the point attributes added to the block object.
+    """
+
     def __init__(self, block, name):
         self.block = block
         self.name = name
@@ -370,7 +627,7 @@ class SunSpecClientBlockBase(object):
         if point:
             point.value = value
 
-    def __getitem__(self, key):
+    def __getitem__(self, name):
         return self._get_property(name)
         # return self.__dict__.get(key, None)
 
@@ -435,6 +692,77 @@ def model_class_get(model_id):
 
 class SunSpecClientDevice(object):
 
+    """This class wraps the sunspec.core.ClientDevice class to provide an
+    alternate syntax for scripting. By placing the model (fixed block) points,
+    and repeating block points directly on the model and repeating block objects
+    as attributes, the syntax for accessing them is simplified.
+
+    The model and block classes within the device are dynamically generated
+    based on the model type with the appropriate attributes being added during
+    creation.
+
+    Parameters:
+
+        device_type :
+            Device type. Possible values: :const:`RTU`, :const:`TCP`,
+            :const:`MAPPED`.
+
+        slave_id :
+            Modbus slave id
+
+        name :
+            For :const:`RTU` devices, the name of the serial port such as 'com4'
+            or '/dev/ttyUSB0'. For :const:`MAPPED` devices, the name of the
+            modbus map file.
+
+        pathlist :
+            Pathlist object containing alternate paths to support files.
+
+        baudrate :
+            For :const:`RTU` devices, baud rate such as 9600 or 19200. Defaulted
+            by modbus module to 9600.
+
+        parity :
+            For :const:`RTU` devices, parity. Possible values:
+            :const:`sunspec.core.client.PARITY_NONE`,
+            :const:`sunspec.core.client.PARITY_EVEN` Defaulted by modbus module
+            to :const:`PARITY_NONE`.
+
+        ipaddr :
+            For :const:`TCP` devices, device IP address.
+
+        ipport :
+            For :const:`TCP` devices, device IP port. Defaulted by modbus module
+            to 502.
+
+        timeout :
+            Modbus request timeout in seconds. Fractional seconds are permitted
+            such as .5.
+
+        trace :
+            Enable low level trace.
+
+    Raises:
+
+        SunSpecClientError: Raised for any sunspec module error.
+
+    Attributes:
+
+        device
+            The :const:`sunspec.core.client.ClientDevice` associated with this
+            object.
+
+        models
+            List of models present in the device in the order in which they
+            appear in the device. If there is a single instance of the model in
+            the device, the list element is a model object.
+
+            If there are multiple instances of the same model in the list, the
+            list element for that model is a list of the models of that type in
+            the order in which they appear in the device with the first element
+            having an index of 1.
+    """
+
     def __init__(self, device_type, slave_id=None, name=None, pathlist = None, baudrate=None, parity=None, ipaddr=None, ipport=None,
                  timeout=None, trace=False, scan_progress=None, scan_delay=None):
 
@@ -475,9 +803,17 @@ class SunSpecClientDevice(object):
             raise
 
     def close(self):
+        """Release resources associated with the device. Should be called when
+        the device object is no longer in use.
+        """
+
         self.device.close()
 
     def read(self):
+        """Read the points for all models in the device from the physical
+        device.
+        """
+
         self.device.read_points()
 
     def __getitem__(self, key):
