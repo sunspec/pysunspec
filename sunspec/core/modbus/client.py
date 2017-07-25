@@ -787,7 +787,9 @@ class ModbusClientDeviceTCP(object):
             if local_connect:
                 self.disconnect()
 
-        resp = bytes(resp, 'latin-1')
+        if sys.version_info > (3,):
+            resp = bytes(resp, 'latin-1')
+
         return resp
 
     def _write(self, addr, data):
