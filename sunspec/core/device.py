@@ -171,7 +171,7 @@ class Device(object):
 
                 addr += model.len + 2
 
-        except Exception, e:
+        except Exception as e:
             raise SunSpecError('Error loading PICS: %s' % str(e))
 
     """
