@@ -171,7 +171,7 @@ class Device(object):
 
                 addr += model.len + 2
 
-        except Exception as e:
+        except Exception, e:
             raise SunSpecError('Error loading PICS: %s' % str(e))
 
     """
@@ -899,6 +899,17 @@ def model_type_get(model_id):
             raise SunSpecError('Model file for model %s not found' % (str(model_id)))
 
     return model_type
+
+def check_for_models(pathlist):
+    # The common model (1) should be accessible.
+    try:
+        model_type_get(1)
+    except:
+        raise Exception(
+            'Unable to open common model (1).  '
+            'Make certain model repository is available.  '
+            'Please reference the README.md.'
+        )
 
 class ModelType(object):
     """

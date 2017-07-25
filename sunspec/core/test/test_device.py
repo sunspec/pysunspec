@@ -303,6 +303,8 @@ class TestDevice(unittest.TestCase):
                                        os.path.join(os.path.dirname(path),
                                                     'devices')])
 
+        device.check_for_models(pathlist=self.pathlist)
+
     def test_device_modeltype(self):
         mt = device.ModelType()
 
