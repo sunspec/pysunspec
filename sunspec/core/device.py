@@ -699,7 +699,15 @@ class Model(object):
                 block_len = self.len
 
             # while another block
-            while end_addr >= block_addr + block_len:
+            while True:
+                block_end = block_addr + block_len
+                if end_addr < block_end:
+                    raise SunSpecError(
+                        'Block (length {}, ending at {}) would exceed end of '
+                        'model reported by device ({}).'
+                        .format(block_len, block_end, end_addr)
+                    )
+
                 block = block_class(self, block_addr, block_len, block_type, index)
                 self.blocks.append(block)
 
