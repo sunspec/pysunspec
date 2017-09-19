@@ -698,7 +698,6 @@ class Model(object):
             if self.id == 1 and self.len == 65:
                 block_len = self.len
 
-            # while another block
             while True:
                 block_end = block_addr + block_len
                 if end_addr < block_end:
