@@ -25,6 +25,7 @@ import os
 import socket
 import struct
 import serial
+import sys
 
 try:
     import xml.etree.ElementTree as ET
@@ -172,7 +173,7 @@ class ModbusClientRTU(object):
                                           stopbits=1, xonxoff=0,
                                           timeout=self.timeout, writeTimeout=self.write_timeout)
 
-        except Exception, e:
+        except Exception as e:
             if self.serial is not None:
                 self.serial.close()
                 self.serial = None
@@ -185,7 +186,7 @@ class ModbusClientRTU(object):
         try:
             if self.serial is not None:
                 self.serial.close()
-        except Exception, e:
+        except Exception as e:
             raise ModbusClientError('Serial close error: %s' % str(e))
 
     def add_device(self, slave_id, device):
@@ -237,11 +238,17 @@ class ModbusClientRTU(object):
         self.serial.flushInput()
         try:
             self.serial.write(req)
-        except Exception, e:
+        except Exception as e:
             raise ModbusClientError('Serial write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
+            if type(c) == bytes and sys.version_info > (3,):
+                temp = ""
+                for i in c:
+                    temp += chr(i)
+                c = temp
+
             len_read = len(c);
             if len_read > 0:
                 resp += c
@@ -328,11 +335,18 @@ class ModbusClientRTU(object):
         except_code = None
         func = FUNC_WRITE_MULTIPLE
         len_data = len(data)
-        count = len_data/2
+        count = int(len_data/2)
 
         req = struct.pack('>BBHHB', int(slave_id), func, int(addr), count, len_data)
+        if sys.version_info > (3,):
+            data = bytes(data, "latin-1")
         req += data
         req += struct.pack('>H', computeCRC(req))
+        if sys.version_info > (3,):
+            temp = ""
+            for i in req:
+                temp += chr(i)
+            req = temp
 
         if trace_func:
             s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
@@ -342,12 +356,19 @@ class ModbusClientRTU(object):
 
         self.serial.flushInput()
         try:
+            if sys.version_info > (3,):
+                req = bytes(req, "latin-1")
             self.serial.write(req)
-        except Exception, e:
+        except Exception as e:
             raise ModbusClientError('Serial write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
+            if type(c) == bytes and sys.version_info > (3,):
+                temp = ""
+                for i in c:
+                    temp += chr(i)
+                c = temp
             len_read = len(c);
             if len_read > 0:
                 resp += c
@@ -375,6 +396,8 @@ class ModbusClientRTU(object):
         if except_code:
             raise ModbusClientException('Modbus exception: %d' % (except_code))
         else:
+            if sys.version_info > (3,):
+                resp = bytes(resp, 'latin-1')
             resp_slave_id, resp_func, resp_addr, resp_count, resp_crc = struct.unpack('>BBHHH', resp)
             if resp_slave_id != slave_id or resp_func != func or resp_addr != addr or resp_count != count:
                 raise ModbusClientError('Mobus response format error')
@@ -410,7 +433,10 @@ class ModbusClientRTU(object):
                     write_count = max_count
                 else:
                     write_count = count
-                self._write(slave_id, addr + write_offset, data[(write_offset * 2):((write_offset + write_count) * 2)], trace_func=trace_func)
+                start = int(write_offset * 2)
+                end = int((write_offset + write_count) * 2)
+                self._write(slave_id, addr + write_offset, data[start:end],
+                            trace_func=trace_func)
                 count -= write_count
                 write_offset += write_count
         else:
@@ -644,7 +670,7 @@ class ModbusClientDeviceTCP(object):
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.settimeout(timeout)
             self.socket.connect((self.ipaddr, self.ipport))
-        except Exception, e:
+        except Exception as e:
             raise ModbusClientError('Connection error: %s' % str(e))
 
     def disconnect(self):
@@ -660,7 +686,7 @@ class ModbusClientDeviceTCP(object):
 
     def _read(self, addr, count, op=FUNC_READ_HOLDING):
 
-        resp = ''
+        resp = b''
         len_remaining = TCP_HDR_LEN + TCP_RESP_MIN_LEN
         len_found = False
         except_code = None
@@ -675,12 +701,12 @@ class ModbusClientDeviceTCP(object):
 
         try:
             self.socket.sendall(req)
-        except Exception, e:
+        except Exception as e:
             raise ModbusClientError('Socket write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
-            # print 'c = {0}'.format(c)
+            # print('c = {0}'.format(c))
             len_read = len(c);
             if len_read > 0:
                 resp += c
@@ -690,6 +716,12 @@ class ModbusClientDeviceTCP(object):
                     len_remaining = data_len[0] - (len(resp) - TCP_HDR_LEN)
             else:
                 raise ModbusClientError('Response timeout')
+
+        if sys.version_info > (3,):
+            temp = ""
+            for i in resp:
+                temp += chr(i)
+            resp = temp
 
         if not (ord(resp[TCP_HDR_LEN + 1]) & 0x80):
             len_remaining = (ord(resp[TCP_HDR_LEN + 2]) + TCP_HDR_LEN) - len(resp)
@@ -744,6 +776,7 @@ class ModbusClientDeviceTCP(object):
                 else:
                     read_count = count
                 data = self._read(addr + read_offset, read_count, op=op)
+
                 if data:
                     resp += data
                     count -= read_count
@@ -753,6 +786,9 @@ class ModbusClientDeviceTCP(object):
         finally:
             if local_connect:
                 self.disconnect()
+
+        if sys.version_info > (3,):
+            resp = bytes(resp, 'latin-1')
 
         return resp
 
@@ -765,8 +801,11 @@ class ModbusClientDeviceTCP(object):
         func = FUNC_WRITE_MULTIPLE
 
         write_len = len(data)
-        write_count = write_len/2
+        write_count = int(write_len/2)
         req = struct.pack('>HHHBBHHB', 0, 0, TCP_WRITE_MULT_REQ_LEN + write_len, int(self.slave_id), func, int(addr), write_count, write_len)
+        if sys.version_info > (3,):
+            if type(data) is not bytes:
+                data = bytes(data, "latin-1")
         req += data
 
         if self.trace_func:
@@ -777,19 +816,31 @@ class ModbusClientDeviceTCP(object):
 
         try:
             self.socket.sendall(req)
-        except Exception, e:
+        except Exception as e:
             raise ModbusClientError('Socket write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
-            # print 'c = {0}'.format(c)
+            # print('c = {0}'.format(c))
             len_read = len(c);
             if len_read > 0:
+                if type(c) == bytes and sys.version_info > (3,):
+                    temp = ""
+                    for i in c:
+                        temp += chr(i)
+                    c = temp
                 resp += c
                 len_remaining -= len_read
                 if len_found is False and len(resp) >= TCP_HDR_LEN + TCP_RESP_MIN_LEN:
+                    if sys.version_info > (3,):
+                        resp = bytes(resp, "latin-1")
                     data_len = struct.unpack('>H', resp[TCP_HDR_O_LEN:TCP_HDR_O_LEN + 2])
                     len_remaining = data_len[0] - (len(resp) - TCP_HDR_LEN)
+                if type(resp) == bytes and sys.version_info > (3,):
+                    temp = ""
+                    for i in resp:
+                        temp += chr(i)
+                    resp = temp
             else:
                 raise ModbusClientTimeout('Response timeout')
 
@@ -836,7 +887,9 @@ class ModbusClientDeviceTCP(object):
                     write_count = self.max_count
                 else:
                     write_count = count
-                self._write(addr + write_offset, data[(write_offset * 2):((write_offset + write_count) * 2)])
+                    start = (write_offset * 2)
+                    end = int((write_offset + write_count) * 2)
+                self._write(addr + write_offset, data[start:end])
                 count -= write_count
                 write_offset += write_count
         finally:
@@ -980,6 +1033,11 @@ def computeCRC(data):
     :returns: The calculated CRC
     '''
     crc = 0xffff
+    if type(data) == bytes and sys.version_info > (3,):
+        temp = ""
+        for i in data:
+            temp += chr(i)
+        data = temp
     for a in data:
         idx = __crc16_table[(crc ^ ord(a)) & 0xff];
         crc = ((crc >> 8) & 0xff) ^ idx

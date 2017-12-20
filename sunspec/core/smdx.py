@@ -126,7 +126,7 @@ def model_filename_to_id(filename):
     if filename[0:5] == 'smdx_' and filename[-4:] == '.xml':
         try:
             model_id = int(filename[5:-4])
-        except Exception, e:
+        except Exception as e:
             pass
 
     return model_id
