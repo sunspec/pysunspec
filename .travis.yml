@@ -6,6 +6,11 @@ python:
     - 3.4
     - 3.5
 
+branches:
+  only:
+  - master
+  - testing
+
 install: 
     - pip install pyserial
     - git submodule update --init --recursive
