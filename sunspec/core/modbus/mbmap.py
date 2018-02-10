@@ -22,11 +22,16 @@
 """
 
 import struct
+import sys
 
 try:
     import xml.etree.ElementTree as ET
 except:
     import elementtree.ElementTree as ET
+
+# Python 3 compatibility for long()
+if sys.version_info > (3,):
+    long = int
 
 MBMAP_ROOT = 'mbmap'
 MBMAP_ADDR = 'addr'
@@ -127,7 +132,7 @@ class ModbusMap(object):
                     data_list = line.rstrip('\r\n').split()
                     data_len = len(data_list)/2
                     if data_len > 0:
-                        # print offset, data_list
+                        # print(offset, data_list)
                         for b in data_list:
                             c = struct.pack('B', int(b, 16))
                             if data is None:
@@ -138,7 +143,7 @@ class ModbusMap(object):
             mmr = ModbusMapRegs(offset, len(data)/2, data, MBMAP_REGS_ACCESS_RW)
             self.regs.append(mmr)
             f.close()
-        except Exception, e:
+        except Exception as e:
             try:
                 f.close()
             except:
@@ -244,7 +249,12 @@ class ModbusMap(object):
                 elif rtype == MBMAP_REGS_TYPE_STRING:
                     if rlen == 0:
                         rlen = (len(text) + 3)/4
-                    data = struct.pack(str(rlen * 2) + 's', str(text))
+
+                    # Python 3 compatibility for byte strings
+                    if sys.version_info > (3,):
+                        text = bytes(text, 'latin-1')
+
+                    data = struct.pack(str(rlen * 2) + 's', text)
                 elif rtype == MBMAP_REGS_TYPE_HEX_STRING:
                     if text:
                         # remove any spaces
@@ -281,7 +291,7 @@ class ModbusMap(object):
                 else:
                     last_regs.append(offset, rlen, data, access)
 
-        except Exception, e:
+        except Exception as e:
             raise ModbusMapError('Error loading %s (%s) at offset %d - %s' % (filename, pathlist, offset, str(e)))
 
     def to_xml(self, parent=None, no_data=False):
@@ -359,7 +369,7 @@ class ModbusMap(object):
             Byte string containing register contents.
         """
 
-        data = ''
+        data = b''
         count_remaining = count
 
         if op and op != self.func:
@@ -383,7 +393,7 @@ class ModbusMap(object):
 
         # must have all requested data for success
         if len(data) != int(count) * 2:
-            print self
+            print(self)
             raise ModbusMapError('Data read error - addr = %d  data len = %d  count = %d' % (addr, len(data), count))
 
         return data
@@ -417,7 +427,9 @@ class ModbusMap(object):
                         write_count = count_remaining
                     # regs
                     # data += regs.read(offset, read_count)
-                    regs.write(offset, data[data_offset:data_offset+(write_count * 2)])
+                    start = data_offset
+                    end = int(data_offset + (write_count * 2))
+                    regs.write(offset, data[start:end])
                     offset += write_count
                     data_offset += write_count
                     count_remaining -= write_count
@@ -542,7 +554,7 @@ class ModbusMapRegs(object):
         count = len(data)/2
         if (offset >= self.offset) and (offset + count <= self.offset + self.count):
             start = (offset - self.offset) * 2
-            end = start + (count * 2)
+            end = int(start + (count * 2))
             self.data = self.data[:start] + data + self.data[end:]
         else:
            raise ModbusMapError('Data write error')

@@ -23,6 +23,7 @@
 
 import os
 import struct
+import sys
 import zipfile
 import array
 
@@ -95,6 +96,12 @@ except Exception:
         return d[0]
 
 def data_to_str(data):
+
+    # Change the data from bytes string to regular string for python 3
+    # compatibility
+    if sys.version_info > (3,):
+        data = str(data, 'latin-1')
+
     if len(data) > 1:
         data = data[0] + data[1:].rstrip('\0')
     return data
@@ -135,6 +142,8 @@ def float_to_data(f, len=None):
 def str_to_data(s, slen=None):
     if slen is None:
         slen = len(s)
+    if sys.version_info > (3,):
+        s = bytes(s, 'latin-1')
     return struct.pack(str(slen) + 's', s)
 
 def eui48_to_data(eui48):
@@ -223,7 +232,7 @@ class PathList(object):
                 zip_file = zipfile.ZipFile(zip_file_path)
                 try:
                     zip_file.getinfo(file_path)
-                except Exception, e:
+                except Exception as e:
                     continue
                 return zip_file.read(file_path)
             else:

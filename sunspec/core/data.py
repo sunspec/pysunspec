@@ -22,6 +22,8 @@
 """
 
 import time
+import sys
+
 
 try:
     import xml.etree.ElementTree as ET
@@ -115,7 +117,14 @@ class SunSpecData(object):
         if pretty_print:
             util.indent(self.root)
 
-        return ET.tostring(self.root)
+        out = ET.tostring(self.root)
+        if sys.version_info > (3,):
+            temp = ""
+            for i in out:
+                temp += chr(i)
+            out = temp
+
+        return out
 
     def __init__(self, element=None, data_record=None):
 
@@ -235,8 +244,12 @@ class ModelData(object):
 
         attr = {SDX_MODEL_ID: str(self.model_id)}
 
+        if self.index is None and sys.version_info > (3,):
+            self.index = -233
         if self.index > 1:
             attr[SDX_MODEL_INDEX] = self.index
+        if self.index is -233 and sys.version_info > (3,):
+            self.index = None
         if self.namespace:
             attr[SDX_MODEL_NAMESPACE] = self.namespace
 

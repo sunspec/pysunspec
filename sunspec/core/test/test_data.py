@@ -41,7 +41,7 @@ class TestData(unittest.TestCase):
         m.point_add("P1", 23)
         m.point_add("P2", 24)
 
-        # print sd.to_xml(pretty_print=True)
+        # print(sd.to_xml(pretty_print=True))
         xml = sd.to_xml_str()
         if xml != expected_xml:
             raise Exception('XML mismatch: %s %s' % (xml, expected_xml))

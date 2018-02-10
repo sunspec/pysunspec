@@ -22,6 +22,11 @@
 """
 
 import sunspec.core.util as util
+import sys
+
+# Python 3 compatibility for long()
+if sys.version_info > (3,):
+    long = int
 
 SUNS_BASE_ADDR_DEFAULT = 40000
 SUNS_SUNS_LEN = 2

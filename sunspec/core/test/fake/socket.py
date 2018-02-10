@@ -31,8 +31,8 @@ class socket(object):
         self.proto = proto
         self.connected = False
         self.timeout = 0
-        self.in_buf = ''
-        self.out_buf = ''
+        self.in_buf = b''
+        self.out_buf = b''
 
     def connect(self, addr_port):
     	self.connected = True
@@ -48,16 +48,16 @@ class socket(object):
         read_len = size
 
         data_len = len(self.in_buf)
-    	if data_len < read_len:
-    		read_len = data_len
+        if data_len < read_len:
+            read_len = data_len
 
-    	if read_len > 0:
-    		data = self.in_buf[:read_len]
-    		self.in_buf = self.in_buf[read_len:]
-    	return data
+        if read_len > 0:
+                data = self.in_buf[:read_len]
+                self.in_buf = self.in_buf[read_len:]
+        return data
 
     def send(self, data):
-    	self.out_buf += data
+        self.out_buf += data
 
     def sendall(self, data):
-    	self.out_buf += data
+        self.out_buf += data

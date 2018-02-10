@@ -164,14 +164,14 @@ class Device(object):
                 model = Model(self, model_id, addr + 2, model_len)
                 try:
                     model.load()
-                except Exception, e:
+                except Exception as e:
                     model.load_error = str(e)
                 model.from_pics(m)
                 self.add_model(model)
 
                 addr += model.len + 2
 
-        except Exception, e:
+        except Exception as e:
             raise SunSpecError('Error loading PICS: %s' % str(e))
 
     """
@@ -546,7 +546,7 @@ class Point(object):
             attr[pics.PICS_ATTR_IMPLEMENTED] = str(pics.PICS_IMPLEMENTED_FALSE)
         else:
             if self.point_type.access != suns.SUNS_ACCESS_R:
-                access =  [key for key, value in pics.pics_access_types.iteritems() if value == suns.SUNS_ACCESS_RW][0]
+                access =  [key for key, value in pics.pics_access_types.items() if value == suns.SUNS_ACCESS_RW][0]
                 attr[pics.PICS_ATTR_ACCESS] = str(access)
 
         e = ET.SubElement(parent, pics.PICS_POINT, attrib=attr)
@@ -571,9 +571,9 @@ class Point(object):
         if (((self.value_base is not None or point.value_base is not None) and (self.value_base != point.value_base)) or
             ((self.value_sf is not None or point.value_sf is not None) and (self.value_sf != point.value_sf))):
             if self.value_base is not None:
-                print 'self.value_base'
+                print('self.value_base')
             if point.value_base is not None:
-                print 'point.value_base', type(point.value_base), point.value_base
+                print('point.value_base', type(point.value_base), point.value_base)
             return 'point %s not equal: %s %s - %s %s' % (self.point_type.id, self.value_base, self.value_sf, point.value_base, point.value_sf)
         return False
 
@@ -882,7 +882,7 @@ def model_type_get(model_id):
                     f = open(filename, 'r')
                     smdx_data = f.read()
                     f.close()
-                except Exception, e:
+                except Exception as e:
                     raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
 
         if smdx_data:
@@ -893,7 +893,7 @@ def model_type_get(model_id):
                 model_type = ModelType()
                 model_type.from_smdx(root)
                 model_types[model_type.id] = model_type
-            except Exception, e:
+            except Exception as e:
                 raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
         else:
             raise SunSpecError('Model file for model %s not found' % (str(model_id)))
