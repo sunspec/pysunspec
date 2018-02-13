@@ -26,6 +26,7 @@ import struct
 import sys
 import zipfile
 import array
+import base64
 
 class SunSpecError(Exception):
     pass
@@ -58,41 +59,40 @@ def data_to_u64(data):
     return u64[0]
 
 def data_to_ipv6addr(data):
-    addr = struct.unpack('16s', data)
-    return addr[0]
+    if sys.version_info < (3,):
+        data = [ord(x) for x in data]
+
+    value = False
+    for i in data:
+        if i != 0:
+            value = True
+            break
+    if value and len(data) == 16:
+        return '%02X%02X%02X%02X:%02X%02X%02X%02X:%02X%02X%02X%02X:%02X%02X%02X%02X' % (
+            data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],
+            data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15])
 
 def data_to_eui48(data):
-    return '%02X:%02X:%02X:%02X:%02X:%02X' % (ord(data[2]), ord(data[3]), ord(data[4]), ord(data[5]), ord(data[6]), ord(data[7]))
+    if sys.version_info < (3,):
+        data = [ord(x) for x in data]
 
-try:
-    float('nan')
+    value = False
+    for i in data:
+        if i != 0:
+            value = True
+            break
+    if value and len(data) == 8:
+        return '%02X:%02X:%02X:%02X:%02X:%02X' % (
+            data[2], data[3], data[4], data[5], data[6], data[7])
 
-    def data_to_float(data):
-        f = struct.unpack('>f', data)
+def data_to_float(data):
+    f = struct.unpack('>f', data)
+    if str(f[0]) != str(float('nan')):
         return f[0]
 
-    def data_to_double(data):
-        d = struct.unpack('>d', data)
-        return d[0]
-
-except Exception:
-    # earlier python version - nan not supported
-    def data_to_float(data):
-        e = struct.unpack('>L', data)
-        # if all exponent bits are '1' it is nan or inf, set to None
-        if (e[0] & 0x7f800000) == 0x7f800000:
-            return None
-        else:
-            f = struct.unpack('>f', data)
-        return f[0]
-
-    def data_to_double(data):
-        e = struct.unpack('>Q', data)
-        # if all exponent bits are '1' it is nan or inf, set to None
-        if (e[0] & 0x7ff0000000000000) == 0x7ff0000000000000:
-            return None
-        else:
-            d = struct.unpack('>d', data)
+def data_to_double(data):
+    d = struct.unpack('>d', data)
+    if str(d[0]) != str(float('nan')):
         return d[0]
 
 def data_to_str(data):
@@ -124,13 +124,14 @@ def s64_to_data(s64, len=None):
 def u64_to_data(u64, len=None):
     return struct.pack('>Q', u64)
 
-def ipv6addr_to_data(addr, len=None):
-    return struct.pack('16s', addr)
+def ipv6addr_to_data(addr, slen=None):
+    s = base64.b16decode(addr.replace(':', ''))
+    if slen is None:
+        slen = len(s)
+    return struct.pack(str(slen) + 's', s)
 
 def float_to_data32(f, len=None):
-    # convert python float (float64) to float32 before packing
-    fa = array('f', f)
-    return struct.pack('>f', fa[0])
+    return struct.pack('>f', f)
 
 def float32_to_data(f, len=None):
     return struct.pack('>f', f)
@@ -144,10 +145,14 @@ def str_to_data(s, slen=None):
         slen = len(s)
     if sys.version_info > (3,):
         s = bytes(s, 'latin-1')
+    if slen < 16:
+        s += b'\x00'
+        slen += 1
     return struct.pack(str(slen) + 's', s)
 
 def eui48_to_data(eui48):
-    return ('0000' + eui48.replace(':', '')).decode('hex')
+    return (b'\x00\x00' + base64.b16decode(eui48.replace(':', '')))
+
 
 """ Simple XML pretty print support function
 
