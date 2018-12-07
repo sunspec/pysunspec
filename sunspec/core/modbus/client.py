@@ -221,7 +221,7 @@ class ModbusClientRTU(object):
             modbus_rtu_client_remove(self.name)
 
     def _read(self, slave_id, addr, count, op=FUNC_READ_HOLDING, trace_func=None):
-        resp = ''
+        resp = bytearray()
         len_remaining = 5
         len_found = False
         except_code = None
@@ -243,22 +243,17 @@ class ModbusClientRTU(object):
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
-            if type(c) == bytes and sys.version_info > (3,):
-                temp = ""
-                for i in c:
-                    temp += chr(i)
-                c = temp
 
             len_read = len(c);
             if len_read > 0:
                 resp += c
                 len_remaining -= len_read
                 if len_found is False and len(resp) >= 5:
-                    if not (ord(resp[1]) & 0x80):
-                        len_remaining = (ord(resp[2]) + 5) - len(resp)
+                    if not (resp[1] & 0x80):
+                        len_remaining = (resp[2] + 5) - len(resp)
                         len_found = True
                     else:
-                        except_code = ord(resp[2])
+                        except_code = resp[2]
             else:
                 raise ModbusClientTimeout('Response timeout')
 
@@ -268,7 +263,7 @@ class ModbusClientRTU(object):
                 s += '%02X' % (ord(c))
             trace_func(s)
 
-        crc = (ord(resp[-2]) << 8) | ord(resp[-1])
+        crc = (resp[-2] << 8) | resp[-1]
         if not checkCRC(resp[:-2], crc):
             raise ModbusClientError('CRC error')
 
@@ -306,7 +301,7 @@ class ModbusClientRTU(object):
             Byte string containing register contents.
         """
 
-        resp = ''
+        resp = bytearray()
         read_count = 0
         read_offset = 0
 
@@ -329,7 +324,7 @@ class ModbusClientRTU(object):
         return resp
 
     def _write(self, slave_id, addr, data, trace_func=None):
-        resp = ''
+        resp = bytearray()
         len_remaining = 5
         len_found = False
         except_code = None
@@ -338,15 +333,8 @@ class ModbusClientRTU(object):
         count = int(len_data/2)
 
         req = struct.pack('>BBHHB', int(slave_id), func, int(addr), count, len_data)
-        if sys.version_info > (3,):
-            data = bytes(data, "latin-1")
         req += data
         req += struct.pack('>H', computeCRC(req))
-        if sys.version_info > (3,):
-            temp = ""
-            for i in req:
-                temp += chr(i)
-            req = temp
 
         if trace_func:
             s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
@@ -356,25 +344,18 @@ class ModbusClientRTU(object):
 
         self.serial.flushInput()
         try:
-            if sys.version_info > (3,):
-                req = bytes(req, "latin-1")
             self.serial.write(req)
         except Exception as e:
             raise ModbusClientError('Serial write error: %s' % str(e))
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
-            if type(c) == bytes and sys.version_info > (3,):
-                temp = ""
-                for i in c:
-                    temp += chr(i)
-                c = temp
             len_read = len(c);
             if len_read > 0:
                 resp += c
                 len_remaining -= len_read
                 if len_found is False and len(resp) >= 5:
-                    if not (ord(resp[1]) & 0x80):
+                    if not (resp[1] & 0x80):
                         len_remaining = 8 - len(resp)
                         len_found = True
                     else:
@@ -389,15 +370,13 @@ class ModbusClientRTU(object):
             trace_func(s)
 
 
-        crc = (ord(resp[-2]) << 8) | ord(resp[-1])
+        crc = (resp[-2] << 8) | resp[-1]
         if not checkCRC(resp[:-2], crc):
             raise ModbusClientError('CRC error')
 
         if except_code:
             raise ModbusClientException('Modbus exception: %d' % (except_code))
         else:
-            if sys.version_info > (3,):
-                resp = bytes(resp, 'latin-1')
             resp_slave_id, resp_func, resp_addr, resp_count, resp_crc = struct.unpack('>BBHHH', resp)
             if resp_slave_id != slave_id or resp_func != func or resp_addr != addr or resp_count != count:
                 raise ModbusClientError('Mobus response format error')
@@ -686,7 +665,7 @@ class ModbusClientDeviceTCP(object):
 
     def _read(self, addr, count, op=FUNC_READ_HOLDING):
 
-        resp = b''
+        resp = bytearray()
         len_remaining = TCP_HDR_LEN + TCP_RESP_MIN_LEN
         len_found = False
         except_code = None
@@ -717,17 +696,11 @@ class ModbusClientDeviceTCP(object):
             else:
                 raise ModbusClientError('Response timeout')
 
-        if sys.version_info > (3,):
-            temp = ""
-            for i in resp:
-                temp += chr(i)
-            resp = temp
-
-        if not (ord(resp[TCP_HDR_LEN + 1]) & 0x80):
-            len_remaining = (ord(resp[TCP_HDR_LEN + 2]) + TCP_HDR_LEN) - len(resp)
+        if not (resp[TCP_HDR_LEN + 1] & 0x80):
+            len_remaining = (resp[TCP_HDR_LEN + 2] + TCP_HDR_LEN) - len(resp)
             len_found = True
         else:
-            except_code = ord(resp[TCP_HDR_LEN + 2])
+            except_code = resp[TCP_HDR_LEN + 2]
 
         if self.trace_func:
             s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
@@ -760,7 +733,7 @@ class ModbusClientDeviceTCP(object):
             Byte string containing register contents.
         """
 
-        resp = ''
+        resp = bytearray()
         read_count = 0
         read_offset = 0
         local_connect = False
@@ -787,14 +760,11 @@ class ModbusClientDeviceTCP(object):
             if local_connect:
                 self.disconnect()
 
-        if sys.version_info > (3,):
-            resp = bytes(resp, 'latin-1')
-
         return resp
 
     def _write(self, addr, data):
 
-        resp = ''
+        resp = bytearray()
         len_remaining = TCP_HDR_LEN + TCP_RESP_MIN_LEN
         len_found = False
         except_code = None
@@ -824,31 +794,19 @@ class ModbusClientDeviceTCP(object):
             # print('c = {0}'.format(c))
             len_read = len(c);
             if len_read > 0:
-                if type(c) == bytes and sys.version_info > (3,):
-                    temp = ""
-                    for i in c:
-                        temp += chr(i)
-                    c = temp
                 resp += c
                 len_remaining -= len_read
                 if len_found is False and len(resp) >= TCP_HDR_LEN + TCP_RESP_MIN_LEN:
-                    if sys.version_info > (3,):
-                        resp = bytes(resp, "latin-1")
                     data_len = struct.unpack('>H', resp[TCP_HDR_O_LEN:TCP_HDR_O_LEN + 2])
                     len_remaining = data_len[0] - (len(resp) - TCP_HDR_LEN)
-                if type(resp) == bytes and sys.version_info > (3,):
-                    temp = ""
-                    for i in resp:
-                        temp += chr(i)
-                    resp = temp
             else:
                 raise ModbusClientTimeout('Response timeout')
 
-        if not (ord(resp[TCP_HDR_LEN + 1]) & 0x80):
-            len_remaining = (ord(resp[TCP_HDR_LEN + 2]) + TCP_HDR_LEN) - len(resp)
+        if not (resp[TCP_HDR_LEN + 1] & 0x80):
+            len_remaining = (resp[TCP_HDR_LEN + 2] + TCP_HDR_LEN) - len(resp)
             len_found = True
         else:
-            except_code = ord(resp[TCP_HDR_LEN + 2])
+            except_code = resp[TCP_HDR_LEN + 2]
 
         if self.trace_func:
             s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
@@ -1033,13 +991,8 @@ def computeCRC(data):
     :returns: The calculated CRC
     '''
     crc = 0xffff
-    if type(data) == bytes and sys.version_info > (3,):
-        temp = ""
-        for i in data:
-            temp += chr(i)
-        data = temp
-    for a in data:
-        idx = __crc16_table[(crc ^ ord(a)) & 0xff];
+    for a in bytearray(data):
+        idx = __crc16_table[(crc ^ a) & 0xff];
         crc = ((crc >> 8) & 0xff) ^ idx
     swapped = ((crc << 8) & 0xff00) | ((crc >> 8) & 0x00ff)
     return swapped

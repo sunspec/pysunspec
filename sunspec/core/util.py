@@ -96,14 +96,10 @@ def data_to_double(data):
         return d[0]
 
 def data_to_str(data):
+    data = data.rstrip(b'\0')
+    if len(data) == 0:
+        data = b'\0'
 
-    # Change the data from bytes string to regular string for python 3
-    # compatibility
-    if sys.version_info > (3,):
-        data = str(data, 'latin-1')
-
-    if len(data) > 1:
-        data = data[0] + data[1:].rstrip('\0')
     return data
 
 def s16_to_data(s16, len=None):

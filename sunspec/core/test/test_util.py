@@ -74,7 +74,7 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(util.data_to_double(b'\xc0\x8f\x40\x00\x00\x00\x00\x00'), float(-1000))
 
     def test_data_to_str(self):
-        self.assertEqual(util.data_to_str(b'\x53\x75\x6e\x53\x70\x65\x63\x20\x54\x65\x73\x74\x00'), 'SunSpec Test')
+        self.assertEqual(util.data_to_str(b'\x53\x75\x6e\x53\x70\x65\x63\x20\x54\x65\x73\x74\x00'), b'SunSpec Test')
 
 
     def test_s16_to_data(self):

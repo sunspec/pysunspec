@@ -46,8 +46,9 @@ class TestModbusClient(unittest.TestCase):
         if d.client.serial.out_buf != b'\x01\x03\x9C\x40\x00\x02\xEB\x8F':
             raise Exception("Modbus request mismatch")
 
-        if data != 'SunS':
-            raise Exception("Read data mismatch - expected: 'SunS' received: %s") % (data)
+        expected = b'SunS'
+        if data != expected:
+            raise Exception("Read data mismatch - expected: {expected} received: {data}".format(expected=repr(expected), data=repr(data)))
 
         d.close()
 
@@ -63,7 +64,7 @@ class TestModbusClient(unittest.TestCase):
         d.client.serial.in_buf = b'\x01\x10\x9C\x40\x00\x02\x6E\x4C'
         d.client.serial.out_buf = b''
 
-        d.write(40000, 'ABCD')
+        d.write(40000, b'ABCD')
 
         if d.client.serial.out_buf != b'\x01\x10\x9C\x40\x00\x02\x04\x41\x42\x43\x44\x8B\xB2':
             raise Exception("Modbus request mismatch")
