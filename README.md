@@ -1,4 +1,5 @@
 # pySunSpec
+
 The pySunSpec package provides objects and applications that support
 interaction with SunSpec compliant devices and documents.  It can be run in
 most environments that support Python and is tested on Windows 7, Mac OS X, and
@@ -11,6 +12,7 @@ Copyright (c) 2018 SunSpec Alliance
 
 
 # Features
+
 - Provides access to SunSpec Modbus RTU and TCP devices
 - High level object model allowing easy device scripting
 - Minimal dependencies for core package allowing it to run in more constrained
@@ -19,6 +21,7 @@ Copyright (c) 2018 SunSpec Alliance
 
 
 # Requirements
+
 - Python 2.7, 3.3-3.6
 - pySerial
 
@@ -29,10 +32,10 @@ Copyright (c) 2018 SunSpec Alliance
 ## Python
 
 Since this is a Python library you will need Python installed both to run your
-code and this library.  While there are efforts to support Python 3 versions
-they are not yet complete so the latest version of Python 2 is recommended.
+code and this library.  Supported Python versions are noted above.  Unless
+there is a strong reason not to, it is recommended to use the current Python 3.
 The CPython interpreter from [python.org](python.org) is commonly used.
-The #python community support channel on the Freenode IRC network is usually
+The `#python` community support channel on the Freenode IRC network is usually
 quite active and has many knowledgeable and helpful users that can assist with
 general Python issues.
 
@@ -77,7 +80,11 @@ git submodule update --init
 
 Python libraries should generally be installed before use.  This reduces issues
 relating to paths and dependency on the value of the current working directory.
-pySunSpec can be installed per the [package installation tutorial](https://packaging.python.org/tutorials/installing-packages/).
+It is strongly recommended that you work in an isolated environment such as
+can be created by `venv` or `virtualenv` (see [bit.ly/py-env](bit.ly/py-env)).
+pySunSpec can be installed per the
+[package installation tutorial](https://packaging.python.org/tutorials/installing-packages/)
+which also discusses virtual environments.
 
 
 ## Dependencies
@@ -89,6 +96,7 @@ to use the pySunSpec code.  pySerial is available as a Python package from
 [PyPi](https://pypi.python.org/pypi/pyserial) and as source from
 [GitHub](https://github.com/pyserial/pyserial) as both a Git repository and
 a .zip download.
+
 
 ## Verifying the pySunSpec Installation
 
