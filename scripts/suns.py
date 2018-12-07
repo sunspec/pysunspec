@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-  Copyright (c) 2017, SunSpec Alliance
+  Copyright (c) 2018, SunSpec Alliance
   All Rights Reserved
 
 """
@@ -74,15 +74,15 @@ if __name__ == "__main__":
         elif options.t == 'mapped':
             sd = client.SunSpecClientDevice(client.MAPPED, options.a, name=options.m)
         else:
-            print 'Unknown -t option: %s' % (options.t)
+            print('Unknown -t option: %s' % (options.t))
             sys.exit(1)
 
     except client.SunSpecClientError, e:
-        print 'Error: %s' % (e)
+        print('Error: %s' % (e))
         sys.exit(1)
 
     if sd is not None:
-        print '\nTimestamp: %s' % (time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()))
+        print( '\nTimestamp: %s' % (time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())))
 
         # read all models in the device
         sd.read()
@@ -92,7 +92,7 @@ if __name__ == "__main__":
                 label = '%s (%s)' % (model.model_type.label, str(model.id))
             else:
                 label = '(%s)' % (str(model.id))
-            print '\nmodel: %s\n' % (label)
+            print('\nmodel: %s\n' % (label))
             for block in model.blocks:
                 if block.index > 0:
                   index = '%02d:' % (block.index)
@@ -113,5 +113,5 @@ if __name__ == "__main__":
                             value = '0x%08x' % (point.value)
                         else:
                             value = str(point.value).rstrip('\0')
-                        print '%-40s %20s %-10s' % (label, value, str(units))
+                        print('%-40s %20s %-10s' % (label, value, str(units)))
 

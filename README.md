@@ -4,7 +4,7 @@ interaction with SunSpec compliant devices and documents.  It can be run in
 most environments that support Python and is tested on Windows 7, Mac OS X, and
 Ubuntu.
 
-Copyright (c) 2017 SunSpec Alliance
+Copyright (c) 2018 SunSpec Alliance
 ([License](https://github.com/sunspec/pysunspec/blob/master/LICENSE))
 
 [![Build Status](https://travis-ci.org/sunspec/pysunspec.svg?branch=master)](https://travis-ci.org/sunspec/pysunspec)
@@ -19,7 +19,7 @@ Copyright (c) 2017 SunSpec Alliance
 
 
 # Requirements
-- Python 2.4 - 2.7 (2.7 recommended for most uses)
+- Python 2.7, 3.3-3.6
 - pySerial
 
 
