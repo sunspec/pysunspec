@@ -35,6 +35,10 @@ except:
 
 import sunspec.core.modbus.mbmap as mbmap
 
+
+deadtime_clock = getattr(time, 'monotonic', time.clock)
+
+
 PARITY_NONE = 'N'
 PARITY_EVEN = 'E'
 
@@ -238,7 +242,7 @@ class ModbusClientRTU(object):
                 s += '%02X' % (ord(c))
             trace_func(s)
 
-        now = time.monotonic()
+        now = deadtime_clock()
         delta = now - self.last_receive_completion
         remaining = self.deadtime - delta
         if remaining > 0:
@@ -272,7 +276,7 @@ class ModbusClientRTU(object):
                 else:
                     raise ModbusClientTimeout('Response timeout')
         finally:
-            self.last_receive_completion = time.monotonic()
+            self.last_receive_completion = deadtime_clock()
 
         if trace_func:
             s = '%s:%s[addr=%s] <--' % (self.name, str(slave_id), addr)
@@ -366,7 +370,7 @@ class ModbusClientRTU(object):
                 s += '%02X' % (ord(c))
             trace_func(s)
 
-        now = time.monotonic()
+        now = deadtime_clock()
         delta = now - self.last_receive_completion
         remaining = self.deadtime - delta
         if remaining > 0:
@@ -401,7 +405,7 @@ class ModbusClientRTU(object):
                 else:
                     raise ModbusClientTimeout('Response timeout')
         finally:
-            self.last_receive_completion = time.monotonic()
+            self.last_receive_completion = deadtime_clock()
 
         if trace_func:
             s = '%s:%s[addr=%s] <--' % (self.name, str(slave_id), addr)
