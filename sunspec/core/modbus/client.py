@@ -65,7 +65,7 @@ class ModbusClientException(ModbusClientError):
 def wait_until(target, clock):
     while True:
         remaining = target - clock()
-         if remaining > 0:
+        if remaining > 0:
             time.sleep(remaining)
         else:
             break
