@@ -9,7 +9,7 @@ python:
 install: 
     - python -m pip install --upgrade pip setuptools wheel
     - git submodule update --init --recursive
-    - pip install -e .
+    - pip install .
 
 matrix:
     allow_failures:
