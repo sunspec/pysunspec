@@ -1,0 +1,19 @@
+<sunSpecModels v="1">
+  <model id="65000" len="0" name="aggregator">
+    <block len="1">
+      <point id="APNT" offset="0" type="uint16" />
+    </block>
+  </model>
+  <strings id="2" locale="en">
+    <model>
+      <label>Block past end of model test model</label>
+      <description></description>
+      <notes></notes>
+    </model>
+    <point id="APNT">
+      <label>APNT</label>
+      <description></description>
+      <notes></notes>
+    </point>
+  </strings>
+</sunSpecModels>

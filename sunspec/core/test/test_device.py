@@ -36,6 +36,8 @@ import sunspec.core.pics as pics
 import sunspec.core.smdx as smdx
 import sunspec.core.suns as suns
 
+test_model_directory = os.path.join(os.path.dirname(__file__), 'models')
+
 test_device_pointtype_smdx_1 = """
 <sunSpecModels v="1">
   <!-- 1: common -->
@@ -489,6 +491,15 @@ class TestDevice(unittest.TestCase):
         expected_value = 190
         if value != expected_value:
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+
+
+class TestModel(unittest.TestCase):
+    def test_block_past_end_of_model(self):
+        model = device.Model(mid=65000)
+
+        with device.fresh_file_pathlist(test_model_directory):
+            with self.assertRaises(util.SunSpecError):
+                model.load()
 
 
 if __name__ == "__main__":
