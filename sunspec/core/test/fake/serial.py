@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2017 SunSpec Alliance
+    Copyright (C) 2018 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -43,35 +43,36 @@ class Serial(object):
         self.dsrdtr = dsrdtr
         self.interCharTimeout = interCharTimeout
         self.is_open = False
-        self.in_buf = ''
-        self.out_buf = ''
+        self.in_buf = b''
+        self.out_buf = b''
 
         self.open()
 
+
     def open(self):
-    	self.is_open = True
+        self.is_open = True
 
     def close(self):
-    	self.is_open = False
+        self.is_open = False
 
     def read(self, size=1):
         data = ''
         read_len = size
 
         data_len = len(self.in_buf)
-    	if data_len < read_len:
-    		read_len = data_len
+        if data_len < read_len:
+          read_len = data_len
 
-    	if read_len > 0:
-    		data = self.in_buf[:read_len]
-    		self.in_buf = self.in_buf[read_len:]
-    	return data
+        if read_len > 0:
+                data = self.in_buf[:read_len]
+                self.in_buf = self.in_buf[read_len:]
+        return data
 
     def write(self, data):
-    	self.out_buf += data
+        self.out_buf += data
 
     def flushInput(self):
-    	pass
+        pass
 
     def flushOutput(self):
-    	pass
+        pass

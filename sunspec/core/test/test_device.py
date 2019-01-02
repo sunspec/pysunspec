@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2017 SunSpec Alliance
+    Copyright (C) 2018 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -303,6 +303,8 @@ class TestDevice(unittest.TestCase):
                                        os.path.join(os.path.dirname(path),
                                                     'devices')])
 
+        device.check_for_models(pathlist=self.pathlist)
+
     def test_device_modeltype(self):
         mt = device.ModelType()
 
@@ -405,7 +407,7 @@ class TestDevice(unittest.TestCase):
         root = ET.Element(pics.PICS_ROOT)
         d1.to_pics(root, single_repeating=False)
         # util.indent(root)
-        # print ET.tostring(root)
+        # print(ET.tostring(root))
 
         d = root.find(pics.PICS_DEVICE)
         if d is None:
@@ -474,7 +476,7 @@ class TestDevice(unittest.TestCase):
                 model_id = smdx.model_filename_to_id(f)
                 if model_id is not None:
                     device.model_type_get(model_id)
-            except Exception, e:
+            except Exception as e:
                 raise Exception('Error scanning model %s: %s' % (str(model_id), e))
 
     def test_device_constant_sf(self):

@@ -5,16 +5,11 @@ python:
     - 3.3
     - 3.4
     - 3.5
+    - 3.6
 
 install: 
     - git submodule update --init --recursive
     - pip install .
-
-matrix:
-    allow_failures:
-        - python: 3.3
-        - python: 3.4
-        - python: 3.5
 
 script: python -m unittest discover -v sunspec
 
