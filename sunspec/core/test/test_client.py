@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2017 SunSpec Alliance
+    Copyright (C) 2018 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -29,12 +29,15 @@ import sunspec.core.client as client
 import sunspec.core.device as device
 import sunspec.core.util as util
 
+
 class TestClientDevice(unittest.TestCase):
     def setUp(self):
         path = os.path.abspath(__file__)
         self.pathlist = util.PathList(['.',
                                        os.path.join(os.path.dirname(path),
                                                     'devices')])
+
+        device.check_for_models(pathlist=self.pathlist)
 
     def test_client_device(self):
         d = client.ClientDevice(client.MAPPED, slave_id=1,

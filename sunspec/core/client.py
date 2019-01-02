@@ -1,6 +1,6 @@
 
 """
-    Copyright (C) 2017 SunSpec Alliance
+    Copyright (C) 2018 SunSpec Alliance
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,8 @@
 
 import os
 import time
+import struct
+import sys
 import sunspec.core.modbus.client as modbus
 import sunspec.core.device as device
 import sunspec.core.util as util
@@ -142,7 +144,7 @@ class ClientDevice(device.Device):
                     if self.modbus_device is not None:
                         self.modbus_device.close()
                     raise SunSpecClientError('Map file required for mapped device')
-        except modbus.ModbusClientError, e:
+        except modbus.ModbusClientError as e:
             if self.modbus_device is not None:
                 self.modbus_device.close()
             raise SunSpecClientError('Modbus error: %s' % str(e))
@@ -172,7 +174,7 @@ class ClientDevice(device.Device):
                 return self.modbus_device.read(addr, count)
             else:
                 raise SunSpecClientError('No modbus device set for SunSpec device')
-        except modbus.ModbusClientError, e:
+        except modbus.ModbusClientError as e:
             raise SunSpecClientError('Modbus read error: %s' % str(e))
 
     def write(self, addr, data):
@@ -192,7 +194,7 @@ class ClientDevice(device.Device):
                 return self.modbus_device.write(addr, data)
             else:
                 raise SunSpecClientError('No modbus device set for SunSpec device')
-        except modbus.ModbusClientError, e:
+        except modbus.ModbusClientError as e:
             raise SunSpecClientError('Modbus write error: %s' % str(e))
 
     def read_points(self):
@@ -221,17 +223,16 @@ class ClientDevice(device.Device):
 
         if self.base_addr is None:
             for addr in self.base_addr_list:
-                # print 'trying base address %s' % (addr)
+                # print('trying base address %s' % (addr))
                 try:
                     data = self.read(addr, 3)
-
-                    if data[:4] == 'SunS':
+                    if data[:4] == b'SunS':
                         self.base_addr = addr
-                        # print 'device base address = %d' % self.base_addr
+                        # print('device base address = %d' % self.base_addr)
                         break
                     else:
                         error = 'Device responded - not SunSpec register map'
-                except SunSpecClientError, e:
+                except SunSpecClientError as e:
                     if not error:
                         error = str(e)
 
@@ -239,7 +240,7 @@ class ClientDevice(device.Device):
                     time.sleep(delay)
 
         if self.base_addr is not None:
-            # print 'base address = %s' % (self.base_addr)
+            # print('base address = %s' % (self.base_addr))
             model_id = util.data_to_u16(data[4:6])
             addr = self.base_addr + 2
 
@@ -253,14 +254,14 @@ class ClientDevice(device.Device):
                         if not cont:
                             raise SunSpecClientError('Device scan terminated')
                     model_len = util.data_to_u16(data)
-                    # print 'model_id = %s  model_len = %s' % (model_id, model_len)
+                    # print('model_id = %s  model_len = %s' % (model_id, model_len))
 
                     # move address past model id and length
                     model = ClientModel(self, model_id, addr + 2, model_len)
-                    # print 'loading model %s at %d' % (model_id, addr + 2)
+                    # print('loading model %s at %d' % (model_id, addr + 2))
                     try:
                         model.load()
-                    except Exception, e:
+                    except Exception as e:
                         model.load_error = str(e)
                     self.add_model(model)
 
@@ -332,7 +333,7 @@ class ClientModel(device.Model):
                 if end_index == 1:
                     data = self.device.read(self.addr, self.len)
                 else:
-                    data = ''
+                    data = b''
                     index = 0
                     while index < end_index:
                         addr = self.read_blocks[index]
@@ -343,7 +344,7 @@ class ClientModel(device.Model):
                             read_len = self.addr + self.len - addr
                         data += self.device.read(addr, read_len)
                 if data:
-                    # print 'data len = ', len(data)
+                    # print('data len = ', len(data))
                     data_len = len(data)/2
                     if data_len != self.len:
                         raise SunSpecClientError('Error reading model %s' % self.model_type)
@@ -351,11 +352,11 @@ class ClientModel(device.Model):
                     #  for each repeating block
                     for block in self.blocks:
                         # scale factor points
-                        for pname, point in block.points_sf.iteritems():
+                        for pname, point in block.points_sf.items():
                             offset = int(point.addr) - int(self.addr)
                             if point.point_type.data_to is not None:
                                 byte_offset = offset * 2
-                                # print pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len
+                                # print(pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len)
                                 point.value_base = point.point_type.data_to(data[byte_offset:byte_offset + (int(point.point_type.len) * 2)])
                                 if not point.point_type.is_impl(point.value_base):
                                     point.value_base = None
@@ -363,12 +364,15 @@ class ClientModel(device.Model):
                                 raise SunSpecClientError('No data_to function set for %s : %s' % (pname, point.point_type))
 
                         # non-scale factor points
-                        for pname, point in block.points.iteritems():
+                        for pname, point in block.points.items():
                             offset = int(point.addr) - int(self.addr)
                             if point.point_type.data_to is not None:
                                 byte_offset = offset * 2
-                                # print pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len
+                                # print(pname, point, offset, byte_offset, (byte_offset + (int(point.point_type.len) * 2)), point.point_type.len)
                                 point.value_base = point.point_type.data_to(data[byte_offset:byte_offset + (int(point.point_type.len) * 2)])
+                                if (type(point.value_base) == bytes and
+                                        sys.version_info > (3,)):
+                                    point.value_base = str(point.value_base, 'latin-1')
                                 if point.point_type.is_impl(point.value_base):
                                     if point.sf_point is not None:
                                         point.value_sf = point.sf_point.value_base
@@ -378,9 +382,9 @@ class ClientModel(device.Model):
                             else:
                                 raise SunSpecClientError('No data_to function set for %s : %s' % (pname, point.point_type))
 
-            except SunSpecError, e:
+            except SunSpecError as e:
                 raise SunSpecClientError(e)
-            except modbus.ModbusClientError, e:
+            except modbus.ModbusClientError as e:
                 raise SunSpecClientError('Modbus error: %s' % str(e))
             except:
                 raise
@@ -392,7 +396,7 @@ class ClientModel(device.Model):
 
         addr = None
         next_addr = None
-        data = ''
+        data = b''
 
         for block in self.blocks:
             for point in block.points_list:
@@ -402,12 +406,12 @@ class ClientModel(device.Model):
                     point_data = point.point_type.to_data(point.value_base, (point_len * 2))
                     if addr is None:
                         addr = point_addr
-                        data = ''
+                        data = b''
                     else:
                         if point_addr != next_addr:
                             block.model.device.write(addr, data)
                             addr = point_addr
-                            data = ''
+                            data = b''
                     next_addr = point_addr + point_len
                     data += point_data
                     point.dirty = False
@@ -663,7 +667,7 @@ def model_class_get(model_id):
     model_type = None
     try:
         model_type = device.model_type_get(model_id)
-    except Exception, e:
+    except Exception as e:
         setattr(class_, 'load_error', str(e))
     if model_type is not None:
         for point_type in model_type.fixed_block.points_list:
@@ -793,7 +797,7 @@ class SunSpecClientDevice(object):
                 else:
                     setattr(self, name, model_class)
                     self.models.append(name)
-        except Exception, e:
+        except Exception as e:
             if self.device is not None:
                 self.device.close()
             raise

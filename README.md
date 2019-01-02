@@ -5,7 +5,7 @@ interaction with SunSpec compliant devices and documents.  It can be run in
 most environments that support Python and is tested on Wndows 7, MAC OS X, and
 Ubuntu.
 
-Copyright (c) 2017 SunSpec Alliance
+Copyright (c) 2018 SunSpec Alliance
 ([License](https://github.com/sunspec/pysunspec/blob/master/LICENSE))
 
 
@@ -18,7 +18,7 @@ Copyright (c) 2017 SunSpec Alliance
 
 
 # Requirements
-- Python 2.4 - 2.7 (2.7 recommended for most uses)
+- Python 2.7, 3.3-3.6
 - pySerial
 
 
@@ -50,8 +50,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 
 If Python did not show up you can acquire it from the Python Software
-Foundation's [download page](http://www.python.org/download). Keep in mind this
-repository currently uses Python 2.7 and not any Python 3.X. Accept all the
+Foundation's [download page](http://www.python.org/download). Accept all the
 default settings during the installation.
 
 > ### If using Windows and just downloaded Python you need to set environment variables
