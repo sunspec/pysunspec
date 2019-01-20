@@ -18,7 +18,7 @@ Features
 
 Requirements
 ============
-- Python 2.7, 3.3-3.6
+- Python 2.7, 3.3-3.7
 - pySerial
 
 
