@@ -361,7 +361,7 @@ class ClientModel(device.Model):
                                 if not point.point_type.is_impl(point.value_base):
                                     point.value_base = None
                             else:
-                                raise SunSpecClientError('No data_to function set for %s : %s' % (pname, point.point_type))
+                                raise SunSpecClientError('No data_to function set for {} : {}'.format(pname, point.point_type))
 
                         # non-scale factor points
                         for pname, point in block.points.items():
@@ -380,7 +380,7 @@ class ClientModel(device.Model):
                                     point.value_base = None
                                     point.value_sf = None
                             else:
-                                raise SunSpecClientError('No data_to function set for %s : %s' % (pname, point.point_type))
+                                raise SunSpecClientError('No data_to function set for {} : {}'.format(pname, point.point_type))
 
             except SunSpecError as e:
                 raise SunSpecClientError(e)
@@ -571,11 +571,11 @@ class SunSpecClientModelBase(object):
         self.model.write_points()
 
     def __str__(self):
-        s = '\n%s (%s):\n' % (self.name, self.model.id)
+        s = '\n{} ({}):\n'.format(self.name, self.model.id)
         for name in self.points:
             value = getattr(self, name)
             if value is not None:
-                s += '%s:  %s\n' % (name, str(value))
+                s += '{}:  {}\n'.format(name, str(value))
 
         for block in self.repeating[1:]:
             s += str(block)
@@ -640,7 +640,7 @@ class SunSpecClientBlockBase(object):
         for name in self.points:
             value = getattr(self, name)
             if value is not None:
-                s += '%s:  %s\n' % (name, str(value))
+                s += '{}:  {}\n'.format(name, str(value))
 
         return s
 

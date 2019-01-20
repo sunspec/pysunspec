@@ -411,7 +411,7 @@ class TestDevice(unittest.TestCase):
 
         d = root.find(pics.PICS_DEVICE)
         if d is None:
-            raise Exception("No '%s' elements found in '%s' element" % (pics.PICS_DEVICE, root.tag))
+            raise Exception("No '{}' elements found in '{}' element".format(pics.PICS_DEVICE, root.tag))
 
         d2 = device.Device()
         d2.from_pics(element=d)
@@ -429,7 +429,7 @@ class TestDevice(unittest.TestCase):
         value = m.points[p].value
         expected_value = -20
         if value != expected_value:
-            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+            raise Exception("Value '{}' mismatch: {} {}".format(p, str(value), str(expected_value)))
 
 
     def test_device_value_set(self):
@@ -442,7 +442,7 @@ class TestDevice(unittest.TestCase):
         m.points[p].value = expected_value
         value = m.points[p].value
         if value != expected_value:
-            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+            raise Exception("Value '{}' mismatch: {} {}".format(p, str(value), str(expected_value)))
 
 
     def test_device_common_len_65(self):
@@ -454,7 +454,7 @@ class TestDevice(unittest.TestCase):
         p = 'Md'
         value = m_1.points[p].value
         if value != expected_value:
-            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+            raise Exception("Value '{}' mismatch: {} {}".format(p, str(value), str(expected_value)))
 
         m_63001 = d.models[63001][0]
         expected_value = -180
@@ -462,7 +462,7 @@ class TestDevice(unittest.TestCase):
         m_63001.points[p].value = expected_value
         value = m_63001.points[p].value
         if value != expected_value:
-            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+            raise Exception("Value '{}' mismatch: {} {}".format(p, str(value), str(expected_value)))
 
 
     # verify all models in the default models directory can be read
@@ -477,7 +477,7 @@ class TestDevice(unittest.TestCase):
                 if model_id is not None:
                     device.model_type_get(model_id)
             except Exception as e:
-                raise Exception('Error scanning model %s: %s' % (str(model_id), e))
+                raise Exception('Error scanning model {}: {}'.format(str(model_id), e))
 
     def test_device_constant_sf(self):
         d = device.Device()
@@ -488,7 +488,7 @@ class TestDevice(unittest.TestCase):
         value = m.points[p].value
         expected_value = 190
         if value != expected_value:
-            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+            raise Exception("Value '{}' mismatch: {} {}".format(p, str(value), str(expected_value)))
 
 
 if __name__ == "__main__":
