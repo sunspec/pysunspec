@@ -2,7 +2,7 @@
 
 The pySunSpec package provides objects and applications that support
 interaction with SunSpec compliant devices and documents.  It can be run in
-most environments that support Python and is tested on Wndows 7, MAC OS X, and
+most environments that support Python and is tested on Windows 7, macOS, and
 Ubuntu.
 
 Copyright (c) 2018 SunSpec Alliance
@@ -18,7 +18,7 @@ Copyright (c) 2018 SunSpec Alliance
 
 
 # Requirements
-- Python 2.7, 3.3-3.6
+- Python 2.7, 3.4-3.6
 - pySerial
 
 
