@@ -2,7 +2,7 @@
 
 The pySunSpec package provides objects and applications that support
 interaction with SunSpec compliant devices and documents.  It can be run in
-most environments that support Python and is tested on Wndows 7, MAC OS X, and
+most environments that support Python and is tested on Windows 7, MAC OS X, and
 Ubuntu.
 
 Copyright (c) 2018 SunSpec Alliance
@@ -78,11 +78,16 @@ To install the pySerial package, try using easy_install
 ```
 $ easy_install -U pyserial
 ```
+on some systems (Debian based), you could be able to download it as a package (raspberry pi for ex.)
+
+```
+$ sudo apt-get install python-serial
+```
 
 If easy install is not present on the system download the archive (.tar.gz)
 from https://pypi.python.org/pypi/pyserial (Note if on Windows, use the
 Windows installer option (pyserial-x.y-win32.exe) instead and move on to the
-next section).  Unpack the archive, enter the ``pyserial-x.y`` directory and
+next section). Unpack the archive, enter the ``pyserial-x.y`` directory and
 run the following 
 
 ```
