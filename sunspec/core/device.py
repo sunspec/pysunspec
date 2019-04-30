@@ -496,7 +496,7 @@ class Point(object):
     def value_setter(self, v):
 
         if self.value_sf:
-            self.value_base = int(round(float(v), abs(self.value_sf)) / math.pow(10, self.value_sf))
+            self.value_base = int(round(float(v) / math.pow(10, self.value_sf)))
         else:
             self.value_base = self.point_type.to_value(v)
 

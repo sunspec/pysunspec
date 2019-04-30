@@ -445,6 +445,22 @@ class TestDevice(unittest.TestCase):
             raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
 
 
+    def test_device_value_set_rounding(self):
+        d = device.Device()
+        d.from_pics(filename='pics_test_device_1.xml', pathlist=self.pathlist)
+
+        m = d.models[63001][0]
+        m.points_sf['sunssf_1'].value = -1
+        expected_value = 84.3
+        p = 'int16_1'
+        point = m.points[p]
+        point.value_sf = point.sf_point.value_base
+        point.value = expected_value
+        value = point.value
+        if abs(value - expected_value) > 0.1 / 100:
+            raise Exception("Value '%s' mismatch: %s %s" % (p, str(value), str(expected_value)))
+
+
     def test_device_common_len_65(self):
         d = device.Device()
         d.from_pics(filename='pics_test_device_2.xml', pathlist=self.pathlist)
