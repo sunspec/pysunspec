@@ -1391,7 +1391,7 @@ class PointType(object):
         if point_type is None:
             return "PointType '%s' is None" % (str(self.id))
         if len(self.__dict__) != len(point_type.__dict__):
-            return "PointType '%s' attribute count not equal': %s  %s" % (str(self.id))
+            return "PointType '%s' attribute count not equal" % (str(self.id))
         for k, v in self.__dict__.items():
             if k != 'block_type':
                 value = point_type.__dict__.get(k)
