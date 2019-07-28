@@ -172,7 +172,7 @@ class Device(object):
                 addr += model.len + 2
 
         except Exception as e:
-            raise SunSpecError('Error loading PICS: %s' % str(e))
+            raise SunSpecError('Error loading PICS: %s' % e)
 
     """
     def to_pics(self, pretty_print=False, single_repeating=True):
@@ -578,9 +578,9 @@ class Point(object):
         return False
 
     def __str__(self):
-        point_str = 'Point: id = %s impl = %s addr = %s value_base = %s' % (self.point_type.id, str(self.impl), self.addr, str(self.value_base))
+        point_str = 'Point: id = %s impl = %s addr = %s value_base = %s' % (self.point_type.id, self.impl, self.addr, self.value_base)
         if self.sf_point is not None:
-            point_str += ' sf_value = %s' % (str(self.sf_point.value_base))
+            point_str += ' sf_value = %s' % (self.sf_point.value_base)
         return point_str
 
 class ScaleFactor(object):
@@ -745,7 +745,7 @@ class Model(object):
                 index += 1
                 block_len = int(block_type.len)
         else:
-            raise SunSpecError('Unknown model type - id: %s' % str(self.id))
+            raise SunSpecError('Unknown model type - id: %s' % self.id)
 
         # expose fixed block points at model level if present
         try:
@@ -787,7 +787,7 @@ class Model(object):
                 else:
                     block_index = int(block_index)
                     if len(self.blocks) < block_index:
-                        raise SunSpecError('Block index out of range: %s' % (str(block_index)))
+                        raise SunSpecError('Block index out of range: %s' % (block_index))
                     self.blocks[block_index].from_pics(b)
             else:
                 raise SunSpecError('Internal block type error')
@@ -883,7 +883,7 @@ def model_type_get(model_id):
                     smdx_data = f.read()
                     f.close()
                 except Exception as e:
-                    raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
+                    raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, e))
 
         if smdx_data:
             root = ET.fromstring(smdx_data)
@@ -894,9 +894,9 @@ def model_type_get(model_id):
                 model_type.from_smdx(root)
                 model_types[model_type.id] = model_type
             except Exception as e:
-                raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, str(e)))
+                raise SunSpecError('Error loading model %s at %s: %s' % (model_id, filename, e))
         else:
-            raise SunSpecError('Model file for model %s not found' % (str(model_id)))
+            raise SunSpecError('Model file for model %s not found' % (model_id))
 
     return model_type
 
@@ -1046,15 +1046,15 @@ class ModelType(object):
         if model_type is None:
             return "ModelType is None"
         if self.id != model_type.id:
-            return "ModelType attribute 'id' not equal: %s  %s" % (str(self.id), str(model_type.id))
+            return "ModelType attribute 'id' not equal: %s  %s" % (self.id, model_type.id)
         if self.len != model_type.len:
-            return "ModelType attribute 'len' not equal: %s  %s" % (str(self.len), str(model_type.len))
+            return "ModelType attribute 'len' not equal: %s  %s" % (self.len, model_type.len)
         if self.label != model_type.label:
-            return "ModelType attribute 'label' not equal: %s  %s" % (str(self.label), str(model_type.label))
+            return "ModelType attribute 'label' not equal: %s  %s" % (self.label, model_type.label)
         if self.description != model_type.description:
-            return "ModelType attribute 'description' not equal: %s  %s" % (str(self.description), str(model_type.description))
+            return "ModelType attribute 'description' not equal: %s  %s" % (self.description, model_type.description)
         if self.notes != model_type.notes:
-            return "ModelType attribute 'notes' not equal: %s  %s" % (str(self.notes), str(model_type.notes))
+            return "ModelType attribute 'notes' not equal: %s  %s" % (self.notes, model_type.notes)
         if self.fixed_block is not None:
             not_equal = self.fixed_block.not_equal(model_type.fixed_block)
             if not_equal:
@@ -1166,13 +1166,13 @@ class BlockType(object):
             return False
 
         if block_type is None:
-            return "BlockType '%s' is none" % (str(self.type))
+            return "BlockType '%s' is none" % (self.type)
         if self.type != block_type.type:
-            return "BlockType attribute 'type' not equal: %s  %s" % (str(self.type), str(block_type.type))
+            return "BlockType attribute 'type' not equal: %s  %s" % (self.type, block_type.type)
         if self.len != block_type.len:
-            return "BlockType attribute 'len' not equal: %s  %s" % (str(self.len), str(block_type.len))
+            return "BlockType attribute 'len' not equal: %s  %s" % (self.len, block_type.len)
         if len(self.points) != len(block_type.points):
-            return "BlockType '%s' point count not equal" % (str(self.type))
+            return "BlockType '%s' point count not equal" % (self.type)
         for k, v in self.points.items():
             value = block_type.points.get(k)
             not_equal =  v.not_equal(value)
@@ -1185,7 +1185,7 @@ class BlockType(object):
 
         s = 'BlockType: type = %s len = %s\n' % (self.type, self.len)
         for p in self.points_list:
-            s += '  %s\n' % (str(p))
+            s += '  %s\n' % (p)
         return s
 
 class PointType(object):
@@ -1389,15 +1389,15 @@ class PointType(object):
             return False
 
         if point_type is None:
-            return "PointType '%s' is None" % (str(self.id))
+            return "PointType '%s' is None" % (self.id)
         if len(self.__dict__) != len(point_type.__dict__):
-            return "PointType '%s' attribute count not equal" % (str(self.id))
+            return "PointType '%s' attribute count not equal" % (self.id)
         for k, v in self.__dict__.items():
             if k != 'block_type':
                 value = point_type.__dict__.get(k)
                 if v is not None and value is not None:
                     if value is None or v != value:
-                        return "PointType '%s' attribute '%s' not equal: %s  %s" % (str(self.id), str(k), str(v), str(value))
+                        return "PointType '%s' attribute '%s' not equal: %s  %s" % (self.id, k, v, value)
 
         return False
 

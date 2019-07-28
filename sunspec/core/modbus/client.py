@@ -177,7 +177,7 @@ class ModbusClientRTU(object):
             if self.serial is not None:
                 self.serial.close()
                 self.serial = None
-            raise ModbusClientError('Serial init error: %s' % str(e))
+            raise ModbusClientError('Serial init error: %s' % e)
 
     def close(self):
         """Close the RTU client serial interface.
@@ -187,7 +187,7 @@ class ModbusClientRTU(object):
             if self.serial is not None:
                 self.serial.close()
         except Exception as e:
-            raise ModbusClientError('Serial close error: %s' % str(e))
+            raise ModbusClientError('Serial close error: %s' % e)
 
     def add_device(self, slave_id, device):
         """Add a device to the RTU client.
@@ -230,7 +230,7 @@ class ModbusClientRTU(object):
         req += struct.pack('>H', computeCRC(req))
 
         if trace_func:
-            s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
+            s = '%s:%s[addr=%s] ->' % (self.name, slave_id, addr)
             for c in req:
                 s += '%02X' % (ord(c))
             trace_func(s)
@@ -239,7 +239,7 @@ class ModbusClientRTU(object):
         try:
             self.serial.write(req)
         except Exception as e:
-            raise ModbusClientError('Serial write error: %s' % str(e))
+            raise ModbusClientError('Serial write error: %s' % e)
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
@@ -263,7 +263,7 @@ class ModbusClientRTU(object):
                 raise ModbusClientTimeout('Response timeout')
 
         if trace_func:
-            s = '%s:%s[addr=%s] <--' % (self.name, str(slave_id), addr)
+            s = '%s:%s[addr=%s] <--' % (self.name, slave_id, addr)
             for c in resp:
                 s += '%02X' % (ord(c))
             trace_func(s)
@@ -349,7 +349,7 @@ class ModbusClientRTU(object):
             req = temp
 
         if trace_func:
-            s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
+            s = '%s:%s[addr=%s] ->' % (self.name, slave_id, addr)
             for c in req:
                 s += '%02X' % (ord(c))
             trace_func(s)
@@ -360,7 +360,7 @@ class ModbusClientRTU(object):
                 req = bytes(req, "latin-1")
             self.serial.write(req)
         except Exception as e:
-            raise ModbusClientError('Serial write error: %s' % str(e))
+            raise ModbusClientError('Serial write error: %s' % e)
 
         while len_remaining > 0:
             c = self.serial.read(len_remaining)
@@ -383,7 +383,7 @@ class ModbusClientRTU(object):
                 raise ModbusClientTimeout('Response timeout')
 
         if trace_func:
-            s = '%s:%s[addr=%s] <--' % (self.name, str(slave_id), addr)
+            s = '%s:%s[addr=%s] <--' % (self.name, slave_id, addr)
             for c in resp:
                 s += '%02X' % (ord(c))
             trace_func(s)
@@ -671,7 +671,7 @@ class ModbusClientDeviceTCP(object):
             self.socket.settimeout(timeout)
             self.socket.connect((self.ipaddr, self.ipport))
         except Exception as e:
-            raise ModbusClientError('Connection error: %s' % str(e))
+            raise ModbusClientError('Connection error: %s' % e)
 
     def disconnect(self):
         """Disconnect from TCP destination.
@@ -694,7 +694,7 @@ class ModbusClientDeviceTCP(object):
         req = struct.pack('>HHHBBHH', 0, 0, TCP_READ_REQ_LEN, int(self.slave_id), op, int(addr), int(count))
 
         if self.trace_func:
-            s = '%s:%s:%s[addr=%s] ->' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
+            s = '%s:%s:%s[addr=%s] ->' % (self.ipaddr, self.ipport, self.slave_id, addr)
             for c in req:
                 s += '%02X' % (ord(c))
             self.trace_func(s)
@@ -702,7 +702,7 @@ class ModbusClientDeviceTCP(object):
         try:
             self.socket.sendall(req)
         except Exception as e:
-            raise ModbusClientError('Socket write error: %s' % str(e))
+            raise ModbusClientError('Socket write error: %s' % e)
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
@@ -730,7 +730,7 @@ class ModbusClientDeviceTCP(object):
             except_code = ord(resp[TCP_HDR_LEN + 2])
 
         if self.trace_func:
-            s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
+            s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, self.ipport, self.slave_id, addr)
             for c in resp:
                 s += '%02X' % (ord(c))
             self.trace_func(s)
@@ -809,7 +809,7 @@ class ModbusClientDeviceTCP(object):
         req += data
 
         if self.trace_func:
-            s = '%s:%s:%s[addr=%s] ->' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
+            s = '%s:%s:%s[addr=%s] ->' % (self.ipaddr, self.ipport, self.slave_id, addr)
             for c in req:
                 s += '%02X' % (ord(c))
             self.trace_func(s)
@@ -817,7 +817,7 @@ class ModbusClientDeviceTCP(object):
         try:
             self.socket.sendall(req)
         except Exception as e:
-            raise ModbusClientError('Socket write error: %s' % str(e))
+            raise ModbusClientError('Socket write error: %s' % e)
 
         while len_remaining > 0:
             c = self.socket.recv(len_remaining)
@@ -851,7 +851,7 @@ class ModbusClientDeviceTCP(object):
             except_code = ord(resp[TCP_HDR_LEN + 2])
 
         if self.trace_func:
-            s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
+            s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, self.ipport, self.slave_id, addr)
             for c in resp:
                 s += '%02X' % (ord(c))
             self.trace_func(s)
