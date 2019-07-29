@@ -148,7 +148,7 @@ class ModbusMap(object):
                 f.close()
             except:
                 pass
-            raise ModbusMapError('Error loading map file: %s' % e)
+            raise ModbusMapError('Error loading map file: %s' % str(e))
 
     def from_xml(self, filename=None, pathlist=None, element=None):
         """Load Modbus map from a Modbus map (mbmap) formatted file.
@@ -292,7 +292,7 @@ class ModbusMap(object):
                     last_regs.append(offset, rlen, data, access)
 
         except Exception as e:
-            raise ModbusMapError('Error loading %s (%s) at offset %d - %s' % (filename, pathlist, offset, e))
+            raise ModbusMapError('Error loading %s (%s) at offset %d - %s' % (filename, pathlist, offset, str(e)))
 
     def to_xml(self, parent=None, no_data=False):
 
@@ -373,7 +373,7 @@ class ModbusMap(object):
         count_remaining = count
 
         if op and op != self.func:
-            raise ModbusMapError('Data read error - function mismatch: request func = %s map func = %s' % (op, self.func))
+            raise ModbusMapError('Data read error - function mismatch: request func = %s map func = %s' % (str(op), str(self.func)))
 
         offset = addr - int(self.base_addr)
         for regs in self.regs:
@@ -449,7 +449,7 @@ class ModbusMap(object):
         """
 
         if self.base_addr != mbmap.base_addr:
-            return ('Base address mismatch: %s %s' % (self.base_addr, mbmap.base_addr))
+            return ('Base address mismatch: %s %s' % (str(self.base_addr), str(mbmap.base_addr)))
         if self.func != mbmap.func:
             return ('Function mismatch: %s %s' % (self.func, mbmap.func))
 
@@ -602,7 +602,7 @@ class ModbusMapRegs(object):
         return False
 
     def __str__(self):
-        s = '  offset = %s count = %s access = %s' % (self.offset, self.count, self.access)
+        s = '  offset = %s count = %s access = %s' % (str(self.offset), str(self.count), str(self.access))
         return s
 
 

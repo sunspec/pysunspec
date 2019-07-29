@@ -147,7 +147,7 @@ class ClientDevice(device.Device):
         except modbus.ModbusClientError as e:
             if self.modbus_device is not None:
                 self.modbus_device.close()
-            raise SunSpecClientError('Modbus error: %s' % e)
+            raise SunSpecClientError('Modbus error: %s' % str(e))
 
     def close(self):
 
@@ -175,7 +175,7 @@ class ClientDevice(device.Device):
             else:
                 raise SunSpecClientError('No modbus device set for SunSpec device')
         except modbus.ModbusClientError as e:
-            raise SunSpecClientError('Modbus read error: %s' % e)
+            raise SunSpecClientError('Modbus read error: %s' % str(e))
 
     def write(self, addr, data):
         """Write Modbus device registers.
@@ -195,7 +195,7 @@ class ClientDevice(device.Device):
             else:
                 raise SunSpecClientError('No modbus device set for SunSpec device')
         except modbus.ModbusClientError as e:
-            raise SunSpecClientError('Modbus write error: %s' % e)
+            raise SunSpecClientError('Modbus write error: %s' % str(e))
 
     def read_points(self):
         """Read the points for all models in the device from the physical
@@ -385,7 +385,7 @@ class ClientModel(device.Model):
             except SunSpecError as e:
                 raise SunSpecClientError(e)
             except modbus.ModbusClientError as e:
-                raise SunSpecClientError('Modbus error: %s' % e)
+                raise SunSpecClientError('Modbus error: %s' % str(e))
             except:
                 raise
 
@@ -575,7 +575,7 @@ class SunSpecClientModelBase(object):
         for name in self.points:
             value = getattr(self, name)
             if value is not None:
-                s += '%s:  %s\n' % (name, value)
+                s += '%s:  %s\n' % (name, str(value))
 
         for block in self.repeating[1:]:
             s += str(block)
@@ -640,7 +640,7 @@ class SunSpecClientBlockBase(object):
         for name in self.points:
             value = getattr(self, name)
             if value is not None:
-                s += '%s:  %s\n' % (name, value)
+                s += '%s:  %s\n' % (name, str(value))
 
         return s
 
