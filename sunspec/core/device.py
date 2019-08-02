@@ -706,7 +706,7 @@ class Model(object):
                 for point_type in block_type.points_list:
                     if point_type.type != suns.SUNS_TYPE_PAD:
                         point_addr = int(block_addr) + int(point_type.offset)
-                        point = point_class(block, point_type, str(point_addr))
+                        point = point_class(block=block, point_type=point_type, addr=str(point_addr))
                         if point_addr + point.point_type.len - last_read_addr > MAX_READ_COUNT:
                             last_read_addr = point_addr
                             self.read_blocks.append(last_read_addr)
