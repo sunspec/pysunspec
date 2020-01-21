@@ -373,7 +373,7 @@ class ModbusMap(object):
         count_remaining = count
 
         if op and op != self.func:
-            raise ModbusMapError('Data read error - function mismatch: request func = %s map func = %s' % (str(op), str(self.func)))
+            raise ModbusMapError('Data read error - function mismatch: request func = {} map func = {}'.format(str(op), str(self.func)))
 
         offset = addr - int(self.base_addr)
         for regs in self.regs:
@@ -449,9 +449,9 @@ class ModbusMap(object):
         """
 
         if self.base_addr != mbmap.base_addr:
-            return ('Base address mismatch: %s %s' % (str(self.base_addr), str(mbmap.base_addr)))
+            return ('Base address mismatch: {} {}'.format(str(self.base_addr), str(mbmap.base_addr)))
         if self.func != mbmap.func:
-            return ('Function mismatch: %s %s' % (self.func, mbmap.func))
+            return ('Function mismatch: {} {}'.format(self.func, mbmap.func))
 
         if len(self.regs) != len(mbmap.regs):
             return ('Register group count mismatch')
@@ -463,7 +463,7 @@ class ModbusMap(object):
         return False
 
     def __str__(self):
-        s = 'modbus_map: slave id = %s func = %s base_addr = %s' % (self.slave_id, self.func, self.base_addr)
+        s = 'modbus_map: slave id = {} func = {} base_addr = {}'.format(self.slave_id, self.func, self.base_addr)
         for regs in self.regs:
             s += '\n' + str(regs)
         return s
@@ -602,7 +602,7 @@ class ModbusMapRegs(object):
         return False
 
     def __str__(self):
-        s = '  offset = %s count = %s access = %s' % (str(self.offset), str(self.count), str(self.access))
+        s = '  offset = {} count = {} access = {}'.format(str(self.offset), str(self.count), str(self.access))
         return s
 
 

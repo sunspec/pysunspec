@@ -44,7 +44,7 @@ class TestData(unittest.TestCase):
         # print(sd.to_xml(pretty_print=True))
         xml = sd.to_xml_str()
         if xml != expected_xml:
-            raise Exception('XML mismatch: %s %s' % (xml, expected_xml))
+            raise Exception('XML mismatch: {} {}'.format(xml, expected_xml))
 
 
 if __name__ == "__main__":

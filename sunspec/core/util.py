@@ -68,7 +68,7 @@ def data_to_ipv6addr(data):
             value = True
             break
     if value and len(data) == 16:
-        return '%02X%02X%02X%02X:%02X%02X%02X%02X:%02X%02X%02X%02X:%02X%02X%02X%02X' % (
+        return '{:02X}{:02X}{:02X}{:02X}:{:02X}{:02X}{:02X}{:02X}:{:02X}{:02X}{:02X}{:02X}:{:02X}{:02X}{:02X}{:02X}'.format(
             data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],
             data[8], data[9], data[10], data[11], data[12], data[13], data[14], data[15])
 
@@ -82,7 +82,7 @@ def data_to_eui48(data):
             value = True
             break
     if value and len(data) == 8:
-        return '%02X:%02X:%02X:%02X:%02X:%02X' % (
+        return '{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}'.format(
             data[2], data[3], data[4], data[5], data[6], data[7])
 
 def data_to_float(data):

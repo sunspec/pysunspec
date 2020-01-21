@@ -55,21 +55,21 @@ class TestUtil(unittest.TestCase):
         self.assertEqual(util.data_to_u64(b'\x92\x34\x56\x78\x12\x34\x56\x78'), int(10535140502027916920))
 
     def test_data_to_ipv6addr(self):
-        self.assertEqual(util.data_to_ipv6addr(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'), None)
+        self.assertIsNone(util.data_to_ipv6addr(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'))
         self.assertEqual(util.data_to_ipv6addr(b'\x12\x34\x56\x78\x9A\xBC\xDE\xF0\x12\x34\x56\x78\x9A\xBC\xDE\xF0'), '12345678:9ABCDEF0:12345678:9ABCDEF0')
-        self.assertEqual(util.data_to_ipv6addr(b'\x01\x00\x00\x00\x00\x00\x00\x00'), None)
+        self.assertIsNone(util.data_to_ipv6addr(b'\x01\x00\x00\x00\x00\x00\x00\x00'))
 
     def test_data_to_eui48(self):
-        self.assertEqual(util.data_to_eui48(b'\x00\x00\x00\x00\x00\x00\x00\x00'), None)
+        self.assertIsNone(util.data_to_eui48(b'\x00\x00\x00\x00\x00\x00\x00\x00'))
         self.assertEqual(util.data_to_eui48(b'\x00\x00\x12\x34\x56\x78\x9A\xBC'), '12:34:56:78:9A:BC')
 
     def test_data_to_float(self):
-        self.assertEqual(util.data_to_float(b'\x7f\xc0\x00\x00'), None)
+        self.assertIsNone(util.data_to_float(b'\x7f\xc0\x00\x00'))
         self.assertEqual(util.data_to_float(b'\x44\x7a\x00\x00'), float(1000))
         self.assertEqual(util.data_to_float(b'\xc4\x7a\x00\x00'), float(-1000))
 
     def test_data_to_double(self):
-        self.assertEqual(util.data_to_double(b'\x7F\xF8\x00\x00\x00\x00\x00\x00'), None)
+        self.assertIsNone(util.data_to_double(b'\x7F\xF8\x00\x00\x00\x00\x00\x00'))
         self.assertEqual(util.data_to_double(b'\x40\x8f\x40\x00\x00\x00\x00\x00'), float(1000))
         self.assertEqual(util.data_to_double(b'\xc0\x8f\x40\x00\x00\x00\x00\x00'), float(-1000))
 
