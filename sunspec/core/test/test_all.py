@@ -51,7 +51,7 @@ def test_all(pathlist=None, stop_on_failure=False, local=False):
     	else:
             print('Using local path: ', local_path)
 
-    print('pySunSpec version: %s\nTest device path: %s\n' % (sunspec.version, os.path.join(current_path, 'devices')))
+    print('pySunSpec version: {}\nTest device path: {}\n'.format(sunspec.version, os.path.join(current_path, 'devices')))
 
     for m in test_modules:
         module = __import__(m)
