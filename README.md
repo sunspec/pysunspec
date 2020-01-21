@@ -69,6 +69,11 @@ well as the pySunSpec source.  The models repository is referenced in the
 ```
 git clone --recursive https://github.com/sunspec/pysunspec.git
 ```
+on some systems (Debian based), you could be able to download it as a package (raspberry pi for ex.)
+
+```
+$ sudo apt-get install python-serial
+```
 
 If a non-recursive clone was done, the models can be retreived using the
 `git submodules` command from within your pySunSpec repository clone.
