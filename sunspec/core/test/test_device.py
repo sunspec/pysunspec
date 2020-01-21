@@ -490,6 +490,16 @@ class TestDevice(unittest.TestCase):
         if value != expected_value:
             raise Exception("Value '{}' mismatch: {} {}".format(p, str(value), str(expected_value)))
 
+    def test_model_load_symbol_id_conflicts(self):
+        model = device.Model(mid=17)
+        model.load()
+
+        parity_none_symbol = model.points['Pty'].point_type.symbols[0]
+        flow_none_symbol = model.points['Flw'].point_type.symbols[0]
+
+        self.assertEqual(parity_none_symbol.description, 'No Parity')
+        self.assertEqual(flow_none_symbol.description, 'No flow control')
+
 
 if __name__ == "__main__":
 

@@ -242,8 +242,8 @@ class PathList(object):
                 return zip_file.read(file_path)
             else:
                 if os.path.exists(file_path):
-                    f = open(file_path, 'rb')
-                    return f.read()
+                    with open(file_path, 'rb') as f:
+                        return f.read()
                 else:
                     continue
 
