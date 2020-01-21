@@ -14,5 +14,6 @@ setup(name = 'pysunspec',
       author_email = ['bob@sunspec.org'],
       packages = ['sunspec', 'sunspec.core', 'sunspec.core.modbus', 'sunspec.core.test', 'sunspec.core.test.fake'],
       package_data = {'sunspec': ['models/smdx/*'], 'sunspec.core.test': ['devices/*']},
-      scripts = ['scripts/suns.py']
+      scripts = ['scripts/suns.py'],
+      install_requires = ['pyserial'],
       )
