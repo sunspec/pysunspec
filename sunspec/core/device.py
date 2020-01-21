@@ -1022,11 +1022,11 @@ class ModelType(object):
         if self.fixed_block is None:
             self.fixed_block = BlockType(suns.SUNS_BLOCK_FIXED, model_type=self)
 
-    def symbol_add(self, symbol):
-        self.symbols[symbol.id] = symbol
+    def symbol_add(self, symbol, point_id):
+        self.symbols[symbol.id, point_id] = symbol
 
-    def symbol_get(self, sid):
-        return self.symbols.get(sid)
+    def symbol_get(self, sid, point_id):
+        return self.symbols.get((sid, point_id))
 
     def not_equal(self, model_type):
         """ Determines if the specified model type instance is not equal based
@@ -1314,24 +1314,6 @@ class PointType(object):
                 definintion within the model definition.
         """
 
-        for e in element.findall('*'):
-            if e.tag == smdx.SMDX_LABEL:
-                self.label = e.text
-            elif e.tag == smdx.SMDX_DESCRIPTION:
-                self.description = e.text
-            elif e.tag == smdx.SMDX_NOTES:
-                self.notes = e.text
-            elif e.tag == smdx.SMDX_SYMBOL:
-                sid = e.attrib.get(smdx.SMDX_ATTR_ID)
-                symbol = self.block_type.model_type.symbol_get(sid)
-                if symbol is None:
-                    symbol = Symbol()
-                    symbol.from_smdx(e, strings)
-                    self.block_type.model_type.symbol_add(symbol)
-                if self.symbol_get(sid) is None:
-                    self.symbols.append(symbol)
-                symbol.from_smdx(e, strings)
-
         if strings is False:
             self.id = element.attrib.get(smdx.SMDX_ATTR_ID)
             self.offset = int(element.attrib.get(smdx.SMDX_ATTR_OFFSET))
@@ -1367,6 +1349,30 @@ class PointType(object):
                 self.len, self.is_impl, self.data_to, self.to_data, self.to_value, self.value_default = info
                 if plen is not None:
                     self.len = int(plen)
+
+        for e in element.findall('*'):
+            if e.tag == smdx.SMDX_LABEL:
+                self.label = e.text
+            elif e.tag == smdx.SMDX_DESCRIPTION:
+                self.description = e.text
+            elif e.tag == smdx.SMDX_NOTES:
+                self.notes = e.text
+            elif e.tag == smdx.SMDX_SYMBOL:
+                sid = e.attrib.get(smdx.SMDX_ATTR_ID)
+                symbol = self.block_type.model_type.symbol_get(
+                    sid=sid,
+                    point_id=self.id,
+                )
+                if symbol is None:
+                    symbol = Symbol()
+                    symbol.from_smdx(e, strings)
+                    self.block_type.model_type.symbol_add(
+                        symbol=symbol,
+                        point_id=self.id,
+                    )
+                if self.symbol_get(sid) is None:
+                    self.symbols.append(symbol)
+                symbol.from_smdx(e, strings)
 
     def symbol_get(self, sid):
         for symbol in self.symbols:
