@@ -69,49 +69,49 @@ class TestClientDevice(unittest.TestCase):
 
         expected = 'SunSpecTest'
         if d.common.Mn != expected:
-            raise Exception("'common.Mn' point mismatch: %s %s" % (d.common.Mn, expected))
+            raise Exception("'common.Mn' point mismatch: {} {}".format(d.common.Mn, expected))
 
         expected = 'sn-123456789'
         if d.common.SN != expected:
-            raise Exception("'common.SN' point mismatch: %s %s" % (d.common.SN, expected))
+            raise Exception("'common.SN' point mismatch: {} {}".format(d.common.SN, expected))
 
 
         # int16 read and write
         d.model_63001.read()
         expected = -20
         if d.model_63001.int16_4 != expected:
-            raise Exception("'model_63001.int16_4' point mismatch: %s %s" % (d.model_63001.int16_4, expected))
+            raise Exception("'model_63001.int16_4' point mismatch: {} {}".format(d.model_63001.int16_4, expected))
         value = 330
         d.model_63001.int16_4 = value
         d.model_63001.write()
         d.model_63001.read()
         value = d.model_63001.int16_4
         if d.model_63001.int16_4 != value:
-            raise Exception("'model_63001.int16_4' write failure: %s %s" % (d.model_63001.int16_4, value))
+            raise Exception("'model_63001.int16_4' write failure: {} {}".format(d.model_63001.int16_4, value))
 
         # string read and write
         expected = '12345678'
         if d.model_63001.string != expected:
-            raise Exception("'model_63001.string' point mismatch: %s %s" % (d.model_63001.string, expected))
+            raise Exception("'model_63001.string' point mismatch: {} {}".format(d.model_63001.string, expected))
 
         value = 'abcdefg'
         d.model_63001.string = value
         d.model_63001.write()
         d.model_63001.read()
         if d.model_63001.string != value:
-            raise Exception("'model_63001.string' write failure: %s %s" % (d.model_63001.string, value))
+            raise Exception("'model_63001.string' write failure: {} {}".format(d.model_63001.string, value))
 
         # write multiple
         d.model_63001.read()
         expected = 65524
         if d.model_63001.uint16_3 != expected:
-            raise Exception("'model_63001.uint16_3' point mismatch: %s %s" % (d.model_63001.uint16_3, expected))
+            raise Exception("'model_63001.uint16_3' point mismatch: {} {}".format(d.model_63001.uint16_3, expected))
         expected = 60
         if d.model_63001.uint16_4 != expected:
-            raise Exception("'model_63001.uint16_4' point mismatch: %s %s" % (d.model_63001.uint16_4, expected))
+            raise Exception("'model_63001.uint16_4' point mismatch: {} {}".format(d.model_63001.uint16_4, expected))
         expected = 7
         if d.model_63001.uint16_5 != expected:
-            raise Exception("'model_63001.uint16_5' point mismatch: %s %s" % (d.model_63001.uint16_5, expected))
+            raise Exception("'model_63001.uint16_5' point mismatch: {} {}".format(d.model_63001.uint16_5, expected))
         value_3 = 65525
         value_4 = 70
         value_5 = 8
@@ -122,25 +122,25 @@ class TestClientDevice(unittest.TestCase):
         d.model_63001.read()
         value = d.model_63001.uint16_3
         if d.model_63001.uint16_3 != value_3:
-            raise Exception("'model_63001.int16_3' write failure: %s %s" % (d.model_63001.uint16_3, value_3))
+            raise Exception("'model_63001.int16_3' write failure: {} {}".format(d.model_63001.uint16_3, value_3))
         value = d.model_63001.uint16_4
         if d.model_63001.uint16_4 != value_4:
-            raise Exception("'model_63001.int16_4' write failure: %s %s" % (d.model_63001.uint16_4, value_4))
+            raise Exception("'model_63001.int16_4' write failure: {} {}".format(d.model_63001.uint16_4, value_4))
         value = d.model_63001.uint16_5
         if d.model_63001.uint16_5 != value_5:
-            raise Exception("'model_63001.int16_5' write failure: %s %s" % (d.model_63001.uint16_5, value_5))
+            raise Exception("'model_63001.int16_5' write failure: {} {}".format(d.model_63001.uint16_5, value_5))
 
         # write multiple
         d.model_63001.read()
         expected = value_3
         if d.model_63001.uint16_3 != expected:
-            raise Exception("'model_63001.uint16_3' point mismatch: %s %s" % (d.model_63001.uint16_3, expected))
+            raise Exception("'model_63001.uint16_3' point mismatch: {} {}".format(d.model_63001.uint16_3, expected))
         expected = value_4
         if d.model_63001.uint16_4 != expected:
-            raise Exception("'model_63001.uint16_4' point mismatch: %s %s" % (d.model_63001.uint16_4, expected))
+            raise Exception("'model_63001.uint16_4' point mismatch: {} {}".format(d.model_63001.uint16_4, expected))
         expected = value_5
         if d.model_63001.uint16_5 != expected:
-            raise Exception("'model_63001.uint16_5' point mismatch: %s %s" % (d.model_63001.uint16_5, expected))
+            raise Exception("'model_63001.uint16_5' point mismatch: {} {}".format(d.model_63001.uint16_5, expected))
         value_3 = 65524
         value_5 = 7
         d.model_63001.uint16_3 = value_3
@@ -149,13 +149,13 @@ class TestClientDevice(unittest.TestCase):
         d.model_63001.read()
         value = d.model_63001.uint16_3
         if d.model_63001.uint16_3 != value_3:
-            raise Exception("'model_63001.int16_3' write failure: %s %s" % (d.model_63001.uint16_3, value_3))
+            raise Exception("'model_63001.int16_3' write failure: {} {}".format(d.model_63001.uint16_3, value_3))
         value = d.model_63001.uint16_4
         if d.model_63001.uint16_4 != value_4:
-            raise Exception("'model_63001.int16_4' write failure: %s %s" % (d.model_63001.uint16_4, value_4))
+            raise Exception("'model_63001.int16_4' write failure: {} {}".format(d.model_63001.uint16_4, value_4))
         value = d.model_63001.uint16_5
         if d.model_63001.uint16_5 != value_5:
-            raise Exception("'model_63001.int16_5' write failure: %s %s" % (d.model_63001.uint16_5, value_5))
+            raise Exception("'model_63001.int16_5' write failure: {} {}".format(d.model_63001.uint16_5, value_5))
 
         d.close()
 
@@ -168,7 +168,7 @@ class TestClientDevice(unittest.TestCase):
         expected = 1111
         value = int(d.model_63002.repeating[1].int16_1 * 10)
         if  value != expected:
-            raise Exception("'model_63002.int16_1' point mismatch: %s %s" % (value, expected))
+            raise Exception("'model_63002.int16_1' point mismatch: {} {}".format(value, expected))
 
         d.model_63002.repeating[1].int16_1 = 333.3
         d.model_63002.write()
@@ -176,12 +176,12 @@ class TestClientDevice(unittest.TestCase):
         expected = 3333
         value = int(d.model_63002.repeating[1].int16_1 * 10)
         if value != expected:
-            raise Exception("'model_63002.int16_2' write failure: %s %s" % (value, expected))
+            raise Exception("'model_63002.int16_2' write failure: {} {}".format(value, expected))
 
         expected = 2222
         value = int(d.model_63002.repeating[1].int16_2 * 100)
         if  value != expected:
-            raise Exception("'model_63002.int16_1' point mismatch: %s %s" % (value, expected))
+            raise Exception("'model_63002.int16_1' point mismatch: {} {}".format(value, expected))
 
         d.close()
 

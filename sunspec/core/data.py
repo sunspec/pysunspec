@@ -83,7 +83,7 @@ class SunSpecData(object):
 
             for d in self.root.findall('*'):
                 if d.tag != SDX_DEVICE:
-                    raise SunSpecDataError("Unexpected '%s' element in '%s' element" % (d.tag, self.root.tag))
+                    raise SunSpecDataError("Unexpected '{}' element in '{}' element".format(d.tag, self.root.tag))
                 dd = DeviceData()
                 dd.from_xml(d)
                 self.device_data.append(dd)
@@ -162,7 +162,7 @@ class DeviceData(object):
 
         for m in element.findall('*'):
             if m.tag != SDX_MODEL:
-                raise SunSpecDataError("Unexpected '%s' element in '%s' element" % (m.tag, element.tag))
+                raise SunSpecDataError("Unexpected '{}' element in '{}' element".format(m.tag, element.tag))
             md = ModelData()
             md.from_xml(m)
             self.model_data.append(md)
@@ -235,7 +235,7 @@ class ModelData(object):
         self.index = index
         for p in element.findall('*'):
             if p.tag != SDX_POINT:
-                raise SunSpecDataError("Unexpected '%s' element in '%s' element" % (p.tag, element.tag))
+                raise SunSpecDataError("Unexpected '{}' element in '{}' element".format(p.tag, element.tag))
             pd = PointData()
             pd.from_xml(p)
             self.point_data.append(pd)

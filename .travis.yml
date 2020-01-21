@@ -2,15 +2,12 @@ language: python
 
 python:
     - 2.7
-    - 3.3
-    - 3.4
     - 3.5
     - 3.6
 
 install: 
-    - pip install pyserial
     - git submodule update --init --recursive
-    - python setup.py install
+    - pip install .
 
 script: python -m unittest discover -v sunspec
 
