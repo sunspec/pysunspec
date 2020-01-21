@@ -578,7 +578,8 @@ class Point(object):
         return False
 
     def __str__(self):
-        point_str = 'Point: id = {} impl= {} addr = {} value_base = {}'.format(self.point_type.id, str(self.impl), self.addr, str(self.value_base))
+        point_str = 'Point: id = %s impl = %s addr = %s value_base = %s' % (self.point_type.id, str(self.impl), self.addr, str(self.value_base))
+        
         if self.sf_point is not None:
             point_str += ' sf_value = %s' % (str(self.sf_point.value_base))
         return point_str
