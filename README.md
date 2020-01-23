@@ -21,6 +21,7 @@ Copyright (c) 2018 SunSpec Alliance
 
 
 # Requirements
+
 - Python 2.7, 3.5-3.8
 - pySerial
 
