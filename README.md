@@ -69,11 +69,6 @@ well as the pySunSpec source.  The models repository is referenced in the
 ```
 git clone --recursive https://github.com/sunspec/pysunspec.git
 ```
-on some systems (Debian based), you could be able to download it as a package (raspberry pi for ex.)
-
-```
-$ sudo apt-get install python-serial
-```
 
 If a non-recursive clone was done, the models can be retreived using the
 `git submodules` command from within your pySunSpec repository clone.
@@ -99,7 +94,11 @@ you get an error such as `ImportError: No module named 'serial'` when trying
 to use the pySunSpec code.  pySerial is available as a Python package from
 [PyPi](https://pypi.python.org/pypi/pyserial) and as source from
 [GitHub](https://github.com/pyserial/pyserial) as both a Git repository and
-a .zip download.
+a .zip download.  If you choose to not use an isolated environment as
+described above, on some systems (Debian based and likely other Linux
+flavors), `pyserial` is available via the system package manager package.
+Be aware of there possibly being separate versions for both Python 2 and
+Python 3.
 
 
 ## Verifying the pySunSpec Installation
