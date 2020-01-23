@@ -10,9 +10,8 @@ python:
     - 3.8
 
 install:
-    - pip install pyserial
     - git submodule update --init --recursive
-    - python setup.py install
+    - pip install .
 
 script: python -m unittest discover -v sunspec
 
