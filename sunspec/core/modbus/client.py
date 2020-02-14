@@ -326,6 +326,9 @@ class ModbusClientRTU(object):
         else:
             raise ModbusClientError('Client serial port not open: %s' % self.name)
 
+        if sys.version_info > (3,):
+            resp = bytes(resp, 'latin-1')
+
         return resp
 
     def _write(self, slave_id, addr, data, trace_func=None):
@@ -339,7 +342,8 @@ class ModbusClientRTU(object):
 
         req = struct.pack('>BBHHB', int(slave_id), func, int(addr), count, len_data)
         if sys.version_info > (3,):
-            data = bytes(data, "latin-1")
+            if type(data) is not bytes:
+                data = bytes(data, "latin-1")
         req += data
         req += struct.pack('>H', computeCRC(req))
         if sys.version_info > (3,):

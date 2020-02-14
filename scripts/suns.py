@@ -77,7 +77,7 @@ if __name__ == "__main__":
             print('Unknown -t option: %s' % (options.t))
             sys.exit(1)
 
-    except client.SunSpecClientError, e:
+    except client.SunSpecClientError as e:
         print('Error: %s' % (e))
         sys.exit(1)
 
