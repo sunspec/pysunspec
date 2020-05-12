@@ -21,6 +21,7 @@
     IN THE SOFTWARE.
 """
 
+import contextlib
 import os
 import math
 
@@ -32,10 +33,31 @@ except:
 import sunspec.core.pics as pics
 import sunspec.core.smdx as smdx
 import sunspec.core.suns as suns
+import sunspec.core.util as util
 from sunspec.core.util import SunSpecError
+
+
+fspath = getattr(os, 'fspath', str)
 
 # file path list
 file_pathlist = None
+
+
+@contextlib.contextmanager
+def fresh_file_pathlist(*paths):
+    global file_pathlist
+
+    original_pathlist = file_pathlist
+    file_pathlist = util.PathList()
+
+    for path in paths:
+        file_pathlist.add(fspath(path))
+
+    try:
+        yield file_pathlist
+    finally:
+        file_pathlist = original_pathlist
+
 
 MAX_READ_COUNT = 125
 
@@ -699,8 +721,15 @@ class Model(object):
             if self.id == 1 and self.len == 65:
                 block_len = self.len
 
-            # while another block
-            while end_addr >= block_addr + block_len:
+            while True:
+                block_end = block_addr + block_len
+                if end_addr < block_end:
+                    raise SunSpecError(
+                        'Block (length {}, ending at {}) would exceed end of '
+                        'model reported by device ({}).'
+                        .format(block_len, block_end, end_addr)
+                    )
+
                 block = block_class(self, block_addr, block_len, block_type, index)
                 self.blocks.append(block)
 
@@ -745,6 +774,8 @@ class Model(object):
                     break
                 index += 1
                 block_len = int(block_type.len)
+                if end_addr == block_end:
+                    break
         else:
             raise SunSpecError('Unknown model type - id: %s' % str(self.id))
 
