@@ -81,6 +81,27 @@ class ClientDevice(device.Device):
             For :const:`TCP` devices, device IP port. Defaulted by modbus module
             to 502.
 
+        tls :
+            For :const:`TCP` devices, use TLS (Modbus/TCP Security). Defaults
+            to `tls=False`.
+
+        cafile :
+            For :const:`TCP` devices, path to certificate authority (CA)
+            certificate to use for validating server certificates. Only used
+            if `tls=True`.
+
+        certfile :
+            For :const:`TCP` devices, path to client TLS certificate to use
+            for client authentication. Only used if `tls=True`.
+
+        keyfile :
+            For :const:`TCP` devices, path to client TLS key to use for
+            client authentication. Only used if `tls=True`.
+
+        insecure_skip_tls_verify :
+            Skip verification of server TLS certificate. Only used if
+            `tls=True`.
+
         timeout :
             Modbus request timeout in seconds. Fractional seconds are permitted
             such as .5.
@@ -120,8 +141,8 @@ class ClientDevice(device.Device):
             first time.
     """
 
-    def __init__(self, device_type, slave_id=None, name=None, pathlist = None, baudrate=None, parity=None, ipaddr=None, ipport=None,
-                 timeout=None, trace=False):
+    def __init__(self, device_type, slave_id=None, name=None, pathlist=None, baudrate=None, parity=None, ipaddr=None, ipport=None,
+                 tls=False, cafile=None, certfile=None, keyfile=None, insecure_skip_tls_verify=False, timeout=None, trace=False):
         device.Device.__init__(self, addr=None)
 
         self.type = device_type
@@ -136,7 +157,7 @@ class ClientDevice(device.Device):
             if device_type == RTU:
                 self.modbus_device = modbus.ModbusClientDeviceRTU(slave_id, name, baudrate, parity, timeout, self, trace)
             elif device_type == TCP:
-                self.modbus_device = modbus.ModbusClientDeviceTCP(slave_id, ipaddr, ipport, timeout, self, trace)
+                self.modbus_device = modbus.ModbusClientDeviceTCP(slave_id, ipaddr, ipport, timeout, self, trace, tls, cafile, certfile, keyfile, insecure_skip_tls_verify)
             elif device_type == MAPPED:
                 if name is not None:
                     self.modbus_device = modbus.ModbusClientDeviceMapped(slave_id, name, pathlist, self)
@@ -735,6 +756,27 @@ class SunSpecClientDevice(object):
             For :const:`TCP` devices, device IP port. Defaulted by modbus module
             to 502.
 
+        tls :
+            For :const:`TCP` devices, use TLS (Modbus/TCP Security). Defaults
+            to `tls=False`.
+
+        cafile :
+            For :const:`TCP` devices, path to certificate authority (CA)
+            certificate to use for validating server certificates. Only used
+            if `tls=True`.
+
+        certfile :
+            For :const:`TCP` devices, path to client TLS certificate to use
+            for client authentication. Only used if `tls=True`.
+
+        keyfile :
+            For :const:`TCP` devices, path to client TLS key to use for
+            client authentication. Only used if `tls=True`.
+
+        insecure_skip_tls_verify :
+            Skip verification of server TLS certificate. Only used if
+            `tls=True`.
+
         timeout :
             Modbus request timeout in seconds. Fractional seconds are permitted
             such as .5.
@@ -764,10 +806,10 @@ class SunSpecClientDevice(object):
     """
 
     def __init__(self, device_type, slave_id=None, name=None, pathlist = None, baudrate=None, parity=None, ipaddr=None, ipport=None,
-                 timeout=None, trace=False, scan_progress=None, scan_delay=None):
+                 tls=False, cafile=None, certfile=None, keyfile=None, insecure_skip_tls_verify=False, timeout=None, trace=False, scan_progress=None, scan_delay=None):
 
         # super(self.__class__, self).__init__(device_type, slave_id, name, pathlist, baudrate, parity, ipaddr, ipport)
-        self.device = ClientDevice(device_type, slave_id, name, pathlist, baudrate, parity, ipaddr, ipport, timeout, trace)
+        self.device = ClientDevice(device_type, slave_id, name, pathlist, baudrate, parity, ipaddr, ipport, tls, cafile, certfile, keyfile, insecure_skip_tls_verify, timeout, trace)
         self.models = []
 
         try:
