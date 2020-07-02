@@ -22,6 +22,7 @@
 """
 
 import os
+import ssl
 import socket
 import struct
 import serial
@@ -585,6 +586,25 @@ class ModbusClientDeviceTCP(object):
             Trace function to use for detailed logging. No detailed logging is
             perform is a trace function is not supplied.
 
+        tls :
+            Use TLS (Modbus/TCP Security). Defaults to `tls=False`.
+
+        cafile :
+            Path to certificate authority (CA) certificate to use for
+            validating server certificates. Only used if `tls=True`.
+
+        certfile :
+            Path to client TLS certificate to use for client authentication.
+            Only used if `tls=True`.
+
+        keyfile :
+            Path to client TLS key to use for client authentication. Only
+            used if `tls=True`.
+
+        insecure_skip_tls_verify :
+            Skip verification of server TLS certificate. Only used if
+            `tls=True`.
+
         max_count :
             Maximum register count for a single Modbus request.
 
@@ -628,11 +648,30 @@ class ModbusClientDeviceTCP(object):
         trace_func
             Trace function to use for detailed logging.
 
+        tls
+            Use TLS (Modbus/TCP Security). Defaults to `tls=False`.
+
+        cafile
+            Path to certificate authority (CA) certificate to use for
+            validating server certificates. Only used if `tls=True`.
+
+        certfile
+            Path to client TLS certificate to use for client authentication.
+            Only used if `tls=True`.
+
+        keyfile
+            Path to client TLS key to use for client authentication. Only
+            used if `tls=True`.
+
+        insecure_skip_tls_verify :
+            Skip verification of server TLS certificate. Only used if
+            `tls=True`.
+
         max_count
             Maximum register count for a single Modbus request.
     """
 
-    def __init__(self, slave_id, ipaddr, ipport=502, timeout=None, ctx=None, trace_func=None, max_count=REQ_COUNT_MAX, test=False):
+    def __init__(self, slave_id, ipaddr, ipport=502, timeout=None, ctx=None, trace_func=None, tls=False, cafile=None, certfile=None, keyfile=None, insecure_skip_tls_verify=False, max_count=REQ_COUNT_MAX, test=False):
         self.slave_id = slave_id
         self.ipaddr = ipaddr
         self.ipport = ipport
@@ -640,6 +679,11 @@ class ModbusClientDeviceTCP(object):
         self.ctx = ctx
         self.socket = None
         self.trace_func = trace_func
+        self.tls = tls
+        self.cafile = cafile
+        self.certfile = certfile
+        self.keyfile = keyfile
+        self.tls_verify = not insecure_skip_tls_verify
         self.max_count = max_count
 
         if ipport is None:
@@ -673,6 +717,14 @@ class ModbusClientDeviceTCP(object):
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.settimeout(timeout)
+
+            if self.tls:
+                context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile=self.cafile)
+                context.load_cert_chain(certfile=self.certfile, keyfile=self.keyfile)
+                context.check_hostname = self.tls_verify
+
+                self.socket = context.wrap_socket(self.socket, server_side=False, server_hostname=self.ipaddr)
+
             self.socket.connect((self.ipaddr, self.ipport))
         except Exception as e:
             raise ModbusClientError('Connection error: %s' % str(e))
