@@ -273,11 +273,11 @@ class ModbusMap(object):
                         else:
                             data += c
                     # fill remainder of string with nulls
-                    regs_len = rlen * 2
-                    if regs_len > text_len:
+                    padding_needed = 2 * int(rlen - text_len / 4)
+                    if padding_needed > 0:
                         if data is None:
-                            data = ''
-                        data += struct.pack(str(regs_len - text_len) + 's', '')
+                            data = b''
+                        data += struct.pack(str(padding_needed) + 's', b'')
                 else:
                     raise ModbusMapError('Unknown type at offset %d' % (offset))
 
@@ -318,8 +318,13 @@ class ModbusMap(object):
 
             if no_data is False:
                 s = ''
-                for d in regs.data:
-                    s += '%02x' % ord(d)
+                if sys.version_info > (3,):
+                    # Iterating over python 3 bytes gives integers
+                    for d in regs.data:
+                        s += '%02x' % d
+                else:
+                    for d in regs.data:
+                        s += '%02x' % ord(d)
                 e.text = s
 
         return element
@@ -341,7 +346,7 @@ class ModbusMap(object):
         if offset < last_regs_next:
             raise ModbusMapError('Register offsets must be in ascending order with no overlap %d  %d' % (offset, last_regs_next))
 
-        data = struct.pack(str(count * 2) + 's', '')
+        data = struct.pack(str(count * 2) + 's', b'')
 
         if last_regs is None or offset > last_regs_next:
             mmr = ModbusMapRegs(offset, count, data, access)

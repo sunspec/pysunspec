@@ -30,6 +30,9 @@ build/
 doc/_build/
 doc/sphinx/
 
+# Jetbrains IDE junk
+.idea/
+
 # Mac OS X Junk
 .DS_Store
 *.AppleDouble

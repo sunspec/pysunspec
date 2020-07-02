@@ -64,6 +64,12 @@ class TestModbusMap(unittest.TestCase):
         if not_equal:
             raise Exception(not_equal)
 
+        m5 = mbmap.ModbusMap()
+        m5.from_xml('mbmap_test_device_1_d.xml', self.pathlist)
+        not_equal =  m1.not_equal(m5)
+        if not_equal:
+            raise Exception(not_equal)
+
 
     def test_modbus_mbmap_from_xml_element(self):
         filename = os.path.join(self.pathlist.path[1],
@@ -94,6 +100,11 @@ class TestModbusMap(unittest.TestCase):
         not_equal =  m1.not_equal(m4)
         if not_equal:
             raise Exception(not_equal)
+
+    def test_regs_add(self):
+        m1 = mbmap.ModbusMap(base_addr=999, func='holding', mapid=12345)
+        m1.regs_add(offset=40072, count=1)
+        print(m1.to_xml())
 
 
 if __name__ == "__main__":
