@@ -232,7 +232,7 @@ class ModbusClientRTU(object):
         if trace_func:
             s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
             for c in req:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             trace_func(s)
 
         self.serial.flushInput()
@@ -260,7 +260,7 @@ class ModbusClientRTU(object):
         if trace_func:
             s = '%s:%s[addr=%s] <--' % (self.name, str(slave_id), addr)
             for c in resp:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             trace_func(s)
 
         crc = (resp[-2] << 8) | resp[-1]
@@ -339,7 +339,7 @@ class ModbusClientRTU(object):
         if trace_func:
             s = '%s:%s[addr=%s] ->' % (self.name, str(slave_id), addr)
             for c in req:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             trace_func(s)
 
         self.serial.flushInput()
@@ -359,14 +359,14 @@ class ModbusClientRTU(object):
                         len_remaining = 8 - len(resp)
                         len_found = True
                     else:
-                        except_code = ord(resp[2])
+                        except_code = resp[2]
             else:
                 raise ModbusClientTimeout('Response timeout')
 
         if trace_func:
             s = '%s:%s[addr=%s] <--' % (self.name, str(slave_id), addr)
             for c in resp:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             trace_func(s)
 
 
@@ -675,7 +675,7 @@ class ModbusClientDeviceTCP(object):
         if self.trace_func:
             s = '%s:%s:%s[addr=%s] ->' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
             for c in req:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             self.trace_func(s)
 
         try:
@@ -705,7 +705,7 @@ class ModbusClientDeviceTCP(object):
         if self.trace_func:
             s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
             for c in resp:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             self.trace_func(s)
 
         if except_code:
@@ -781,7 +781,7 @@ class ModbusClientDeviceTCP(object):
         if self.trace_func:
             s = '%s:%s:%s[addr=%s] ->' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
             for c in req:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             self.trace_func(s)
 
         try:
@@ -811,7 +811,7 @@ class ModbusClientDeviceTCP(object):
         if self.trace_func:
             s = '%s:%s:%s[addr=%s] <--' % (self.ipaddr, str(self.ipport), str(self.slave_id), addr)
             for c in resp:
-                s += '%02X' % (ord(c))
+                s += '%02X' % (c)
             self.trace_func(s)
 
         if except_code:
