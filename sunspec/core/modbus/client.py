@@ -27,6 +27,7 @@ import socket
 import struct
 import serial
 import sys
+import time
 
 try:
     import xml.etree.ElementTree as ET
@@ -34,6 +35,10 @@ except:
     import elementtree.ElementTree as ET
 
 import sunspec.core.modbus.mbmap as mbmap
+
+
+deadtime_clock = getattr(time, 'monotonic', time.clock)
+
 
 PARITY_NONE = 'N'
 PARITY_EVEN = 'E'
@@ -56,6 +61,16 @@ class ModbusClientTimeout(ModbusClientError):
 
 class ModbusClientException(ModbusClientError):
     pass
+
+
+def wait_until(target, clock):
+    while True:
+        remaining = target - clock()
+        if remaining > 0:
+            time.sleep(remaining)
+        else:
+            break
+
 
 def modbus_rtu_client(name=None, baudrate=None, parity=None):
 
@@ -149,6 +164,8 @@ class ModbusClientRTU(object):
         self.timeout = .5
         self.write_timeout = .5
         self.devices = {}
+        self.deadtime = 44 / int(self.baudrate)
+        self.last_receive_completion = -self.deadtime
 
         self.open()
 
@@ -236,32 +253,40 @@ class ModbusClientRTU(object):
                 s += '%02X' % (ord(c))
             trace_func(s)
 
+        wait_until(
+            target=self.last_receive_completion + self.deadtime,
+            clock=deadtime_clock,
+        )
+
         self.serial.flushInput()
         try:
             self.serial.write(req)
         except Exception as e:
             raise ModbusClientError('Serial write error: %s' % str(e))
 
-        while len_remaining > 0:
-            c = self.serial.read(len_remaining)
-            if type(c) == bytes and sys.version_info > (3,):
-                temp = ""
-                for i in c:
-                    temp += chr(i)
-                c = temp
+        try:
+            while len_remaining > 0:
+                c = self.serial.read(len_remaining)
+                if type(c) == bytes and sys.version_info > (3,):
+                    temp = ""
+                    for i in c:
+                        temp += chr(i)
+                    c = temp
 
-            len_read = len(c);
-            if len_read > 0:
-                resp += c
-                len_remaining -= len_read
-                if len_found is False and len(resp) >= 5:
-                    if not (ord(resp[1]) & 0x80):
-                        len_remaining = (ord(resp[2]) + 5) - len(resp)
-                        len_found = True
-                    else:
-                        except_code = ord(resp[2])
-            else:
-                raise ModbusClientTimeout('Response timeout')
+                len_read = len(c);
+                if len_read > 0:
+                    resp += c
+                    len_remaining -= len_read
+                    if len_found is False and len(resp) >= 5:
+                        if not (ord(resp[1]) & 0x80):
+                            len_remaining = (ord(resp[2]) + 5) - len(resp)
+                            len_found = True
+                        else:
+                            except_code = ord(resp[2])
+                else:
+                    raise ModbusClientTimeout('Response timeout')
+        finally:
+            self.last_receive_completion = deadtime_clock()
 
         if trace_func:
             s = '{}:{}[addr={}] <--'.format(self.name, str(slave_id), addr)
@@ -359,6 +384,11 @@ class ModbusClientRTU(object):
                 s += '%02X' % (ord(c))
             trace_func(s)
 
+        wait_until(
+            target=self.last_receive_completion + self.deadtime,
+            clock=deadtime_clock,
+        )
+
         self.serial.flushInput()
         try:
             if sys.version_info > (3,):
@@ -367,25 +397,28 @@ class ModbusClientRTU(object):
         except Exception as e:
             raise ModbusClientError('Serial write error: %s' % str(e))
 
-        while len_remaining > 0:
-            c = self.serial.read(len_remaining)
-            if type(c) == bytes and sys.version_info > (3,):
-                temp = ""
-                for i in c:
-                    temp += chr(i)
-                c = temp
-            len_read = len(c);
-            if len_read > 0:
-                resp += c
-                len_remaining -= len_read
-                if len_found is False and len(resp) >= 5:
-                    if not (ord(resp[1]) & 0x80):
-                        len_remaining = 8 - len(resp)
-                        len_found = True
-                    else:
-                        except_code = ord(resp[2])
-            else:
-                raise ModbusClientTimeout('Response timeout')
+        try:
+            while len_remaining > 0:
+                c = self.serial.read(len_remaining)
+                if type(c) == bytes and sys.version_info > (3,):
+                    temp = ""
+                    for i in c:
+                        temp += chr(i)
+                    c = temp
+                len_read = len(c);
+                if len_read > 0:
+                    resp += c
+                    len_remaining -= len_read
+                    if len_found is False and len(resp) >= 5:
+                        if not (ord(resp[1]) & 0x80):
+                            len_remaining = 8 - len(resp)
+                            len_found = True
+                        else:
+                            except_code = ord(resp[2])
+                else:
+                    raise ModbusClientTimeout('Response timeout')
+        finally:
+            self.last_receive_completion = deadtime_clock()
 
         if trace_func:
             s = '{}:{}[addr={}] <--'.format(self.name, str(slave_id), addr)
