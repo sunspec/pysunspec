@@ -892,7 +892,7 @@ def model_type_get(model_id):
     global file_pathlist
     global model_types
 
-    model_type = model_types.get(str(model_id))
+    model_type = model_types.get(model_id)
     if model_type is None:
         smdx_data = ''
         # create model file name
